@@ -69,8 +69,14 @@ export interface RcOffer {
   name: string | null;
   /** e.g. `{ code: 'COMP', name: 'Complimentary' }`. */
   offerType: { code: string | null; name: string | null } | null;
-  /** Whatever the offer code carries beyond the campaign code. */
-  tier: string | null;
+  /**
+   * The campaign variant this grant is: the offer code with the campaign code
+   * removed (`26BAF304` → `04`). **Not the Club Royale loyalty tier.** Royal
+   * assigns variants per campaign from its own segmentation, so one loyalty tier
+   * receives different variant numbers across campaigns and the two do not map
+   * 1:1. Treat it as an opaque per-campaign label, not a rank.
+   */
+  variant: string | null;
   description: string | null;
   /** Parsed out of the perk names; Royal does not return it as a field. */
   freePlay: number | null;
@@ -187,7 +193,7 @@ export function mapOffer(o: any): RcOffer {
     offerType: co.offerType
       ? { code: str(co.offerType.code), name: str(co.offerType.name) }
       : null,
-    tier: campaignCode ? str(offerCode.replace(campaignCode, '')) : null,
+    variant: campaignCode ? str(offerCode.replace(campaignCode, '')) : null,
     description: str(co.description),
     freePlay: freePlayFrom(perks),
     tradeInValue: int(co.tradeInValue),

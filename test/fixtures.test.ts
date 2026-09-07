@@ -89,8 +89,9 @@ test('offers are mapped out of the campaignOffer envelope', async () => {
   assert.equal(offer.campaignCode, '26BAF3');
   assert.equal(offer.campaignName, '2026 California Winners');
   assert.equal(offer.offerType?.code, 'COMP');
-  // The tier is whatever the offer code carries beyond the campaign code.
-  assert.equal(offer.tier, '04');
+  // The variant is the offer code with the campaign code removed. It is a
+  // per-campaign marketing label, not the Club Royale tier -- the two are not 1:1.
+  assert.equal(offer.variant, '04');
   assert.equal(offer.bookBy, '2026-09-08');
   assert.ok(offer.description, 'description is what the dashboard actually shows');
 });

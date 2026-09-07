@@ -104,6 +104,13 @@ totalOffers, totalPages, pageNumber }`. Each entry keeps the familiar
   redeemable. `playerOfferId` is the identity of a row; the offer code is only
   how they group for display. Anything keyed on the code alone both undercounts
   what the player holds and cannot be upserted.
+- **The offer code is `campaignCode` + a variant suffix** (`26BAF3` + `04`),
+  exposed as `RcOffer.variant`. The suffix is a per-campaign marketing segment,
+  **not the Club Royale loyalty tier** — one loyalty tier receives different
+  suffixes across campaigns (a Prime account carried `02`, `03` and `04`), so
+  the two are not 1:1. The list endpoint is player-scoped and ignores every
+  filter, and no campaign, tier, catalogue or all-offers route exists (probed
+  exhaustively), so a variant you do not hold cannot be fetched.
 - `sailings[]` is present but **always empty**, and no separate sailings route
   exists on this version — `/v2/offers/detail`, `/v2/offers/{code}`,
   `/v2/offers/{id}/sailings`, `/v2/campaigns` and an `includeSailings` /
