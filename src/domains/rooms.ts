@@ -130,11 +130,23 @@ function mapRoom(
   };
 }
 
-/** Royal states occupancy as prose in a feature line, e.g. "Up to 4 guests". */
+/**
+ * Royal states occupancy as prose in a feature line, e.g. "Up to 4 guests".
+ *
+ * The live payload nests those lines under `features.singleFeatures`; reading
+ * `features` as a bare array returns null for every real response. Guarantee
+ * cabins state no occupancy at all, so null there is correct. `roomFeatures` is
+ * deliberately not scanned — its bed prose says "up to 3 guests" about the sofa
+ * bed and would read low.
+ */
 function readMaxOccupancy(features: unknown): number | null {
-  if (!Array.isArray(features)) return null;
-  for (const f of features) {
-    const lines: unknown = (f as any)?.lines ?? (f as any)?.text;
+  const blocks: any[] = Array.isArray(features)
+    ? features
+    : ((features as any)?.singleFeatures ?? []);
+
+  const stated = blocks.find((f) => f?.code === 'occupancy');
+  for (const f of stated ? [stated] : blocks) {
+    const lines: unknown = f?.lines ?? f?.text;
     const text = Array.isArray(lines) ? lines.join(' ') : String(lines ?? '');
     const match = text.match(/(\d+)\s*guests?/i);
     if (match?.[1]) return Number.parseInt(match[1], 10);

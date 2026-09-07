@@ -98,14 +98,20 @@ await grab('casino-loyalty', 'https://www.royalcaribbean.com/api/casino/v1/loyal
   headers: casinoHeaders(session),
 });
 
-await grab('offers', 'https://www.royalcaribbean.com/api/casino/v2/offers/merged', {
-  method: 'POST',
-  headers: casinoHeaders(session, { loyaltyId }),
-  body: JSON.stringify({
-    sortBy: 'offer.reserveByDate', sortDirection: 'asc', limit: 100,
-    approvedAgencyIds: ['109638', '388809'], page: 1, digitalRedemption: true,
-  }),
-});
+// A GET with query parameters. The body-carrying POST at
+// /api/casino/v2/offers/merged is gone; see docs/endpoints.md.
+await grab(
+  'offers',
+  'https://www.royalcaribbean.com/api/casino/v2/offers/list' +
+    '?page=1&limit=100&sortBy=offer.reserveByDate&sortDirection=asc',
+  {
+    headers: {
+      ...casinoHeaders(session, { loyaltyId }),
+      'x-environment-marker': '',
+      'x-environment-ship-code': '',
+    },
+  },
+);
 
 // The plain endpoint, not `enriched` — the latter can return an empty list for
 // an account that demonstrably has bookings.

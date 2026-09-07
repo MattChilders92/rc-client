@@ -1,9 +1,7 @@
 import { isExpired, signIn, type Credentials, type RcSession } from './auth/index.ts';
 import { fetchAccount, type RcAccount } from './domains/account.ts';
 import { fetchCasinoLoyalty, type CasinoLoyalty } from './domains/casino.ts';
-import {
-  fetchOfferSailings, listOffers, type OffersResult, type RcOffer,
-} from './domains/offers.ts';
+import { listOffers, type OffersResult } from './domains/offers.ts';
 import {
   COVERAGE_OCCUPANCIES, fetchRooms, sweepOccupancy,
   type Brand, type RcRoom, type RoomQuery,
@@ -95,24 +93,17 @@ export class RcClient {
   /**
    * Casino offers. The Crown & Anchor number is resolved from the account
    * automatically — it is what the offers API keys on, and passing the account
-   * id or casino profile id instead silently returns nothing.
+   * id or casino profile id instead returns nothing.
+   *
+   * Throws `RcRouteGoneError` if the endpoint has moved again, rather than
+   * reporting an empty list. There is no `offerSailings` companion: this API
+   * version exposes no route for an offer's eligible sailings.
    */
   async offers(loyaltyId?: string): Promise<OffersResult> {
     const id = loyaltyId ?? (await this.account()).crownAndAnchorId;
-    if (!id) return { offers: [], outcome: 'none', totalOffers: 0 };
+    const player = { firstName: null, lastName: null, loyaltyId: null };
+    if (!id) return { offers: [], outcome: 'none', totalOffers: 0, player };
     return listOffers(await this.session(), { loyaltyId: id });
-  }
-
-  /** One offer with its eligible sailings. */
-  async offerSailings(
-    offerCode: string,
-    opts: { playerOfferId?: string; loyaltyId?: string } = {},
-  ): Promise<RcOffer | null> {
-    const id = opts.loyaltyId ?? (await this.account()).crownAndAnchorId;
-    if (!id) return null;
-    return fetchOfferSailings(await this.session(), {
-      loyaltyId: id, offerCode, ...(opts.playerOfferId ? { playerOfferId: opts.playerOfferId } : {}),
-    });
   }
 
   async bookings(opts?: ListBookingsOptions): Promise<RcBooking[]> {

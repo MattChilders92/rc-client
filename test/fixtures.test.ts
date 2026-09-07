@@ -10,6 +10,7 @@ import { listOffers, freePlayFrom } from '../src/domains/offers.ts';
 import { fetchRooms, roomKey } from '../src/domains/rooms.ts';
 import { fetchCategory } from '../src/domains/products.ts';
 import { listBookings } from '../src/domains/bookings.ts';
+import { RcRouteGoneError } from '../src/errors.ts';
 import type { RcSession } from '../src/auth/index.ts';
 
 /**
@@ -76,14 +77,56 @@ test('casino loyalty returns the casino profile id and evaluation window', async
   assert.ok(loyalty.periodStart && loyalty.periodEnd, 'annual window present');
 });
 
-test('offers reports a 404 as an outcome, never as an empty success', async () => {
+test('offers are mapped out of the campaignOffer envelope', async () => {
   stub('offers');
   const result = await listOffers(session, { loyaltyId: '000000000' });
 
-  // This is the whole reason the endpoint move went unnoticed elsewhere: an
-  // empty array and a dead route must not look the same.
-  assert.equal(result.outcome, 'none');
-  assert.deepEqual(result.offers, []);
+  assert.equal(result.outcome, 'ok');
+  assert.equal(result.offers.length, 4);
+
+  const offer = result.offers[0]!;
+  assert.equal(offer.offerCode, '26BAF304');
+  assert.equal(offer.campaignCode, '26BAF3');
+  assert.equal(offer.campaignName, '2026 California Winners');
+  assert.equal(offer.offerType?.code, 'COMP');
+  // The tier is whatever the offer code carries beyond the campaign code.
+  assert.equal(offer.tier, '04');
+  assert.equal(offer.bookBy, '2026-09-08');
+  assert.ok(offer.description, 'description is what the dashboard actually shows');
+});
+
+test('free play comes from the perk name, since the code is opaque', async () => {
+  stub('offers');
+  const { offers } = await listOffers(session, { loyaltyId: '000000000' });
+
+  // The live perk is { perkCode: 'TBB8', perkName: 'Bonus FP $100' }. Reading
+  // the code alone — as an FP<n> pattern would — yields nothing.
+  const withPerk = offers.find((o) => o.perks.length > 0);
+  assert.ok(withPerk, 'the fixture must keep an offer that carries a perk');
+  assert.equal(withPerk.freePlay, 100);
+});
+
+test('one offer code can arrive several times, under different player ids', async () => {
+  stub('offers');
+  const { offers } = await listOffers(session, { loyaltyId: '000000000' });
+
+  // Real payloads repeat a code across player-offer associations. Anything
+  // upserting on the code alone has to collapse these first.
+  const codes = offers.map((o) => o.offerCode);
+  assert.ok(codes.length > new Set(codes).size, 'fixture must keep the duplicate');
+});
+
+test('a moved route throws instead of reporting an empty account', async () => {
+  stub('offers-route-gone');
+
+  // The endpoint has now moved twice. Both times, clients that treated the
+  // resulting 404 as "no offers" reported zero for accounts that had plenty —
+  // this project included, for a week. The router's own NOT_FOUND body is the
+  // tell, and it must never be mistaken for an answer about the player.
+  await assert.rejects(
+    () => listOffers(session, { loyaltyId: '000000000' }),
+    RcRouteGoneError,
+  );
 });
 
 test('free play is parsed out of perk codes and names', () => {

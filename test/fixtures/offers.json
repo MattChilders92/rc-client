@@ -1,9 +1,172 @@
 {
-  "_status": 404,
   "body": {
-    "error": true,
-    "code": "NOT_FOUND",
-    "message": "Not Found",
-    "requestId": "00000000-0000-0000-0000-000000000000"
+    "firstName": "REDACTED",
+    "lastName": "REDACTED",
+    "email": null,
+    "loyaltyId": "REDACTED",
+    "offers": [
+      {
+        "campaignCode": "26BAF3",
+        "campaignName": "2026 California Winners",
+        "campaignType": "Stateroom Offer",
+        "redeemInfo": null,
+        "status": "active",
+        "playerOfferId": "REDACTED",
+        "bookingRequest": [],
+        "campaignOffer": {
+          "offerCode": "26BAF304",
+          "offerType": {
+            "code": "COMP",
+            "name": "Complimentary"
+          },
+          "name": "California Winners",
+          "description": "Balcony or Oceanview Room for Two + Bonus Interior Room for Your Guests",
+          "reserveByDate": "2026-09-08T03:59:00.000Z",
+          "currency": {
+            "name": "US Dollar",
+            "symbol": "$",
+            "code": "USD"
+          },
+          "tradeInValue": 0,
+          "perkCodes": [],
+          "sailings": [],
+          "status": "Active",
+          "offerImages": [
+            {
+              "fileName": "California Winners_My Offers Hero Image-20260806-174953.jpg",
+              "fileType": "image/jpeg",
+              "fileUrl": "https://rcg-casino-operations-hub-prod-public-documents.s3.us-east-1.amazonaws.com/campaign/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000.jpg",
+              "scopes": [
+                "Campaign"
+              ],
+              "category": "HERO_REGULAR_CARD",
+              "description": "Image"
+            }
+          ]
+        }
+      },
+      {
+        "campaignCode": "26MIX5",
+        "campaignName": "2026 King of Spades",
+        "campaignType": "Stateroom Offer",
+        "redeemInfo": null,
+        "status": "active",
+        "playerOfferId": "REDACTED",
+        "bookingRequest": [],
+        "campaignOffer": {
+          "offerCode": "26MIX503",
+          "offerType": {
+            "code": "COMP",
+            "name": "Complimentary"
+          },
+          "name": "King of Spades",
+          "description": "Enjoy a Balcony or Oceanview Room for Two",
+          "reserveByDate": "2026-09-11T03:59:00.000Z",
+          "currency": {
+            "name": "US Dollar",
+            "symbol": "$",
+            "code": "USD"
+          },
+          "tradeInValue": 0,
+          "perkCodes": [
+            {
+              "perkName": "Bonus FP $100",
+              "perkCode": "TBB8",
+              "type": "FreePlay option",
+              "comments": null
+            }
+          ],
+          "sailings": [],
+          "status": "Active",
+          "offerImages": [
+            {
+              "fileName": "My Offers Hero Image-20260805-134954.png",
+              "fileType": "image/png",
+              "fileUrl": "https://rcg-casino-operations-hub-prod-public-documents.s3.us-east-1.amazonaws.com/campaign/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000.png",
+              "scopes": [
+                "Campaign"
+              ],
+              "category": "HERO_REGULAR_CARD",
+              "description": "Image"
+            }
+          ]
+        }
+      },
+      {
+        "campaignCode": "26TOR6",
+        "campaignName": "2026 Play Your Way",
+        "campaignType": "Stateroom Offer",
+        "redeemInfo": null,
+        "status": "active",
+        "playerOfferId": "REDACTED",
+        "bookingRequest": [],
+        "campaignOffer": {
+          "offerCode": "26TOR603",
+          "offerType": {
+            "code": "COMP",
+            "name": "Complimentary"
+          },
+          "name": "Play Your Way",
+          "description": "Enjoy a room for two or apply $900 Off an upgraded stateroom on eligible sailings.",
+          "reserveByDate": "2026-09-16T03:59:00.000Z",
+          "currency": null,
+          "tradeInValue": 0,
+          "perkCodes": [],
+          "sailings": [],
+          "status": "Active",
+          "offerImages": [
+            {
+              "fileName": "Play Your Way My Offers App Hero Image.jpg",
+              "fileType": "image/jpeg",
+              "fileUrl": "https://rcg-casino-operations-hub-prod-public-documents.s3.us-east-1.amazonaws.com/campaign/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000.jpg",
+              "scopes": [
+                "Campaign"
+              ],
+              "category": "HERO_REGULAR_CARD",
+              "description": "Image"
+            }
+          ]
+        }
+      },
+      {
+        "campaignCode": "26TOR6",
+        "campaignName": "2026 Play Your Way",
+        "campaignType": "Stateroom Offer",
+        "redeemInfo": null,
+        "status": "active",
+        "playerOfferId": "REDACTED",
+        "bookingRequest": [],
+        "campaignOffer": {
+          "offerCode": "26TOR603",
+          "offerType": {
+            "code": "COMP",
+            "name": "Complimentary"
+          },
+          "name": "Play Your Way",
+          "description": "Enjoy a room for two or apply $900 Off an upgraded stateroom on eligible sailings.",
+          "reserveByDate": "2026-09-16T03:59:00.000Z",
+          "currency": null,
+          "tradeInValue": 0,
+          "perkCodes": [],
+          "sailings": [],
+          "status": "Active",
+          "offerImages": [
+            {
+              "fileName": "Play Your Way My Offers App Hero Image.jpg",
+              "fileType": "image/jpeg",
+              "fileUrl": "https://rcg-casino-operations-hub-prod-public-documents.s3.us-east-1.amazonaws.com/campaign/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000.jpg",
+              "scopes": [
+                "Campaign"
+              ],
+              "category": "HERO_REGULAR_CARD",
+              "description": "Image"
+            }
+          ]
+        }
+      }
+    ],
+    "totalOffers": 4,
+    "totalPages": 1,
+    "pageNumber": 1
   }
 }

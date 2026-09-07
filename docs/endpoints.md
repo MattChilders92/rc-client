@@ -76,27 +76,78 @@ Note the path shape: **the version comes first**, `/api/casino/v1/<resource>`.
 ## Casino offers
 
 ```
-POST www.royalcaribbean.com/api/casino/v2/offers/merged                [casino]
-     headers: x-account-id, x-loyalty-id (Crown & Anchor number)
-     body:    { sortBy: "offer.reserveByDate", sortDirection: "asc",
-                limit: 100, approvedAgencyIds: ["109638","388809"],
-                page, digitalRedemption: true }
+GET www.royalcaribbean.com/api/casino/v2/offers/list                   [casino]
+    ?page=1 &limit=100 &sortBy=offer.reserveByDate &sortDirection=asc
+    headers: x-account-id, x-loyalty-id (Crown & Anchor number),
+             x-environment-marker, x-environment-ship-code (both empty ashore)
 ```
 
-One endpoint, two modes: adding `offerCode` and `playerOfferId` to the same body
-returns that one offer with `sailings[]` populated.
+**A GET with query parameters.** All four are required; omitting them returns a
+`VALIDATION_ERROR` that lists the accepted `sortBy` values, which is the most
+convenient documentation Royal publishes:
+
+    sailDate · createdAt · offer.offerCode · offer.offerType ·
+    offer.reserveByDate · offer.startDate · offer.sailByDate ·
+    offer.tradeInValue · offer.campaign.campaignType
+
+Response envelope: `{ firstName, lastName, email, loyaltyId, offers[],
+totalOffers, totalPages, pageNumber }`. Each entry keeps the familiar
+`campaignOffer` shape.
 
 - Paginated — read `totalPages` and loop.
-- Agency ids select brand: `109638` Royal, `388809` believed Celebrity
-  (unconfirmed against a Celebrity account).
-- **Free play is not a field.** It is encoded in the perk code (`FP100`) or the
-  perk name ("Bonus FP $100"). Largest perk wins.
-- `404` and `422` mean the account has no offers. This library reports that as
-  `outcome: 'none'` rather than an empty array, because the two are different.
+- **Free play is not a field.** It is in the perk *name* ("Bonus FP $75"); the
+  perk codes on this version are opaque (`TBK6`), so a code-only `FP<n>` parse
+  returns nothing.
+- **One offer code arrives several times**, once per player-offer association.
+  A live payload repeated `26TOR603` three times. Anything keyed on the offer
+  code alone must collapse them first.
+- `sailings[]` is present but **always empty**, and no separate sailings route
+  exists on this version — `/v2/offers/detail`, `/v2/offers/{code}`,
+  `/v2/offers/{id}/sailings`, `/v2/campaigns` and an `includeSailings` /
+  `expand` parameter were all tried and none is routed.
 
-Replaces `POST /api/casino/casino-offers/v1`, which now returns 404 for every
-input including an empty loyalty id. Code still calling it silently receives
-nothing.
+### This endpoint has now moved twice
+
+    1. POST /api/casino/casino-offers/v1   gone
+    2. POST /api/casino/v2/offers/merged   gone
+    3. GET  /api/casino/v2/offers/list     current
+
+Each move was silent and each broke every client that read the resulting 404 as
+"this player has no offers" — including this library, which reported zero for an
+account holding thirteen.
+
+**Tell the two apart by the body, not the status.** `/api/casino` proxies to an
+internal gateway that answers an unrouted path with exactly:
+
+```json
+{"error":true,"code":"NOT_FOUND","message":"Not Found","requestId":"…"}
+```
+
+That body means the route moved, and `listOffers` throws `RcRouteGoneError` for
+it. Any other 404 is an answer about the player and becomes `outcome: 'none'`.
+
+### Finding the route again, when it moves
+
+`GET /api/casino/health` returns `{status, hostname, version, redis}`, and every
+real route answers with JSON while an unrouted one returns either the gateway
+body above or the site's HTML 404. That makes the path space enumerable: probe
+candidates and keep whatever is neither. `GET /api/casino/v1/rewards/eligibility`
+is also worth reading first — `guestNotEligbleReason: "ActiveOffersPresent"`
+proves an account *has* offers, which turns "is this broken?" into a fact.
+
+The hub's own JavaScript names its bases. `https://www.royalcaribbean.com/club-royale/offers`
+redirects to sign-in but still embeds the config in its flight payload:
+
+```json
+"endpoints":{"casinoApiExternal":"https://www.royalcaribbean.com/api/casino",
+             "casinoApiInternal":"https://rcg-casino-guesthub-api-rcl-a.private.prd.ecom.rccl.io",
+             "casinoOps":"https://www.royalcaribbean.com/api/casino",
+             "digital":"https://api.rccl.com/en/royal/web"}
+```
+
+Route chunks for signed-in pages are not served anonymously, so the bundle shows
+the shared calls (`/v1/loyalty-data`, `/v1/partners`, `/v1/guest-account/loyalty`)
+but not the offers one.
 
 ## Room pricing
 

@@ -53,12 +53,11 @@ for (const o of offers.offers.slice(0, 8)) {
     o.bookBy ? `book by ${o.bookBy}` : '',
   ].filter(Boolean).join(' · '));
 }
-if (offers.offers[0]) {
-  const detail = await rc.offerSailings(offers.offers[0].offerCode, {
-    playerOfferId: offers.offers[0].playerOfferId ?? undefined,
-  });
-  line('sailings', detail ? `${detail.sailings.length} for ${detail.offerCode}` : 'none returned');
-}
+// Every offer currently comes back with an empty `sailings`; say so plainly
+// rather than leaving a silent zero that looks like a mapping bug.
+line('sailings', offers.offers.some((o) => o.sailings.length > 0)
+  ? 'populated'
+  : 'none — this API version exposes no sailings route');
 
 console.log('\n— bookings —');
 const bookings = await rc.bookings();

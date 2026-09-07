@@ -29,9 +29,11 @@ Royal's APIs are undocumented, inconsistent, and change without notice. Three
 codebases here each grew their own copy of the same calls, drifted apart, and
 independently broke. Two concrete costs:
 
-- The casino offers endpoint moved. Older code still calls the dead route, which
-  answers `404` — and because it also treats `404` as "no offers", it silently
-  reported zero offers instead of failing.
+- The casino offers endpoint has moved twice, most recently from a POST with a
+  JSON body to a GET with query parameters. Every client that treated the
+  resulting `404` as "no offers" reported zero for accounts that had plenty —
+  this library included, until it learned to read the body rather than the
+  status.
 - Bookings have two endpoints, and the `enriched` one that every existing
   implementation calls returns an empty list for an account that does have
   bookings. The plain endpoint returns them.
@@ -66,10 +68,14 @@ and reports it in the result:
 
 ```ts
 const { offers, outcome } = await rc.offers();
-// outcome: 'ok'   — Royal returned a list
-// outcome: 'none' — Royal answered 404/422: no offers on this account
-// throws RcRouteGoneError — the route moved again
+// outcome: 'ok'   — Royal returned a list, possibly empty
+// outcome: 'none' — a 404 that was an answer about the player
+// throws RcRouteGoneError — a 404 carrying the gateway's own NOT_FOUND body,
+//                           which means the endpoint moved again
 ```
+
+For the casino API the two are separable: its gateway answers an unrouted path
+with `{"error":true,"code":"NOT_FOUND",…}`, and nothing else does.
 
 ## Occupancy
 
@@ -113,6 +119,9 @@ with the real payload instead of reaching production.
 Verified live: auth, account, casino loyalty, cruise search, bookings, room
 pricing (31 categories via occupancy sweep), products.
 
-`offers` is implemented against the current endpoint and returns
-`outcome: 'none'` for the account tested, which has no active offers. The mapping
-has not yet been exercised against a payload containing real offers.
+`offers` is verified against a live payload of 13 real offers, including
+free-play perks, trade-in values and a repeated offer code.
+
+One known gap: `RcOffer.sailings` is always empty. The list endpoint returns the
+key unpopulated and this API version exposes no route for an offer's eligible
+sailings — see [docs/endpoints.md](docs/endpoints.md) for what was tried.
