@@ -274,3 +274,54 @@ site sends, plus an `x-session-id` uuid (any valid one works).
 
 GraphQL reports failures **inside a 200** in an `errors[]` array, so the status
 code alone never tells you it worked.
+
+## The rest of the casino hub API
+
+The hub's bundles reference exactly fourteen casino routes. Beyond the four this
+library implements, here is what the others are, verified against the code that
+calls them and — for the reads — against live responses. **The writes are listed
+so nobody probes them by accident**: several create real state on the account.
+
+| Route | Method | Kind | What it does |
+| --- | --- | --- | --- |
+| `/v1/loyalty-data` | GET | read | Casino profile, tier, points, window. Implemented. |
+| `/v2/offers/list` | GET | read | Offers. Implemented. |
+| `/v2/offers/details` | GET | read | One grant with sailings. Implemented. |
+| `/v1/rewards/eligibility` | GET | read | Rewards Match eligibility. Live: `guestEligibleForRewardsMatch:false, guestNotEligbleReason:"ActiveOffersPresent"` — you become eligible only when you hold **no** active offers. |
+| `/v1/partners` | GET | read | The Rewards Match registry: **40 land-based casinos** (Rampart Rewards, …) with `validationRules`, `partnershipType`, `tiers`, `abbreviationCode`. No account context. |
+| `/v1/partners/player` | GET | read | Partner programmes linked to this player (empty for the account tested). |
+| `/v1/partners/player` | POST | **write** | Link a partner programme. |
+| `/v1/partners/player/remove` | POST | **write** | Unlink one. |
+| `/v1/rewards/upload-url` | GET→S3 PUT | **write** | Presigned upload for a competitor statement (Rewards Match). |
+| `/v1/rewards/generate-offer` | POST | **write** | Generates a Rewards Match offer. |
+| `/v1/booking-request` | POST | **write** | **Redeems an offer on a sailing.** GET is unrouted. |
+| `/v1/booking-request/cancel` | POST | **write** | Cancels a redemption (`{bookingRequestId, offerCode}`). |
+| `/v1/guest-account/loyalty` | PUT | **write** | Updates the guest's loyalty numbers. |
+| `/v1/guest-account/loyalty/enrollment` | POST | **write** | Enrols in Club Royale. |
+
+Also present only as a react-query key (`loyalty-number/lookup`); its fetcher is
+in an enrollment chunk not served outside that flow.
+
+### Redemptions in progress are already in the list payload
+
+Each offer carries `bookingRequest: []`. The hub reads a non-empty array as a
+redemption **in progress** (`errorType: "IN_PROGRESS"`, and it hides the
+redeem button). So "is this grant being used right now" needs no extra call —
+read the array. Shape unobserved: every grant seen was `[]`.
+
+### An offer sailing's `itineraryCode` is the room-pricing `packageCode`
+
+Verified live on four sailings: `rooms({ packageCode: sailing.itineraryCode,
+sailDate })` returns the sailing's cabins and prices (11–16 categories each).
+That makes **every offer sailing priceable** with the itinerary API this library
+already wraps: the cash price of the room type an offer comps, and the upgrade
+cost from it, per sailing. A sailing inside roughly a week of departure returns
+zero rooms — it is closed to online booking, not a bad code.
+
+### Deep link to a sailing's itinerary page
+
+The hub builds it as
+`https://www.royalcaribbean.com/itinerary/{nights}-night-{itinerary}-from-{port}-on-{ship}-{ITINERARYCODE}`
+with lowercase-hyphen slugs, only the **first word** of the port, and the code
+uppercased. `…/3-night-ensenada-cruise-from-los-on-quantum-of-the-seas-QN03X037`
+resolves to the real page. Ships: `…/cruise-ships/{ship-slug}`.
