@@ -533,84 +533,6 @@
         },
         {
           "accessible": false,
-          "id": "Y78K",
-          "baseId": "AC-HUB-OBACT-004001",
-          "defaultVariantId": "Y78K",
-          "defaultVariantTitle": null,
-          "variantIdList": [
-            "Y78K"
-          ],
-          "productTypeCategory": {
-            "id": "pt_onboardActivities",
-            "categoryDisplayName": null
-          },
-          "merchandisingCategory": null,
-          "title": "Women of Wine Tasting Experience",
-          "media": [
-            {
-              "source": {
-                "path": "/content/dam/commerce/products/royal/beverage-packages/royal-only-women-of-wine-tasting-experience.jpg",
-                "altText": "Different color wines for a tasting while one glass of white is being poured.",
-                "imagePlacement": null,
-                "customDuration": null
-              },
-              "primary": false,
-              "type": "IMAGE"
-            }
-          ],
-          "recommended": false,
-          "mostPopular": false,
-          "favorited": false,
-          "references": [],
-          "quantityType": null,
-          "consumerInterests": [],
-          "stock": {
-            "stockLevel": 9999,
-            "stockLevelStatus": "inStock",
-            "doesStockOwnershipMatchEnvironment": true
-          },
-          "promoDescription": null,
-          "complimentary": false,
-          "alaCarte": false,
-          "dueAtVenue": false,
-          "diningType": null,
-          "salesUnit": "PER_SEAT",
-          "additionalInformation": null,
-          "atYourLeisure": false,
-          "cancellationEnabled": false,
-          "durationValues": [
-            "< 3 hours"
-          ],
-          "unit": {
-            "code": "perSeat",
-            "name": "Per Seat"
-          },
-          "baseOptions": null,
-          "subCategoryCodes": [
-            "m_beverageExperiences"
-          ],
-          "lowestAdultPrice": 50,
-          "msrpAdultPrice": 50,
-          "adultTax": null,
-          "availableInventory": 9999,
-          "currency": "USD",
-          "availableDays": [
-            3
-          ],
-          "promoTagType": null,
-          "recommendedModel": null,
-          "priceRollupType": "TAX_ROLLUP",
-          "productBookingStatus": null,
-          "dayPorts": [
-            {
-              "day": 3,
-              "name": "Day 3 | CRUISING",
-              "port": "CRUISING"
-            }
-          ]
-        },
-        {
-          "accessible": false,
           "id": "Y78R",
           "baseId": "AC-HUB-OBACT-004008",
           "defaultVariantId": "Y78R",
@@ -689,113 +611,24 @@
         },
         {
           "accessible": false,
-          "id": "Y8TT",
-          "baseId": "BV-HUB-999-003601",
-          "defaultVariantId": "Y8TT",
+          "id": "Y78K",
+          "baseId": "AC-HUB-OBACT-004001",
+          "defaultVariantId": "Y78K",
           "defaultVariantTitle": null,
           "variantIdList": [
-            "Y8TT",
-            "Y8TU"
-          ],
-          "productTypeCategory": {
-            "id": "pt_beverage",
-            "categoryDisplayName": null
-          },
-          "merchandisingCategory": null,
-          "title": "San Pellegrino Sparkling Water Delivery (8 or 12 Bottles)",
-          "media": [
-            {
-              "source": {
-                "path": "/content/dam/commerce/products/royal/beverage-packages/2024/royal-only-san-pellegrino-sparkling-water-package-tripplet.jpg",
-                "altText": "San Pellegrino Sparkling Water bottles on a blue wavy background.",
-                "imagePlacement": null,
-                "customDuration": null
-              },
-              "primary": false,
-              "type": "IMAGE"
-            }
-          ],
-          "recommended": false,
-          "mostPopular": false,
-          "favorited": false,
-          "references": [],
-          "quantityType": null,
-          "consumerInterests": [],
-          "stock": {
-            "stockLevel": 9999,
-            "stockLevelStatus": "inStock",
-            "doesStockOwnershipMatchEnvironment": true
-          },
-          "promoDescription": {
-            "code": "SEP_2026_1_FS_R_BV_SPARKLINGWATER_090326_20",
-            "title": "Sparkling Water FS Promo 20% Off",
-            "promotionType": "PERCENT_OFF",
-            "startDate": null,
-            "endDate": null,
-            "description": "PRE-CRUISE SAVINGS",
-            "displayName": "(20% OFF) PRE-CRUISE SAVINGS",
-            "promotionValue": 20,
-            "discountedValue": 5.01
-          },
-          "complimentary": false,
-          "alaCarte": false,
-          "dueAtVenue": false,
-          "diningType": null,
-          "salesUnit": "PER_UNIT",
-          "additionalInformation": null,
-          "atYourLeisure": false,
-          "cancellationEnabled": false,
-          "durationValues": null,
-          "unit": {
-            "code": "perUnit",
-            "name": "Per Person"
-          },
-          "baseOptions": null,
-          "subCategoryCodes": [
-            "m_NonAlcoholicBeveragePackages"
-          ],
-          "lowestAdultPrice": 16.99,
-          "msrpAdultPrice": 22,
-          "adultTax": null,
-          "availableInventory": 9999,
-          "currency": "USD",
-          "availableDays": null,
-          "promoTagType": null,
-          "recommendedModel": null,
-          "priceRollupType": "TAX_ROLLUP",
-          "productBookingStatus": null,
-          "dayPorts": null
-        },
-        {
-          "accessible": false,
-          "id": "YN1W",
-          "baseId": "AC-HUB-OBACT-009601",
-          "defaultVariantId": "YN1W",
-          "defaultVariantTitle": null,
-          "variantIdList": [
-            "YN1W"
+            "Y78K"
           ],
           "productTypeCategory": {
             "id": "pt_onboardActivities",
             "categoryDisplayName": null
           },
           "merchandisingCategory": null,
-          "title": "Jack Daniel’s Bonded Series Immersive Whiskey Tasting",
+          "title": "Women of Wine Tasting Experience",
           "media": [
             {
               "source": {
-                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/08/royal-only-jack-daniels-bonded-series-immersive-whiskey-tasting-bottles.jpg",
-                "altText": "3 Bottles of Jack Daniel's Whiskey in different varieties.",
-                "imagePlacement": null,
-                "customDuration": null
-              },
-              "primary": false,
-              "type": "IMAGE"
-            },
-            {
-              "source": {
-                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/08/royal-only-jack-daniels-bonded-series-immersive-whiskey-tasting-generic.jpg",
-                "altText": "Two shots of whiskey being poured into shot glasses.",
+                "path": "/content/dam/commerce/products/royal/beverage-packages/royal-only-women-of-wine-tasting-experience.jpg",
+                "altText": "Different color wines for a tasting while one glass of white is being poured.",
                 "imagePlacement": null,
                 "customDuration": null
               },
@@ -834,13 +667,13 @@
           "subCategoryCodes": [
             "m_beverageExperiences"
           ],
-          "lowestAdultPrice": 60,
-          "msrpAdultPrice": 60,
+          "lowestAdultPrice": 50,
+          "msrpAdultPrice": 50,
           "adultTax": null,
           "availableInventory": 9999,
           "currency": "USD",
           "availableDays": [
-            2
+            3
           ],
           "promoTagType": null,
           "recommendedModel": null,
@@ -848,8 +681,8 @@
           "productBookingStatus": null,
           "dayPorts": [
             {
-              "day": 2,
-              "name": "Day 2 | CRUISING",
+              "day": 3,
+              "name": "Day 3 | CRUISING",
               "port": "CRUISING"
             }
           ]
@@ -964,6 +797,182 @@
         },
         {
           "accessible": false,
+          "id": "YN1W",
+          "baseId": "AC-HUB-OBACT-009601",
+          "defaultVariantId": "YN1W",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "YN1W"
+          ],
+          "productTypeCategory": {
+            "id": "pt_onboardActivities",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Jack Daniel’s Bonded Series Immersive Whiskey Tasting",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/08/royal-only-jack-daniels-bonded-series-immersive-whiskey-tasting-bottles.jpg",
+                "altText": "3 Bottles of Jack Daniel's Whiskey in different varieties.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/08/royal-only-jack-daniels-bonded-series-immersive-whiskey-tasting-generic.jpg",
+                "altText": "Two shots of whiskey being poured into shot glasses.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": null,
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_SEAT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": [
+            "< 3 hours"
+          ],
+          "unit": {
+            "code": "perSeat",
+            "name": "Per Seat"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_beverageExperiences"
+          ],
+          "lowestAdultPrice": 60,
+          "msrpAdultPrice": 60,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": [
+            2
+          ],
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": [
+            {
+              "day": 2,
+              "name": "Day 2 | CRUISING",
+              "port": "CRUISING"
+            }
+          ]
+        },
+        {
+          "accessible": false,
+          "id": "Y966",
+          "baseId": "AC-HUB-OBACT-007401",
+          "defaultVariantId": "Y966",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "Y966"
+          ],
+          "productTypeCategory": {
+            "id": "pt_onboardActivities",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "The Macallan Scotch Whiskey Tasting Experience",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/01/royal-only-macallan-scotch-whiskey-tasting-experience.jpg",
+                "altText": "Three bottles of Macallan Scotch Whiskey on a wooden table.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/01/royal-only-macallan-scotch-whiskey-tasting-experience-glasses.jpg",
+                "altText": "Glasses of Macallan Scotch Whiskey on a table.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": null,
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_SEAT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": [
+            "< 3 hours"
+          ],
+          "unit": {
+            "code": "perSeat",
+            "name": "Per Seat"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_beverageExperiences"
+          ],
+          "lowestAdultPrice": 60,
+          "msrpAdultPrice": 60,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": [
+            3
+          ],
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": [
+            {
+              "day": 3,
+              "name": "Day 3 | CRUISING",
+              "port": "CRUISING"
+            }
+          ]
+        },
+        {
+          "accessible": false,
           "id": "Y7Q1",
           "baseId": "AC-HUB-OBACT-005111",
           "defaultVariantId": "Y7Q1",
@@ -1064,34 +1073,25 @@
         },
         {
           "accessible": false,
-          "id": "Y966",
-          "baseId": "AC-HUB-OBACT-007401",
-          "defaultVariantId": "Y966",
+          "id": "Y8TT",
+          "baseId": "BV-HUB-999-003601",
+          "defaultVariantId": "Y8TT",
           "defaultVariantTitle": null,
           "variantIdList": [
-            "Y966"
+            "Y8TT",
+            "Y8TU"
           ],
           "productTypeCategory": {
-            "id": "pt_onboardActivities",
+            "id": "pt_beverage",
             "categoryDisplayName": null
           },
           "merchandisingCategory": null,
-          "title": "The Macallan Scotch Whiskey Tasting Experience",
+          "title": "San Pellegrino Sparkling Water Delivery (8 or 12 Bottles)",
           "media": [
             {
               "source": {
-                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/01/royal-only-macallan-scotch-whiskey-tasting-experience.jpg",
-                "altText": "Three bottles of Macallan Scotch Whiskey on a wooden table.",
-                "imagePlacement": null,
-                "customDuration": null
-              },
-              "primary": false,
-              "type": "IMAGE"
-            },
-            {
-              "source": {
-                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/01/royal-only-macallan-scotch-whiskey-tasting-experience-glasses.jpg",
-                "altText": "Glasses of Macallan Scotch Whiskey on a table.",
+                "path": "/content/dam/commerce/products/royal/beverage-packages/2024/royal-only-san-pellegrino-sparkling-water-package-tripplet.jpg",
+                "altText": "San Pellegrino Sparkling Water bottles on a blue wavy background.",
                 "imagePlacement": null,
                 "customDuration": null
               },
@@ -1110,45 +1110,45 @@
             "stockLevelStatus": "inStock",
             "doesStockOwnershipMatchEnvironment": true
           },
-          "promoDescription": null,
+          "promoDescription": {
+            "code": "SEP_2026_1_FS_R_BV_SPARKLINGWATER_090326_20",
+            "title": "Sparkling Water FS Promo 20% Off",
+            "promotionType": "PERCENT_OFF",
+            "startDate": null,
+            "endDate": null,
+            "description": "PRE-CRUISE SAVINGS",
+            "displayName": "(20% OFF) PRE-CRUISE SAVINGS",
+            "promotionValue": 20,
+            "discountedValue": 5.01
+          },
           "complimentary": false,
           "alaCarte": false,
           "dueAtVenue": false,
           "diningType": null,
-          "salesUnit": "PER_SEAT",
+          "salesUnit": "PER_UNIT",
           "additionalInformation": null,
           "atYourLeisure": false,
           "cancellationEnabled": false,
-          "durationValues": [
-            "< 3 hours"
-          ],
+          "durationValues": null,
           "unit": {
-            "code": "perSeat",
-            "name": "Per Seat"
+            "code": "perUnit",
+            "name": "Per Person"
           },
           "baseOptions": null,
           "subCategoryCodes": [
-            "m_beverageExperiences"
+            "m_NonAlcoholicBeveragePackages"
           ],
-          "lowestAdultPrice": 60,
-          "msrpAdultPrice": 60,
+          "lowestAdultPrice": 16.99,
+          "msrpAdultPrice": 22,
           "adultTax": null,
           "availableInventory": 9999,
           "currency": "USD",
-          "availableDays": [
-            3
-          ],
+          "availableDays": null,
           "promoTagType": null,
           "recommendedModel": null,
           "priceRollupType": "TAX_ROLLUP",
           "productBookingStatus": null,
-          "dayPorts": [
-            {
-              "day": 3,
-              "name": "Day 3 | CRUISING",
-              "port": "CRUISING"
-            }
-          ]
+          "dayPorts": null
         },
         {
           "accessible": false,

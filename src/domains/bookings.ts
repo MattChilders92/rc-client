@@ -5,15 +5,40 @@ import { request } from '../http.ts';
 /**
  * The guest's own reservations.
  *
- * Useful beyond listing trips: each booking carries the ship code, package code
- * and sail date needed to price cabins or products for that sailing, so a
- * tracker can discover what to watch instead of being told.
+ * There are two endpoints and they are **not** interchangeable:
+ *
+ *   /v1/profileBookings/{accountId}            the links — always populated
+ *   /v1/profileBookings/enriched/{accountId}   the links plus sailing detail
+ *
+ * `enriched` is the one every existing implementation calls, and it can return
+ * an empty array while the plain endpoint returns real bookings for the same
+ * account. Observed live: a valid upcoming reservation appears under the plain
+ * path and is absent from `enriched`. So the plain path is the source of truth
+ * for *which* bookings exist, and enrichment is layered on when it works.
+ *
+ * The link record carries placeholder values for `shipCode`, `sailDate` and
+ * `numberOfNights` — a real 2026 booking came back as ship "NC" sailing in 2039.
+ * Those are reported only when enrichment supplied them, which each booking's
+ * `enriched` flag tells you.
  */
 
 const BASE = 'https://aws-prd.api.rccl.com';
 
 export interface RcBooking {
-  reservationId: string;
+  /** Reservation number, as printed on the booking confirmation. */
+  bookingId: string;
+  passengerId: string | null;
+  consumerId: string | null;
+  brand: string | null;
+  /** How the booking came to be attached to the profile. */
+  linkType: string | null;
+
+  /**
+   * True when the sailing details below came from the enriched endpoint. When
+   * false every sailing field is null: the link record's own values are
+   * placeholders and are deliberately not passed through.
+   */
+  enriched: boolean;
   shipCode: string | null;
   shipName: string | null;
   packageCode: string | null;
@@ -23,69 +48,123 @@ export interface RcBooking {
   itineraryName: string | null;
   stateroomNumber: string | null;
   stateroomCategory: string | null;
-  guestCount: number | null;
+
   raw: unknown;
 }
 
 const str = (v: unknown): string | null =>
   v === null || v === undefined || v === '' ? null : String(v);
 
+/** Royal writes dates as `YYYYMMDD` here and ISO elsewhere. */
 const day = (v: unknown): string | null => {
   const s = str(v);
   if (!s) return null;
+  const compact = s.match(/^(\d{4})(\d{2})(\d{2})$/);
+  if (compact) return `${compact[1]}-${compact[2]}-${compact[3]}`;
   const d = new Date(s);
   return Number.isNaN(d.getTime()) ? null : d.toISOString().slice(0, 10);
 };
 
-function mapBooking(b: any): RcBooking {
-  const sailing = b?.sailing ?? b?.cruise ?? {};
-  const room = b?.stateroom ?? b?.cabin ?? {};
+function fromLink(link: any): RcBooking {
   return {
-    reservationId: String(b?.reservationId ?? b?.bookingId ?? b?.id ?? ''),
-    shipCode: str(sailing.shipCode ?? b?.shipCode),
-    shipName: str(sailing.shipName ?? b?.shipName),
-    packageCode: str(sailing.packageCode ?? b?.packageCode),
-    sailDate: day(sailing.sailDate ?? b?.sailDate ?? b?.departureDate),
-    returnDate: day(sailing.returnDate ?? b?.returnDate),
-    nights: b?.nights === undefined ? null : Number(b.nights) || null,
-    itineraryName: str(sailing.itineraryName ?? b?.itineraryName),
-    stateroomNumber: str(room.number ?? b?.stateroomNumber),
-    stateroomCategory: str(room.category ?? b?.stateroomCategory),
-    guestCount: Array.isArray(b?.guests) ? b.guests.length : null,
-    raw: b,
+    bookingId: String(link?.bookingId ?? link?.reservationId ?? ''),
+    passengerId: str(link?.passengerId),
+    consumerId: str(link?.consumerId),
+    brand: str(link?.brand),
+    linkType: str(link?.linkType),
+    enriched: false,
+    shipCode: null,
+    shipName: null,
+    packageCode: null,
+    sailDate: null,
+    returnDate: null,
+    nights: null,
+    itineraryName: null,
+    stateroomNumber: null,
+    stateroomCategory: null,
+    raw: link,
+  };
+}
+
+function applyEnrichment(booking: RcBooking, detail: any): RcBooking {
+  const sailing = detail?.sailing ?? detail?.cruise ?? detail ?? {};
+  const room = detail?.stateroom ?? detail?.cabin ?? {};
+  return {
+    ...booking,
+    enriched: true,
+    shipCode: str(sailing.shipCode ?? detail?.shipCode),
+    shipName: str(sailing.shipName ?? detail?.shipName),
+    packageCode: str(sailing.packageCode ?? detail?.packageCode),
+    sailDate: day(sailing.sailDate ?? detail?.sailDate ?? detail?.startDate),
+    returnDate: day(sailing.returnDate ?? detail?.endDate),
+    nights: detail?.numberOfNights === undefined ? null : Number(detail.numberOfNights) || null,
+    itineraryName: str(sailing.itineraryName ?? detail?.itineraryName),
+    stateroomNumber: str(room.number ?? detail?.stateroomNumber),
+    stateroomCategory: str(room.category ?? detail?.stateroomCategory),
+    raw: { link: booking.raw, detail },
   };
 }
 
 export interface ListBookingsOptions {
   brand?: 'R' | 'C';
-  includeCheckin?: boolean;
+  /**
+   * Skip the enrichment call. The links alone say which reservations exist, and
+   * enrichment is an extra round trip that frequently returns nothing.
+   */
+  linksOnly?: boolean;
 }
 
 /**
- * Reservations linked to the online profile.
+ * Every booking attached to the profile.
  *
- * Note that a booking made by phone or through a casino host is not necessarily
- * attached to the web account: such a profile returns 200 with an empty list,
- * which is a real answer and not an error.
+ * An account with genuinely nothing linked returns an empty array with
+ * `errors: []` — a real answer, not a failure.
  */
 export async function listBookings(
   session: RcSession,
   opts: ListBookingsOptions = {},
 ): Promise<RcBooking[]> {
-  const url =
-    `${BASE}/v1/profileBookings/enriched/${encodeURIComponent(session.accountId)}` +
-    `?brand=${opts.brand ?? 'R'}&includeCheckin=${opts.includeCheckin ?? true}`;
+  const brand = opts.brand ?? 'R';
+  const headers = {
+    ...commerceHeaders(session),
+    // The bookings service expects the customer-journey app identity.
+    'req-app-id': 'Royal.Web.CustomerJourney',
+    'req-app-vers': '1.0.7',
+    'vds-id': session.accountId,
+  };
 
-  const res = await request<any>(url, {
-    headers: commerceHeaders(session),
-    // An account with no reservations, rather than a missing route.
-    allowStatus: [404],
-  });
-  if (res.status === 404) return [];
+  const links = await request<any>(
+    `${BASE}/v1/profileBookings/${encodeURIComponent(session.accountId)}?brand=${brand}`,
+    { headers, allowStatus: [404] },
+  );
+  if (links.status === 404) return [];
 
-  // The list is `payload.profileBookings`. An account with nothing linked
-  // returns 200 with an empty array and `errors: []` — a genuine "none",
-  // distinct from a failure.
-  const list: any[] = res.data?.payload?.profileBookings ?? [];
-  return list.map(mapBooking).filter((b) => b.reservationId);
+  const list: any[] = links.data?.payload?.profileBookings ?? [];
+  const bookings = list
+    .filter((l) => l && l.deleted !== true)
+    .map(fromLink)
+    .filter((b) => b.bookingId);
+
+  if (opts.linksOnly || bookings.length === 0) return bookings;
+
+  // Enrichment is best-effort: it returns an empty list often enough that a
+  // failure here must not lose the bookings already known.
+  try {
+    const enriched = await request<any>(
+      `${BASE}/v1/profileBookings/enriched/${encodeURIComponent(session.accountId)}` +
+      `?brand=${brand}&includeCheckin=true`,
+      { headers, allowStatus: [404] },
+    );
+    const details: any[] = enriched.data?.payload?.profileBookings ?? [];
+    const byId = new Map(
+      details.map((d) => [String(d?.bookingId ?? d?.reservationId ?? ''), d]),
+    );
+
+    return bookings.map((b) => {
+      const detail = byId.get(b.bookingId);
+      return detail ? applyEnrichment(b, detail) : b;
+    });
+  } catch {
+    return bookings;
+  }
 }

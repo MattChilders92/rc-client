@@ -5,7 +5,22 @@
     "errors": [],
     "payload": {
       "vdsId": "REDACTED",
-      "profileBookings": []
+      "profileBookings": [
+        {
+          "vdsId": "REDACTED",
+          "bookingId": "REDACTED",
+          "brand": "R",
+          "consumerId": "REDACTED",
+          "deleted": false,
+          "linkFlow": "auto",
+          "linkType": "SELF_ENHANCED",
+          "numberOfNights": 1,
+          "passengerId": "REDACTED",
+          "preferred": true,
+          "sailDate": "20390707",
+          "shipCode": "NC"
+        }
+      ]
     }
   }
 }

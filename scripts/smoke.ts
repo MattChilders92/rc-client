@@ -64,12 +64,14 @@ console.log('\n— bookings —');
 const bookings = await rc.bookings();
 line('count', String(bookings.length));
 for (const b of bookings.slice(0, 5)) {
-  line(b.reservationId, `${b.shipName ?? b.shipCode ?? '?'} ${b.sailDate ?? ''} ${b.packageCode ?? ''}`.trim());
+  line(b.bookingId, b.enriched
+    ? `${b.shipName ?? b.shipCode ?? '?'} ${b.sailDate ?? ''} ${b.packageCode ?? ''}`.trim()
+    : `link only (${b.linkType ?? 'unknown'}) — enrichment returned nothing`);
 }
 
 // Prefer a real booking, but fall back to a known on-sale sailing so the
 // pricing domains are still exercised on an account with nothing linked.
-const target = bookings.find((b) => b.packageCode && b.sailDate) ?? {
+const target = bookings.find((b) => b.enriched && b.packageCode && b.sailDate) ?? {
   shipCode: process.env.SMOKE_SHIP ?? 'LE',
   packageCode: process.env.SMOKE_PACKAGE ?? 'LE08D147',
   sailDate: process.env.SMOKE_SAIL_DATE ?? '2026-11-14',

@@ -145,9 +145,19 @@ test('products read the real price field, not the list price', async () => {
   assert.ok(deluxe.price! < deluxe.msrp!, 'price must be the discounted figure');
 });
 
-test('bookings read payload.profileBookings and an empty profile is not an error', async () => {
+test('bookings come from the plain endpoint, which the enriched one can miss', async () => {
+  // The link record is what actually lists a reservation; `enriched` returned an
+  // empty array for this very account while the plain path returned the booking.
   stub('bookings');
-  const bookings = await listBookings(session);
-  // The captured account has nothing linked: a clean 200 with an empty array.
-  assert.ok(Array.isArray(bookings));
+  const bookings = await listBookings(session, { linksOnly: true });
+
+  assert.ok(bookings.length > 0, 'the plain endpoint lists the reservation');
+  const booking = bookings[0];
+  assert.ok(booking.bookingId, 'a reservation number is the point of this call');
+  assert.equal(booking.enriched, false);
+
+  // The link's own ship and date are placeholders — a 2026 booking reports ship
+  // "NC" sailing in 2039 — so they must never be surfaced as real.
+  assert.equal(booking.shipCode, null);
+  assert.equal(booking.sailDate, null);
 });

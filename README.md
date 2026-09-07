@@ -32,6 +32,9 @@ independently broke. Two concrete costs:
 - The casino offers endpoint moved. Older code still calls the dead route, which
   answers `404` — and because it also treats `404` as "no offers", it silently
   reported zero offers instead of failing.
+- Bookings have two endpoints, and the `enriched` one that every existing
+  implementation calls returns an empty list for an account that does have
+  bookings. The plain endpoint returns them.
 - Room and product prices each have a headline field that is **not** the price.
   Reading `cruiseFare` instead of `pricing.amount` overstates a cabin by ~20%.
 
@@ -107,8 +110,8 @@ with the real payload instead of reaching production.
 
 ## Status
 
-Verified live: auth, account, casino loyalty, cruise search, bookings (returns a
-clean empty list for a profile with nothing linked), room pricing, products.
+Verified live: auth, account, casino loyalty, cruise search, bookings, room
+pricing (31 categories via occupancy sweep), products.
 
 `offers` is implemented against the current endpoint and returns
 `outcome: 'none'` for the account tested, which has no active offers. The mapping

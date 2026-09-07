@@ -141,16 +141,38 @@ Categories: `beverage`, `shorex`, `internet`, `dining`.
 
 ## Bookings
 
+Two endpoints, and they are **not** interchangeable:
+
 ```
-GET aws-prd.api.rccl.com/v1/profileBookings/enriched/{accountId}   [commerce]
-    ?brand=R &includeCheckin=true
+GET aws-prd.api.rccl.com/v1/profileBookings/{accountId}?brand=R          [commerce]
+GET aws-prd.api.rccl.com/v1/profileBookings/enriched/{accountId}?brand=R [commerce]
 ```
+
+Also send `req-app-id: Royal.Web.CustomerJourney`, `req-app-vers: 1.0.7` and
+`vds-id: {accountId}` — the bookings service expects the customer-journey app
+identity.
 
 The list is `payload.profileBookings`, not `payload.bookings`.
 
-A booking made by phone or through a casino host is not necessarily linked to the
-online profile: such an account returns `200` with an empty array and
-`errors: []`. That is a real answer, not a failure.
+**`enriched` can return an empty array for an account that demonstrably has
+bookings.** Verified live: a real upcoming reservation appears under the plain
+path and is absent from `enriched`, with `status: 200, errors: []` in both cases.
+Every existing implementation calls only `enriched`, so any of them would report
+that account as having no bookings at all.
+
+Use the plain path to learn *which* bookings exist, and treat enrichment as
+best-effort detail on top.
+
+The link record's own sailing fields are placeholders — a genuine 2026 booking
+comes back as ship `NC` sailing `20390707` for 1 night — so `shipCode`,
+`sailDate` and `numberOfNights` must not be trusted unless enrichment supplied
+them. Dates here are `YYYYMMDD`, not ISO.
+
+No per-booking detail endpoint was found: `/v1/bookings/{id}`,
+`/v1/guestBookings/{id}`, `/en/royal/web/v{1,3}/bookings/{id}` and
+`/v1/profileBookings/{accountId}/{bookingId}` are all absent. The commerce
+`calendar/v1/{shipCode}/orderHistory/{orderEntryId}` endpoint exists but needs an
+`orderEntryId` that nothing else returns.
 
 ## Cruise search
 

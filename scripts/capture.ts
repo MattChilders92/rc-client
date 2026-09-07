@@ -107,9 +107,22 @@ await grab('offers', 'https://www.royalcaribbean.com/api/casino/v2/offers/merged
   }),
 });
 
+// The plain endpoint, not `enriched` — the latter can return an empty list for
+// an account that demonstrably has bookings.
+const bookingHeaders = {
+  ...commerceHeaders(session),
+  'req-app-id': 'Royal.Web.CustomerJourney',
+  'req-app-vers': '1.0.7',
+  'vds-id': session.accountId,
+};
+
 await grab('bookings',
+  `https://aws-prd.api.rccl.com/v1/profileBookings/${session.accountId}?brand=R`,
+  { headers: bookingHeaders });
+
+await grab('bookings-enriched',
   `https://aws-prd.api.rccl.com/v1/profileBookings/enriched/${session.accountId}?brand=R&includeCheckin=true`,
-  { headers: commerceHeaders(session) });
+  { headers: bookingHeaders });
 
 // A sailing that is reliably on sale, so room and product fixtures stay stable.
 const SHIP = process.env.CAPTURE_SHIP ?? 'LE';
