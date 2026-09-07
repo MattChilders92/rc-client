@@ -94,6 +94,27 @@ test('the header repeats on every page and duplicate rows across pages collapse'
   assert.equal(sailings[0]!.isGuarantee, false);
 });
 
+test('cells centred under their headers still land in the right column (real 2609C10 geometry)', () => {
+  // Transcribed from the live tier-10 PDF: every cell is centred, so the ship
+  // name starts left of the "Ship" header, and this tier has no FreePlay
+  // column — Royal merges its label into the stateroom header.
+  const page: PageLines = [
+    row(1554, [[234, 'Offer Code'], [482, 'Ship'], [681, 'Departure Port'], [931, 'Sail Date'], [1234, 'Itinerary'],
+      [1483, 'Next Cruise Bonus Stateroom Type'], [1896, 'Offer Type'], [2135, 'Next Cruise OBC']]),
+    row(1528, [[243, ''], [243, '2609C10'], [408, 'Freedom Of The Seas®'], [684, 'Miami, Florida'], [890, 'September 5, 2026'],
+      [1114, '5 Night Bahamas & Perfect Day Cruise'], [1574, 'Interior - GTY'], [1845, 'Cruise Fare For 1 Guest'], [2188, '$25']]),
+    row(1484, [[243, '2609C10'], [404, 'Navigator Of The Seas®'], [652, 'Los Angeles, California'], [885, 'September 25, 2026'],
+      [1122, '7 Night Ensenada, Cabo & Mazatlan'], [1574, 'Interior - GTY'], [1845, 'Cruise Fare For 1 Guest'], [2188, '$50']]),
+  ];
+  const { sailings } = parseTierPages([page]);
+  assert.equal(sailings.length, 2);
+  assert.deepEqual(sailings.map((s) => [s.shipName, s.departurePort, s.sailDate, s.nights, s.roomType, s.freePlay, s.onboardCredit]), [
+    ['Freedom Of The Seas', 'Miami, Florida', '2026-09-05', 5, 'INTERIOR', null, 25],
+    ['Navigator Of The Seas', 'Los Angeles, California', '2026-09-25', 7, 'INTERIOR', null, 50],
+  ]);
+  assert.equal(sailings[0]!.secondGuestPays, true);
+});
+
 test('dates and room types normalise the way the pricing side expects', () => {
   assert.equal(normalizeSailDate('September 1, 2026'), '2026-09-01');
   assert.equal(normalizeSailDate('10/5/2026'), '2026-10-05');

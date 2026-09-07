@@ -38,7 +38,7 @@ export { listBookings, type RcBooking, type ListBookingsOptions } from './domain
 export {
   INSTANT_PDF_BASE, INSTANT_SUFFIXES, DEFAULT_TIERS, campaignCode, campaignPdfUrl, tierPdfUrl,
   splitOfferCode, candidateCampaigns, discoverInstantCampaigns, downloadPdf,
-  parseCampaignPage, parseTierPages, normalizeSailDate, tierTradeInValue,
+  parseCampaignPage, parseTierPages, normalizeSailDate, tierTradeInValue, instantSailingKey,
   type InstantSuffix, type CandidateCampaign, type InstantTier, type InstantSailing, type TierParse,
   type TextCell, type TextLine, type PageLines,
 } from './domains/certificates.ts';

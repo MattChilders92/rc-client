@@ -136,7 +136,8 @@ export async function downloadPdf(url: string): Promise<Uint8Array> {
 
 /* ── Parsing, over extracted text positions ───────────────────────────────── */
 
-export interface TextCell { x: number; str: string }
+/** A text item: its left edge, its text, and (when the extractor knows it) its width. */
+export interface TextCell { x: number; str: string; w?: number }
 /** One visual line of a page: cells left to right. */
 export interface TextLine { y: number; cells: TextCell[] }
 export type PageLines = TextLine[];
@@ -236,6 +237,14 @@ export function normalizeSailDate(raw: string): string | null {
   return null;
 }
 
+/**
+ * Identity of a sailing line within a tier PDF. The store keys rows on this
+ * too, so the parser's dedupe and the database's conflict target cannot drift.
+ */
+export function instantSailingKey(s: Pick<InstantSailing, 'shipName' | 'sailDate' | 'stateroomType' | 'offerType'>): string {
+  return `${s.shipName}|${s.sailDate ?? ''}|${s.stateroomType}|${s.offerType}`;
+}
+
 export function roomTypeOf(stateroom: string): string {
   const u = stateroom.toUpperCase();
   if (u.includes('INTERIOR') || u.includes('INSIDE')) return 'INTERIOR';
@@ -255,16 +264,22 @@ const HEADER_KEYS: Record<string, keyof RawRow> = {
   itinerary: 'itinerary', 'stateroom type': 'stateroom', 'offer type': 'offerType',
   'next cruise bonus': 'bonus', 'next cruise obc': 'obc',
   'next cruise bonus stateroom type': 'stateroom',
+  // Some tiers label the stateroom column just "Offer" and carry no offer-type column.
+  offer: 'stateroom',
 };
 interface RawRow {
   offerCode?: string; ship?: string; port?: string; sailDate?: string; itinerary?: string;
   stateroom?: string; offerType?: string; bonus?: string; obc?: string;
 }
 
+const center = (c: TextCell) => c.x + (c.w ?? 0) / 2;
+
 /**
  * A tier PDF: every page repeats the header, and each cell of each row is its
- * own text item. A cell belongs to the header column it sits under, so a long
- * itinerary split across two items still lands in one column.
+ * own text item. Royal centres every cell under its header, so a cell belongs
+ * to the header whose centre is nearest its own — a long itinerary split
+ * across two items still lands in one column, and a ship name that starts
+ * left of the "Ship" header is still the ship.
  */
 export function parseTierPages(pages: PageLines[]): TierParse {
   const sailings: InstantSailing[] = [];
@@ -281,7 +296,7 @@ export function parseTierPages(pages: PageLines[]): TierParse {
 
       if (first === 'offer code') {
         columns = cells
-          .map((c) => ({ x: c.x, key: HEADER_KEYS[c.str.trim().toLowerCase()] }))
+          .map((c) => ({ x: center(c), key: HEADER_KEYS[c.str.trim().toLowerCase()] }))
           .filter((c): c is { x: number; key: keyof RawRow } => !!c.key);
         continue;
       }
@@ -292,10 +307,9 @@ export function parseTierPages(pages: PageLines[]): TierParse {
 
       const row: RawRow = {};
       for (const cell of cells) {
-        // The nearest header at or left of the cell; a cell left of every
-        // header belongs to the first column.
+        const x = center(cell);
         let col = columns[0]!;
-        for (const c of columns) if (c.x <= cell.x + 2) col = c;
+        for (const c of columns) if (Math.abs(c.x - x) < Math.abs(col.x - x)) col = c;
         row[col.key] = row[col.key] ? `${row[col.key]} ${cell.str.trim()}` : cell.str.trim();
       }
       if (!row.offerCode || !row.ship || !row.sailDate) continue;
@@ -317,13 +331,15 @@ export function parseTierPages(pages: PageLines[]): TierParse {
         freePlay: money(row.bonus),
         onboardCredit: money(row.obc),
       };
-      const key = `${sailing.offerCode}|${sailing.shipName}|${sailing.sailDate}|${sailing.stateroomType}`;
+      const key = instantSailingKey(sailing);
       if (seen.has(key)) continue;
       seen.add(key);
       sailings.push(sailing);
     }
   });
 
-  const description = notes.find((n) => /just pay|cruise fare|freeplay|free play/i.test(n)) ?? null;
+  // The offer's terms are the headline lines around the table, in reading order.
+  const terms = notes.filter((n) => /just pay|cruise fare|freeplay|free play/i.test(n));
+  const description = terms.length ? terms.join(' ') : null;
   return { sailings, notes, description };
 }
