@@ -117,7 +117,9 @@ with the real payload instead of reaching production.
 ## Status
 
 Verified live: auth, account, casino loyalty, cruise search, bookings, room
-pricing (31 categories via occupancy sweep), products.
+pricing (31 categories via occupancy sweep), products, offer details with
+sailings, and the public Instant Reward certificate PDFs (discovery, download
+and position-based parsing).
 
 `offers` is verified against a live payload of 13 real offers, including
 free-play perks, trade-in values and a repeated offer code.

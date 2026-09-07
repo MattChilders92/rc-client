@@ -325,3 +325,40 @@ The hub builds it as
 with lowercase-hyphen slugs, only the **first word** of the port, and the code
 uppercased. `…/3-night-ensenada-cruise-from-los-on-quantum-of-the-seas-QN03X037`
 resolves to the real page. Ships: `…/cruise-ships/{ship-slug}`.
+
+## Instant Reward Certificates (public PDFs)
+
+A second class of casino offer that appears in **no player API**. Royal
+publishes them as PDFs under a predictable path, one campaign a month per
+region, each linking to one PDF per tier. Because they are public, this is the
+one offer class where the whole catalogue — every tier — is visible.
+
+```
+campaign  https://www.royalcaribbean.com/content/dam/royal/resources/pdf/casino/offers/{YY}{MM}{suffix}.pdf
+tier      …/offers/{YY}{MM}{suffix}{tier}.pdf
+```
+
+- Suffixes seen: `A` North America 3–5 nights, `C` North America 6+, `D`
+  Europe, `CHN` China; the old platform also carried `O`, `S`, `P`, which did
+  not exist for Jul–Sep 2026. Tiers: `VIP1`, `VIP2`, `01`, `02`, `02A`, `03`,
+  `03A`, `04` … `10`, with point thresholds printed on the campaign page
+  (70,000 … 400).
+- **Discovery is by asking.** `candidateCampaigns()` generates the codes for
+  −1 … +2 months × every suffix (28 URLs); `discoverInstantCampaigns()` HEADs
+  them in batches of seven. A missing month is normal. Verified live: Jul, Aug
+  and Sep 2026 published, Oct not yet.
+- **The campaign PDF** is one page: each offer code followed by "{n} Points",
+  and a hyperlink annotation per tier PDF (every link appears twice). Codes
+  are taken from link filenames, points from the text, with `DEFAULT_TIERS` as
+  the fallback. Royal's links once carried a `CHNN` typo; it is normalised.
+- **A tier PDF** is a table repeated across pages (24 pages for `2609A04`):
+  `Offer Code · Ship · Departure Port · Sail Date · Itinerary · Stateroom Type ·
+  Offer Type · Next Cruise Bonus · Next Cruise OBC`. The last column is new
+  since the old platform's parser. Values look like `Spectrum Of The Seas®`,
+  `September 1, 2026`, `Balcony - GTY`, `Cruise Fare For 2 Guests` (or `For 1
+  Guest`: the second guest pays), `$250 FreePlay`, `$50`.
+- **Parse by position, not by tabs.** Every cell is its own text item, so a
+  cell's column is the header it sits under; the old parser split on tab
+  characters and depended on the extractor's join behaviour. This library
+  carries no PDF dependency: callers hand `parseTierPages()` the per-page
+  lines of `{x, str}` cells (CruiseWatch does that with pdf.js).

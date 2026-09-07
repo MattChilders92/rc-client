@@ -36,5 +36,12 @@ export {
 } from './domains/products.ts';
 export { listBookings, type RcBooking, type ListBookingsOptions } from './domains/bookings.ts';
 export {
+  INSTANT_PDF_BASE, INSTANT_SUFFIXES, DEFAULT_TIERS, campaignCode, campaignPdfUrl, tierPdfUrl,
+  splitOfferCode, candidateCampaigns, discoverInstantCampaigns, downloadPdf,
+  parseCampaignPage, parseTierPages, normalizeSailDate, tierTradeInValue,
+  type InstantSuffix, type CandidateCampaign, type InstantTier, type InstantSailing, type TierParse,
+  type TextCell, type TextLine, type PageLines,
+} from './domains/certificates.ts';
+export {
   searchCruises, type RcCruise, type RcSailingSummary, type SearchParams, type SearchResult,
 } from './domains/search.ts';
