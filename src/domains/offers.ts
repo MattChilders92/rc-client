@@ -25,6 +25,12 @@ import { request } from '../http.ts';
 
 const BASE = 'https://www.royalcaribbean.com/api/casino';
 const LIST = `${BASE}/v2/offers/list`;
+/**
+ * The same envelope as `list`, for one grant, with `sailings` populated and the
+ * offer-level detail fields present. Note the plural: `/details`. `/detail` is
+ * unrouted, and that single letter hid this endpoint for a full day of probing.
+ */
+const DETAILS = `${BASE}/v2/offers/details`;
 
 /** Rejected input is answered with a schema error listing these, which is how we know them. */
 export const SORT_FIELDS = [
@@ -43,14 +49,52 @@ export interface RcPerk {
   type: string | null;
 }
 
+/** One sailing an offer can be redeemed on, from `GET /v2/offers/details`. */
 export interface RcOfferSailing {
+  /** Royal's own key, `AL_MIA_2026-11-01`: ship, departure port, sail date. */
   id: string | null;
   shipCode: string | null;
+  shipName: string | null;
+  departurePort: { code: string | null; name: string | null } | null;
   sailDate: string | null;
-  roomType: string | null;
+  totalNights: number | null;
+  itineraryCode: string | null;
+  itineraryName: string | null;
+  itineraryDescription: string | null;
+  /** Marketing name for the sailing, e.g. "7 Night Eastern Caribbean Perfect Day". */
+  sailingType: string | null;
+  /** The booking group id the itinerary/room-pricing API keys on. */
+  groupId: string | null;
+  /** Room categories this offer covers on this sailing, e.g. `BALCONY`, `INTERIORGTY`. */
+  roomTypes: { code: string; name: string | null }[];
   isGuarantee: boolean;
+  /** "GOBO": buy-one-get-one on a second guest. */
+  isBogo: boolean;
   isComplimentary: boolean;
+  isDollarsOff: boolean;
   dollarsOff: number | null;
+  nextCruiseBonusPerkCode: string | null;
+  nextCruiseBonus: unknown;
+  perks: unknown;
+  raw: unknown;
+}
+
+/**
+ * The offer as `GET /v2/offers/details` returns it: everything the list carries,
+ * plus the fields only the detail exposes, plus `sailings` populated.
+ */
+export interface RcOfferDetail extends RcOffer {
+  startDate: string | null;
+  sailByDate: string | null;
+  bookingFeeAmount: number | null;
+  roomCount: number | null;
+  allowedNumberOfPerks: number | null;
+  /** How `sailings` should be read against `exclusionList`, as Royal reports it. */
+  sailingInclusionMode: string | null;
+  exclusionList: unknown;
+  descriptionList: string[];
+  tags: string[];
+  digitalRedemptionOnly: boolean;
 }
 
 export interface RcOffer {
@@ -84,9 +128,8 @@ export interface RcOffer {
   bookBy: string | null;
   perks: RcPerk[];
   /**
-   * Currently always empty: the list endpoint returns the key but never fills
-   * it, and this API version exposes no separate sailings route.
-   * @see docs/endpoints.md
+   * Always empty from the list endpoint, which returns the key unfilled. Use
+   * `fetchOfferDetail` / `RcClient.offerDetail` to get a grant's sailings.
    */
   sailings: RcOfferSailing[];
   status: string | null;
@@ -165,15 +208,54 @@ export function freePlayFrom(perks: RcPerk[]): number | null {
   return best;
 }
 
+const strList = (v: unknown): string[] =>
+  Array.isArray(v) ? v.map((x) => str(x)).filter((x): x is string => x !== null) : [];
+
 function mapSailing(s: any): RcOfferSailing {
+  const port = s?.departurePort;
   return {
     id: str(s?.id),
     shipCode: str(s?.shipCode),
+    shipName: str(s?.shipName),
+    departurePort: port ? { code: str(port.code), name: str(port.name) } : null,
     sailDate: day(s?.sailDate),
-    roomType: str(s?.roomType),
+    totalNights: int(s?.totalNights),
+    itineraryCode: str(s?.itineraryCode),
+    itineraryName: str(s?.itineraryName),
+    itineraryDescription: str(s?.itineraryDescription),
+    sailingType: str(s?.sailingType?.name),
+    groupId: str(s?.groupId),
+    roomTypes: Array.isArray(s?.roomTypeList)
+      ? s.roomTypeList
+          .map((r: any) => ({ code: String(r?.code ?? ''), name: str(r?.name) }))
+          .filter((r: { code: string }) => r.code)
+      : [],
     isGuarantee: s?.isGTY === true || s?.isGty === true,
+    isBogo: s?.isGOBO === true,
     isComplimentary: s?.isCOMP === true,
-    dollarsOff: int(s?.DOLLARSOFF_AMT),
+    isDollarsOff: s?.isDOLLARSOFF === true,
+    dollarsOff: s?.DOLLARSOFF_AMT === null || s?.DOLLARSOFF_AMT === undefined ? null : int(s.DOLLARSOFF_AMT),
+    nextCruiseBonusPerkCode: str(s?.nextCruiseBonusPerkCode),
+    nextCruiseBonus: s?.nextCruiseBonus ?? null,
+    perks: s?.perks ?? null,
+    raw: s,
+  };
+}
+
+function mapOfferDetail(o: any): RcOfferDetail {
+  const co = o?.campaignOffer ?? {};
+  return {
+    ...mapOffer(o),
+    startDate: day(co.startDate),
+    sailByDate: day(co.sailByDate),
+    bookingFeeAmount: co.bookingFeeAmount === null || co.bookingFeeAmount === undefined ? null : int(co.bookingFeeAmount),
+    roomCount: int(co.roomCount),
+    allowedNumberOfPerks: int(co.allowedNumberOfPerks),
+    sailingInclusionMode: str(co.sailingInclusionMode),
+    exclusionList: co.exclusionList ?? null,
+    descriptionList: strList(co.descriptionList),
+    tags: strList(co.tags),
+    digitalRedemptionOnly: co.digitalRedemptionOnly === true,
   };
 }
 
@@ -278,4 +360,62 @@ export async function listOffers(
     totalOffers: Number(first.data?.totalOffers) || raw.length,
     player,
   };
+}
+
+export interface OfferDetailParams {
+  /** Crown & Anchor number, from `account.crownAndAnchorId`. */
+  loyaltyId: string;
+  offerCode: string;
+  /** The grant to describe. Sailings can differ between grants of one code. */
+  playerOfferId: string;
+}
+
+/**
+ * One grant with its eligible sailings.
+ *
+ * This is the call the hub's offer page makes. It sends the list parameters
+ * with `limit: 1` plus the two ids, and gets back the same envelope holding
+ * exactly one offer — this time with `campaignOffer.sailings` filled (490 rows
+ * on a wide offer) and the detail-only fields present.
+ *
+ * The bearer header is sufficient; no cookie session is needed. Returns null
+ * when Royal answers the route but has no such grant.
+ */
+export async function fetchOfferDetail(
+  session: RcSession,
+  { loyaltyId, offerCode, playerOfferId }: OfferDetailParams,
+): Promise<RcOfferDetail | null> {
+  const query = new URLSearchParams({
+    offerCode,
+    playerOfferId,
+    sortBy: 'offer.reserveByDate',
+    sortDirection: 'asc',
+    limit: '1',
+    page: '1',
+    digitalRedemption: 'true',
+  });
+
+  const res = await request<any>(`${DETAILS}?${query}`, {
+    method: 'GET',
+    headers: {
+      ...casinoHeaders(session, { loyaltyId }),
+      'x-environment-marker': '',
+      'x-environment-ship-code': '',
+    },
+    allowStatus: [404],
+  });
+
+  if (res.status === 404) {
+    if (isRouterNotFound(res.data)) {
+      throw new RcRouteGoneError(
+        'The casino offer-details route no longer exists. Find the current path ' +
+        'before treating this as a grant with no sailings.',
+        { url: DETAILS, status: 404 },
+      );
+    }
+    return null;
+  }
+
+  const raw = Array.isArray(res.data?.offers) ? res.data.offers[0] : null;
+  return raw ? mapOfferDetail(raw) : null;
 }

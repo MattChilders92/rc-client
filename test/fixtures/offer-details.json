@@ -1,0 +1,293 @@
+{
+  "body": {
+    "firstName": "REDACTED",
+    "lastName": "REDACTED",
+    "email": null,
+    "loyaltyId": "REDACTED",
+    "offers": [
+      {
+        "campaignCode": "26BAF3",
+        "campaignName": "2026 California Winners",
+        "campaignType": "Stateroom Offer",
+        "redeemInfo": null,
+        "status": "active",
+        "playerOfferId": "00000000-0000-0000-0000-000000000001",
+        "bookingRequest": [],
+        "campaignDescriptionList": [],
+        "campaignExclusionList": [],
+        "certificateNumber": null,
+        "campaignOffer": {
+          "offerCode": "26BAF304",
+          "offerType": {
+            "code": "COMP",
+            "name": "Complimentary"
+          },
+          "name": "California Winners",
+          "description": "Balcony or Oceanview Room for Two + Bonus Interior Room for Your Guests",
+          "reserveByDate": "2026-09-08T03:59:00.000Z",
+          "currency": {
+            "name": "US Dollar",
+            "symbol": "$",
+            "code": "USD"
+          },
+          "tradeInValue": 0,
+          "perkCodes": [],
+          "sailings": [
+            {
+              "id": "QN_LAX_2026-09-14",
+              "isGTY": true,
+              "isGOBO": false,
+              "isCOMP": true,
+              "isDOLLARSOFF": false,
+              "DOLLARSOFF_AMT": null,
+              "departurePort": {
+                "code": "LAX",
+                "name": "Los Angeles"
+              },
+              "sailingType": {
+                "code": null,
+                "name": "3 NIGHT ENSENADA CRUISE"
+              },
+              "sailDate": "2026-09-14",
+              "shipCode": "QN",
+              "shipName": "Quantum of the Seas",
+              "itineraryCode": "QN03X037",
+              "itineraryName": "Ensenada Cruise",
+              "itineraryDescription": "3 NIGHT ENSENADA CRUISE",
+              "groupId": "QN03LAX-000000000",
+              "nextCruiseBonusPerkCode": null,
+              "totalNights": 3,
+              "roomTypeList": [
+                {
+                  "code": "BALCONY",
+                  "name": "Balcony"
+                },
+                {
+                  "code": "INTERIORGTY",
+                  "name": "Interior (Guarantee)"
+                }
+              ],
+              "nextCruiseBonus": null,
+              "perks": null
+            },
+            {
+              "id": "OV_LAX_2026-09-28",
+              "isGTY": true,
+              "isGOBO": false,
+              "isCOMP": true,
+              "isDOLLARSOFF": false,
+              "DOLLARSOFF_AMT": null,
+              "departurePort": {
+                "code": "LAX",
+                "name": "Los Angeles"
+              },
+              "sailingType": {
+                "code": null,
+                "name": "3 NIGHT ENSENADA CRUISE"
+              },
+              "sailDate": "2026-09-28",
+              "shipCode": "OV",
+              "shipName": "Ovation of the Seas",
+              "itineraryCode": "OV03X039",
+              "itineraryName": "Ensenada Cruise",
+              "itineraryDescription": "3 NIGHT ENSENADA CRUISE",
+              "groupId": "OV03LAX-000000000",
+              "nextCruiseBonusPerkCode": null,
+              "totalNights": 3,
+              "roomTypeList": [
+                {
+                  "code": "BALCONY",
+                  "name": "Balcony"
+                },
+                {
+                  "code": "INTERIORGTY",
+                  "name": "Interior (Guarantee)"
+                }
+              ],
+              "nextCruiseBonus": null,
+              "perks": null
+            },
+            {
+              "id": "OV_LAX_2026-10-01",
+              "isGTY": true,
+              "isGOBO": false,
+              "isCOMP": true,
+              "isDOLLARSOFF": false,
+              "DOLLARSOFF_AMT": null,
+              "departurePort": {
+                "code": "LAX",
+                "name": "Los Angeles"
+              },
+              "sailingType": {
+                "code": null,
+                "name": "3 Night Ensenada Cruise"
+              },
+              "sailDate": "2026-10-01",
+              "shipCode": "OV",
+              "shipName": "Ovation of the Seas",
+              "itineraryCode": "OV03X047",
+              "itineraryName": "Ensenada Cruise",
+              "itineraryDescription": "3 NIGHT ENSENADA CRUISE",
+              "groupId": "OV03LAX-000000000",
+              "nextCruiseBonusPerkCode": null,
+              "totalNights": 3,
+              "roomTypeList": [
+                {
+                  "code": "BALCONY",
+                  "name": "Balcony"
+                },
+                {
+                  "code": "INTERIORGTY",
+                  "name": "Interior (Guarantee)"
+                }
+              ],
+              "nextCruiseBonus": null,
+              "perks": null
+            },
+            {
+              "id": "SR_SAN_2026-10-04",
+              "isGTY": true,
+              "isGOBO": false,
+              "isCOMP": true,
+              "isDOLLARSOFF": false,
+              "DOLLARSOFF_AMT": null,
+              "departurePort": {
+                "code": "SAN",
+                "name": "San Diego"
+              },
+              "sailingType": {
+                "code": null,
+                "name": "7 Night Ensenada, Cabo La Paz Cruise"
+              },
+              "sailDate": "2026-10-04",
+              "shipCode": "SR",
+              "shipName": "Serenade of the Seas",
+              "itineraryCode": "SR07X069",
+              "itineraryName": "Ensenada, Cabo & La Paz Cruise",
+              "itineraryDescription": "7 NIGHT ENSENADA, CABO & LA PAZ CRUISE",
+              "groupId": "SR07SAN-000000000",
+              "nextCruiseBonusPerkCode": null,
+              "totalNights": 7,
+              "roomTypeList": [
+                {
+                  "code": "OCEAN VIEW",
+                  "name": "Ocean View"
+                },
+                {
+                  "code": "INTERIORGTY",
+                  "name": "Interior (Guarantee)"
+                }
+              ],
+              "nextCruiseBonus": null,
+              "perks": null
+            },
+            {
+              "id": "VY_LAX_2026-10-05",
+              "isGTY": true,
+              "isGOBO": false,
+              "isCOMP": true,
+              "isDOLLARSOFF": false,
+              "DOLLARSOFF_AMT": null,
+              "departurePort": {
+                "code": "LAX",
+                "name": "Los Angeles"
+              },
+              "sailingType": {
+                "code": null,
+                "name": "3 Night Ensenada Cruise"
+              },
+              "sailDate": "2026-10-05",
+              "shipCode": "VY",
+              "shipName": "Voyager of the Seas",
+              "itineraryCode": "VY03X045",
+              "itineraryName": "Ensenada Cruise",
+              "itineraryDescription": "3 NIGHT ENSENADA CRUISE",
+              "groupId": "VY03LAX-000000000",
+              "nextCruiseBonusPerkCode": null,
+              "totalNights": 3,
+              "roomTypeList": [
+                {
+                  "code": "BALCONY",
+                  "name": "Balcony"
+                },
+                {
+                  "code": "INTERIORGTY",
+                  "name": "Interior (Guarantee)"
+                }
+              ],
+              "nextCruiseBonus": null,
+              "perks": null
+            },
+            {
+              "id": "OV_LAX_2026-10-09",
+              "isGTY": true,
+              "isGOBO": false,
+              "isCOMP": true,
+              "isDOLLARSOFF": false,
+              "DOLLARSOFF_AMT": null,
+              "departurePort": {
+                "code": "LAX",
+                "name": "Los Angeles"
+              },
+              "sailingType": {
+                "code": null,
+                "name": "3 Night Ensenada Cruise"
+              },
+              "sailDate": "2026-10-09",
+              "shipCode": "OV",
+              "shipName": "Ovation of the Seas",
+              "itineraryCode": "OV03X040",
+              "itineraryName": "Ensenada Cruise",
+              "itineraryDescription": "3 NIGHT ENSENADA CRUISE",
+              "groupId": "OV03LAX-000000000",
+              "nextCruiseBonusPerkCode": null,
+              "totalNights": 3,
+              "roomTypeList": [
+                {
+                  "code": "BALCONY",
+                  "name": "Balcony"
+                },
+                {
+                  "code": "INTERIORGTY",
+                  "name": "Interior (Guarantee)"
+                }
+              ],
+              "nextCruiseBonus": null,
+              "perks": null
+            }
+          ],
+          "status": "Active",
+          "offerImages": [
+            {
+              "fileName": "California Winners_My Offers Hero Image-20260806-174953.jpg",
+              "fileType": "image/jpeg",
+              "fileUrl": "https://rcg-casino-operations-hub-prod-public-documents.s3.us-east-1.amazonaws.com/campaign/00000000-0000-0000-0000-000000000000/00000000-0000-0000-0000-000000000000.jpg",
+              "scopes": [
+                "Campaign"
+              ],
+              "category": "HERO_REGULAR_CARD",
+              "description": "Image"
+            }
+          ],
+          "digitalRedemptionOnly": false,
+          "startDate": "2026-08-07T13:00:00.000Z",
+          "sailByDate": "2027-01-31T00:00:00.000Z",
+          "bookingFeeAmount": null,
+          "allowedNumberOfPerks": 1,
+          "sailingInclusionMode": "included",
+          "exclusionList": [],
+          "descriptionList": [],
+          "tags": [],
+          "offerFiles": [],
+          "roomCount": 2
+        },
+        "useSmartForm": true,
+        "source": "COH",
+        "brmsCouponCode": null
+      }
+    ],
+    "totalOffers": 1,
+    "totalPages": 1,
+    "pageNumber": 1
+  }
+}

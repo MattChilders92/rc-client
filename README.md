@@ -122,6 +122,7 @@ pricing (31 categories via occupancy sweep), products.
 `offers` is verified against a live payload of 13 real offers, including
 free-play perks, trade-in values and a repeated offer code.
 
-One known gap: `RcOffer.sailings` is always empty. The list endpoint returns the
-key unpopulated and this API version exposes no route for an offer's eligible
-sailings — see [docs/endpoints.md](docs/endpoints.md) for what was tried.
+`RcOffer.sailings` is always empty from the list; `rc.offerDetail(code,
+playerOfferId)` returns the grant with its sailings — ship, port, date, nights,
+itinerary and eligible room categories — verified live at 490 sailings on one
+offer. See [docs/endpoints.md](docs/endpoints.md).

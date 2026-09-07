@@ -6,7 +6,7 @@ import { fileURLToPath } from 'node:url';
 
 import { fetchAccount } from '../src/domains/account.ts';
 import { fetchCasinoLoyalty } from '../src/domains/casino.ts';
-import { listOffers, freePlayFrom } from '../src/domains/offers.ts';
+import { listOffers, fetchOfferDetail, freePlayFrom } from '../src/domains/offers.ts';
 import { fetchRooms, roomKey } from '../src/domains/rooms.ts';
 import { fetchCategory } from '../src/domains/products.ts';
 import { listBookings } from '../src/domains/bookings.ts';
@@ -122,6 +122,42 @@ test('a repeated offer code is several redeemable grants, not one offer', async 
   const grants = offers.filter((o) => o.offerCode === repeated);
   const ids = new Set(grants.map((g) => g.playerOfferId));
   assert.equal(ids.size, grants.length, 'each grant carries its own playerOfferId');
+});
+
+test('offer details returns the grant with its sailings populated', async () => {
+  stub('offer-details');
+  const detail = await fetchOfferDetail(session, {
+    loyaltyId: '000000000', offerCode: '26BAF304', playerOfferId: '00000000-0000-0000-0000-000000000001',
+  });
+  assert.ok(detail, 'the route answered with the grant');
+  assert.equal(detail.offerCode, '26BAF304');
+  // The list endpoint never fills sailings; this one is the whole point.
+  assert.ok(detail.sailings.length >= 3, 'sailings are populated');
+
+  const s = detail.sailings[0]!;
+  assert.equal(s.shipCode, 'QN');
+  assert.equal(s.shipName, 'Quantum of the Seas');
+  assert.equal(s.departurePort?.code, 'LAX');
+  assert.equal(s.sailDate, '2026-09-14');
+  assert.equal(s.totalNights, 3);
+  assert.equal(s.groupId, 'QN03LAX-000000000');
+  // Eligible room categories are the search surface a browser filters on.
+  assert.deepEqual(s.roomTypes.map((r) => r.code), ['BALCONY', 'INTERIORGTY']);
+  assert.equal(s.isGuarantee, true);
+  assert.equal(s.isComplimentary, true);
+  assert.equal(s.isBogo, false);
+  assert.equal(s.dollarsOff, null);
+});
+
+test('offer details carries the fields only the detail exposes', async () => {
+  stub('offer-details');
+  const detail = await fetchOfferDetail(session, {
+    loyaltyId: '000000000', offerCode: '26BAF304', playerOfferId: '00000000-0000-0000-0000-000000000001',
+  });
+  assert.ok(detail);
+  // startDate / sailByDate / roomCount are absent from the list envelope.
+  assert.ok('sailByDate' in detail && 'roomCount' in detail && 'tags' in detail);
+  assert.ok(Array.isArray(detail.tags));
 });
 
 test('a moved route throws instead of reporting an empty account', async () => {

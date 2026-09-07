@@ -1,7 +1,7 @@
 import { isExpired, signIn, type Credentials, type RcSession } from './auth/index.ts';
 import { fetchAccount, type RcAccount } from './domains/account.ts';
 import { fetchCasinoLoyalty, type CasinoLoyalty } from './domains/casino.ts';
-import { listOffers, type OffersResult } from './domains/offers.ts';
+import { fetchOfferDetail, listOffers, type OffersResult, type RcOfferDetail } from './domains/offers.ts';
 import {
   COVERAGE_OCCUPANCIES, fetchRooms, sweepOccupancy,
   type Brand, type RcRoom, type RoomQuery,
@@ -104,6 +104,17 @@ export class RcClient {
     const player = { firstName: null, lastName: null, loyaltyId: null };
     if (!id) return { offers: [], outcome: 'none', totalOffers: 0, player };
     return listOffers(await this.session(), { loyaltyId: id });
+  }
+
+  /**
+   * One grant with its eligible sailings — ship, departure port, sail date,
+   * itinerary, nights, and the room categories the offer covers on it. This is
+   * the detail call the hub makes when an offer is opened. Bearer only.
+   */
+  async offerDetail(offerCode: string, playerOfferId: string, loyaltyId?: string): Promise<RcOfferDetail | null> {
+    const id = loyaltyId ?? (await this.account()).crownAndAnchorId;
+    if (!id) return null;
+    return fetchOfferDetail(await this.session(), { loyaltyId: id, offerCode, playerOfferId });
   }
 
   async bookings(opts?: ListBookingsOptions): Promise<RcBooking[]> {

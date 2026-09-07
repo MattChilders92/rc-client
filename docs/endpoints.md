@@ -111,10 +111,37 @@ totalOffers, totalPages, pageNumber }`. Each entry keeps the familiar
   the two are not 1:1. The list endpoint is player-scoped and ignores every
   filter, and no campaign, tier, catalogue or all-offers route exists (probed
   exhaustively), so a variant you do not hold cannot be fetched.
-- `sailings[]` is present but **always empty**, and no separate sailings route
-  exists on this version — `/v2/offers/detail`, `/v2/offers/{code}`,
-  `/v2/offers/{id}/sailings`, `/v2/campaigns` and an `includeSailings` /
-  `expand` parameter were all tried and none is routed.
+- `sailings[]` is present in the list but **always empty**. A grant's sailings
+  come from the details endpoint below.
+
+### Offer details (sailings)
+
+```
+GET www.royalcaribbean.com/api/casino/v2/offers/details                [casino]
+    ?offerCode= &playerOfferId= &limit=1 &page=1
+    &sortBy=offer.reserveByDate &sortDirection=asc &digitalRedemption=true
+```
+
+**Note the plural — `/details`.** `/detail` is unrouted, and that one letter
+hid this endpoint through a full day of enumeration; the path only surfaced by
+reading the hub's authenticated offer-page chunk, where it is built as
+`${base}/v2/offers/details`. The bearer header alone is sufficient — no cookie
+session is needed, despite the hub *pages* being cookie-gated.
+
+Same envelope as `list`, holding exactly one offer with `campaignOffer.sailings`
+populated (490 rows on a wide offer) and offer-level fields the list omits:
+`startDate`, `sailByDate`, `roomCount`, `bookingFeeAmount`,
+`allowedNumberOfPerks`, `sailingInclusionMode`, `exclusionList`, `tags`.
+
+Each sailing: `id` (`AL_MIA_2026-11-01`), `shipCode`/`shipName`,
+`departurePort {code,name}`, `sailDate`, `totalNights`, `itineraryCode/Name/
+Description`, `sailingType.name`, `groupId` (what the room-pricing API keys
+on), `roomTypeList[{code,name}]` — the eligible categories, e.g. `BALCONY`,
+`INTERIORGTY` — and `isGTY` / `isGOBO` / `isCOMP` / `isDOLLARSOFF` +
+`DOLLARSOFF_AMT`. `perks` and `nextCruiseBonus` were null on every sailing seen.
+
+Sailings can differ between grants of one offer code, so query per
+`playerOfferId`, not per code.
 
 ### This endpoint has now moved twice
 

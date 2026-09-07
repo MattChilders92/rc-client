@@ -22,9 +22,9 @@ export { anonymousHeaders, casinoHeaders, commerceHeaders, guestHeaders } from '
 export { fetchAccount, type RcAccount } from './domains/account.ts';
 export { fetchCasinoLoyalty, type CasinoLoyalty } from './domains/casino.ts';
 export {
-  listOffers, freePlayFrom, mapOffer, SORT_FIELDS,
-  type RcOffer, type RcOfferSailing, type RcPerk, type OffersResult, type ListOffersParams,
-  type OfferSortField,
+  listOffers, fetchOfferDetail, freePlayFrom, mapOffer, SORT_FIELDS,
+  type RcOffer, type RcOfferDetail, type RcOfferSailing, type RcPerk, type OffersResult,
+  type ListOffersParams, type OfferDetailParams, type OfferSortField,
 } from './domains/offers.ts';
 export {
   fetchRooms, sweepOccupancy, roomKey, COVERAGE_OCCUPANCIES,

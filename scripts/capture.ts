@@ -135,6 +135,25 @@ await grab(
   },
 );
 
+// One grant's sailings. Plural `details`; the bearer alone is enough.
+{
+  const firstOffer = (await (await fetch(
+    'https://www.royalcaribbean.com/api/casino/v2/offers/list' +
+      '?page=1&limit=1&sortBy=offer.reserveByDate&sortDirection=asc',
+    { headers: { ...casinoHeaders(session, { loyaltyId }), 'x-environment-marker': '', 'x-environment-ship-code': '' } },
+  )).json() as any)?.offers?.[0];
+  if (firstOffer?.playerOfferId) {
+    await grab(
+      'offer-details',
+      'https://www.royalcaribbean.com/api/casino/v2/offers/details?' + new URLSearchParams({
+        offerCode: firstOffer.campaignOffer.offerCode, playerOfferId: firstOffer.playerOfferId,
+        sortBy: 'offer.reserveByDate', sortDirection: 'asc', limit: '1', page: '1', digitalRedemption: 'true',
+      }),
+      { headers: { ...casinoHeaders(session, { loyaltyId }), 'x-environment-marker': '', 'x-environment-ship-code': '' } },
+    );
+  }
+}
+
 // The plain endpoint, not `enriched` — the latter can return an empty list for
 // an account that demonstrably has bookings.
 const bookingHeaders = {
