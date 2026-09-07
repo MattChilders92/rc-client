@@ -1,0 +1,1255 @@
+{
+  "_status": 200,
+  "body": {
+    "sailings": [
+      {
+        "id": "LE08D147_2026-11-14",
+        "packageCode": "LE08D147",
+        "startDate": "2026-11-14",
+        "sailDate": "2026-11-14",
+        "endDate": "2026-11-22",
+        "rooms": [
+          {
+            "code": "INTERIOR",
+            "name": "Interior",
+            "description": [
+              "Our most budget-friendly option",
+              "Cozy and comfortable retreat after an adventure filled day",
+              "156 - 285 sq. ft. stateroom"
+            ],
+            "image": {
+              "path": "https://rccl-h.assetsadobe.com/is/image/content/dam/royal/accommodations/iobd/ic-interior-1440.jpg",
+              "alt": "Our Interior rooms deliver all the comfort you need at a great value. Interior Plus rooms add the convenience of a deluxe closet and dressing area. And for a view, consider a room with a window overlooking Central Park or Surfside."
+            },
+            "subtypes": [
+              {
+                "code": "ZI",
+                "name": "We choose your Interior",
+                "description": [
+                  "Just prior to cruising, we’ll assign you a room in your selected category",
+                  "Enjoy a cozy and comfortable retreat after an adventure filed day",
+                  "Your room may Include an in-stateroom window overlooking Central Park or Surfside neighborhoods"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/interior/ic-v4-render-1.jpg",
+                  "alt": "Interior Guarantee"
+                },
+                "categoryCode": "ZI",
+                "isGuarantee": true,
+                "gallery": [],
+                "features": {
+                  "included": [],
+                  "singleFeatures": [],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 156 - 285 sq. ft."
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 1649.99,
+                  "total": 3299.98
+                }
+              },
+              {
+                "code": "V4",
+                "name": "Interior",
+                "description": [
+                  "Our most budget-friendly option",
+                  "A cozy and comfortable retreat",
+                  "Perfect for long naps after an adventure-filled day"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/interior/ic-v4-1.jpg",
+                  "alt": "Interior"
+                },
+                "categoryCode": "V4",
+                "isGuarantee": false,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 2 guests"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 156 sq. ft."
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Room with bed and vanity"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "Full bathroom",
+                        "Shower with bench"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 1810.49,
+                  "total": 3620.98
+                },
+                "roomsLeft": 5
+              },
+              {
+                "code": "Q2",
+                "name": "Interior Plus",
+                "description": [
+                  "Enjoy a deluxe closet and dressing area",
+                  "There’s no such thing as overpacking in these staterooms"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/interior-plus/ic-q2-1.jpg",
+                  "alt": "Interior Plus"
+                },
+                "categoryCode": "Q2",
+                "isGuarantee": false,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 2 guests"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 157 sq. ft."
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Room with bed",
+                        "Walk in closet with vanity",
+                        "Lounge chair with ottoman"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "Full bathroom",
+                        "Shower with bench"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 1840.49,
+                  "total": 3680.98
+                }
+              },
+              {
+                "code": "R1",
+                "name": "Spacious Interior",
+                "description": [
+                  "Enjoy an interior stateroom with more space, at a great value"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/spacious-interior/ic-r1-1.jpg",
+                  "alt": "Spacious Interior"
+                },
+                "categoryCode": "R4",
+                "isGuarantee": false,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 4 guests"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 178 sq. ft."
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Room with bed and vanity"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)",
+                        "One single sofa bed in staterooms with up to 3 guests",
+                        "One double sofa bed in staterooms with up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "Full bathroom",
+                        "Shower with bench"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 1910.49,
+                  "total": 3820.98
+                }
+              }
+            ],
+            "categoryCode": "ZI",
+            "pricing": {
+              "amount": 1649.99,
+              "total": 3299.98
+            }
+          },
+          {
+            "code": "OUTSIDE",
+            "name": "Ocean View",
+            "description": [
+              "Endless ocean views await from your very own in-stateroom window",
+              "Great for families with small children",
+              "160 - 278 sq. ft. stateroom"
+            ],
+            "image": {
+              "path": "https://rccl-h.assetsadobe.com/is/image/content/dam/royal/accommodations/iobd/ic-ocean-view-1440.jpg",
+              "alt": "Soak in the scenes of sea and shore from the comfort of your own Ocean View room. For extra spectacular sights, floor-to-ceiling glass windows in Panoramic Ocean View rooms deliver endless blue no matter where you're standing."
+            },
+            "subtypes": [
+              {
+                "code": "N1",
+                "name": "We choose your Ocean View",
+                "description": [
+                  "Budget-friendly with a view of the ocean",
+                  "Your very own in-stateroom window",
+                  "Great for families with small children"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/ocean-view/ic-n1-1.jpg",
+                  "alt": "Ocean View"
+                },
+                "categoryCode": "N4",
+                "isGuarantee": true,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "views",
+                      "title": "Views",
+                      "lines": [
+                        "Ocean view"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 160 - 187 sq. ft."
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Room with bed, vanity and seating area with sofa"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)",
+                        "One single sofa bed in staterooms with up to 3 guests",
+                        "One double sofa bed in staterooms with up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "Full bathroom",
+                        "Shower with bench"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 2370.49,
+                  "total": 4740.98
+                }
+              },
+              {
+                "code": "N1",
+                "name": "Ocean View",
+                "description": [
+                  "Budget-friendly with a view of the ocean",
+                  "Your very own in-stateroom window",
+                  "Great for families with small children"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/ocean-view/ic-n1-1.jpg",
+                  "alt": "Ocean View"
+                },
+                "categoryCode": "N5",
+                "isGuarantee": false,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "views",
+                      "title": "Views",
+                      "lines": [
+                        "Ocean view"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 160 - 187 sq. ft."
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Room with bed, vanity and seating area with sofa"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)",
+                        "One single sofa bed in staterooms with up to 3 guests",
+                        "One double sofa bed in staterooms with up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "Full bathroom",
+                        "Shower with bench"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 2390.49,
+                  "total": 4780.98
+                },
+                "roomsLeft": 5
+              }
+            ],
+            "categoryCode": "N4",
+            "pricing": {
+              "amount": 2370.49,
+              "total": 4740.98
+            }
+          },
+          {
+            "code": "BALCONY",
+            "name": "Balcony",
+            "description": [
+              "Crowd Fave: Our most popular option",
+              "Private balcony offering either an ocean view or neighborhood view, overlooking Central Park or Surfside",
+              "195 - 374 sq. ft. stateroom"
+            ],
+            "image": {
+              "path": "https://rccl-h.assetsadobe.com/is/image/content/dam/royal/accommodations/iobd/ic-balcony-1440.jpg",
+              "alt": "Take in breathtaking blue from Ocean View Balcony rooms. Enjoy the ambience of unique neighborhood balcony rooms overlooking Central Park or Surfside. Or, transform your living space into an outdoor escape at the push of a button in new Infinite Balcony rooms."
+            },
+            "subtypes": [
+              {
+                "code": "XN",
+                "name": "We choose your Neighborhood View Balcony",
+                "description": [
+                  "Just prior to cruising, we’ll assign you a room in your selected category",
+                  "Your balcony will face the interior of the ship, overlooking either Central Park or Surfside neighborhoods"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/surfside-family-view-balcony/ic-h2-render-1.jpg",
+                  "alt": "Neighborhood View Balcony Guarantee"
+                },
+                "categoryCode": "XN",
+                "isGuarantee": true,
+                "gallery": [],
+                "features": {
+                  "included": [],
+                  "singleFeatures": [],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 196 - 374 sq. ft.",
+                        "Balcony: 50 - 78 sq. ft."
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 2317.49,
+                  "total": 4634.98
+                }
+              },
+              {
+                "code": "XB",
+                "name": "We choose your Ocean View Balcony",
+                "description": [
+                  "Just prior to cruising, we’ll assign you a room in your selected category",
+                  "Enjoy pristine ocean views from your private balcony"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/ocean-view-balcony/ic-d1-render-1.jpg",
+                  "alt": "Ocean View Balcony Guarantee"
+                },
+                "categoryCode": "XB",
+                "isGuarantee": true,
+                "gallery": [],
+                "features": {
+                  "included": [],
+                  "singleFeatures": [],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 196 - 374 sq. ft.",
+                        "Balcony: 50 - 83 sq. ft."
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 2387.49,
+                  "total": 4774.98
+                }
+              },
+              {
+                "code": "D1",
+                "name": "We choose your Ocean View Balcony",
+                "description": [
+                  "Our standard balcony stateroom",
+                  "Pristine views of the ocean",
+                  "Private balcony with chairs"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/ocean-view-balcony/ic-d1-1.jpg",
+                  "alt": "Ocean View Balcony"
+                },
+                "categoryCode": "D4",
+                "isGuarantee": true,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "views",
+                      "title": "Views",
+                      "lines": [
+                        "Ocean view"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 204 sq. ft.",
+                        "Balcony: 50 - 70 sq. ft."
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Room with bed, vanity and sitting area with sofa"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)",
+                        "One single sofa bed in staterooms with up to 3 guests",
+                        "One double sofa bed in staterooms with up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "Full bathroom",
+                        "Shower with bench"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 3277.99,
+                  "total": 6555.98
+                }
+              },
+              {
+                "code": "IF",
+                "name": "Spacious Infinite Central Park View Balcony",
+                "description": [
+                  "Enjoy extra space and an expanded living area",
+                  "Becomes a balcony overlooking Central Park at the push of a button"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/spacious-infinite-central-park-view-balcony/ic-if-1.jpg",
+                  "alt": "Infinite Central Park View Balcony"
+                },
+                "categoryCode": "IF",
+                "isGuarantee": false,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "views",
+                      "title": "Views",
+                      "lines": [
+                        "Central Park view"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Total Stateroom: 250 sq. ft. (includes 50 sq. ft. convertible balcony)"
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Room with bed, vanity and seating area with sofa",
+                        "Convertible balcony"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)",
+                        "One single sofa bed in staterooms with up to 3 guests",
+                        "One double sofa bed in staterooms with up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "Full bathroom",
+                        "Shower with bench"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 2927.99,
+                  "total": 5855.98
+                },
+                "roomsLeft": 2
+              },
+              {
+                "code": "D1",
+                "name": "Ocean View Balcony",
+                "description": [
+                  "Our standard balcony stateroom",
+                  "Pristine views of the ocean",
+                  "Private balcony with chairs"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/ocean-view-balcony/ic-d1-1.jpg",
+                  "alt": "Ocean View Balcony"
+                },
+                "categoryCode": "D2",
+                "isGuarantee": false,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "views",
+                      "title": "Views",
+                      "lines": [
+                        "Ocean view"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 204 sq. ft.",
+                        "Balcony: 50 - 70 sq. ft."
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Room with bed, vanity and sitting area with sofa"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)",
+                        "One single sofa bed in staterooms with up to 3 guests",
+                        "One double sofa bed in staterooms with up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "Full bathroom",
+                        "Shower with bench"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 3567.99,
+                  "total": 7135.98
+                },
+                "roomsLeft": 1
+              },
+              {
+                "code": "CB",
+                "name": "Connecting Ocean View Balcony",
+                "description": [
+                  "Balcony stateroom that connects to the room next door via a private foyer",
+                  "Get \"double\" the ocean views and space by booking both"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/connecting-ocean-view-balcony/ic-cb-1.jpg",
+                  "alt": "Connecting Ocean View Balcony"
+                },
+                "categoryCode": "CB",
+                "isGuarantee": false,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "views",
+                      "title": "Views",
+                      "lines": [
+                        "Ocean view"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 204 sq. ft.",
+                        "Balcony: 50 sq. ft."
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Room with bed, vanity and sitting area with sofa"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)",
+                        "One single sofa bed in staterooms with up to 3 guests",
+                        "One double sofa bed in staterooms with up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "Full bathroom",
+                        "Shower with bench"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 3747.49,
+                  "total": 7494.98
+                }
+              },
+              {
+                "code": "C1",
+                "name": "Ocean View with Large Balcony",
+                "description": [
+                  "Larger than standard balcony",
+                  "Private balcony with chairs",
+                  "Extra square footage to relax on your balcony"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/ocean-view-with-large-balcony/ic-c1-1.jpg",
+                  "alt": "Ocean View with Large Balcony"
+                },
+                "categoryCode": "C5",
+                "isGuarantee": false,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "views",
+                      "title": "Views",
+                      "lines": [
+                        "Ocean view"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 204 sq. ft.",
+                        "Balcony: 65 - 80 sq. ft."
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Room with bed, vanity and sitting area with sofa"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)",
+                        "One single sofa bed in staterooms with up to 3 guests",
+                        "One double sofa bed in staterooms with up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "Full bathroom",
+                        "Shower with bench"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 3857.49,
+                  "total": 7714.98
+                },
+                "roomsLeft": 6
+              },
+              {
+                "code": "IB",
+                "name": "Family Infinite Ocean View Balcony",
+                "description": [
+                  "Transform your living space into an extended oceanside escape at the press of a button",
+                  "Plus a separate hideaway bunk alcove",
+                  "Great for larger families"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/family-infinite-ocean-view-balcony/ic-ib-1.jpg",
+                  "alt": "Family Infinite Ocean View Balcony"
+                },
+                "categoryCode": "IB",
+                "isGuarantee": false,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 6 guests"
+                      ]
+                    },
+                    {
+                      "code": "views",
+                      "title": "Views",
+                      "lines": [
+                        "Ocean view"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Total Stateroom: 285 sq. ft. (includes 50 sq. ft. convertible balcony)"
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Room with bed, vanity and seating area with sofa",
+                        "Convertible balcony",
+                        "Room with bunk bed"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)",
+                        "One double sofa bed",
+                        "Bunk bed with 2 twin beds"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "Split bathroom with compartment for toilet and sink",
+                        "Shower",
+                        "Sink"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 4127.99,
+                  "total": 8255.98
+                }
+              },
+              {
+                "code": "FD",
+                "name": "Family Ocean View Balcony",
+                "description": [
+                  "Pristine views of the ocean",
+                  "Private balcony with chairs",
+                  "Plus a separate hideaway bunk alcove"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/ocean-view-balcony/ic-d1-2.jpg",
+                  "alt": "Family Ocean View Balcony"
+                },
+                "categoryCode": "FB",
+                "isGuarantee": false,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 6 guests"
+                      ]
+                    },
+                    {
+                      "code": "views",
+                      "title": "Views",
+                      "lines": [
+                        "Ocean view"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 285 sq. ft.",
+                        "Balcony: 50 sq. ft."
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Rooms",
+                      "lines": [
+                        "Room with bed, vanity and sitting area with sofa"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)",
+                        "One double sofa bed",
+                        "One bunk bed with two twin beds"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "One bathroom"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 4337.99,
+                  "total": 8675.98
+                },
+                "roomsLeft": 7
+              }
+            ],
+            "categoryCode": "XN",
+            "pricing": {
+              "amount": 2317.49,
+              "total": 4634.98
+            }
+          },
+          {
+            "code": "DELUXE",
+            "name": "Suite",
+            "description": [
+              "Live the 'suite' life",
+              "Take luxury to the next level with exclusive experiences and inclusive amenities",
+              "270 - 2088 sq. ft. stateroom"
+            ],
+            "image": {
+              "path": "https://rccl-h.assetsadobe.com/is/image/content/dam/royal/accommodations/iobd/ic-suite-1440.jpg",
+              "alt": "Luxury is anything but boring in Royal Suite Class. Three tiers - Sea, Sky and Star - offer exclusive experiences and inclusive amenities in the most expansive suites at sea. Like new Surfside Family Suites, Infinite Grand Suites and the unbelievable Ultimate Family Townhouse."
+            },
+            "subtypes": [
+              {
+                "code": "OW",
+                "name": "Owner's Suite",
+                "description": [
+                  "Even bigger than our Grand Suites",
+                  "With extra square footage to use as you kick back and relax",
+                  "Sky Class amenities"
+                ],
+                "image": {
+                  "path": "https://www.royalcaribbean.com/content/dam/royal/booking-funnel/stateroom-image-gallery/icon/owners-suite-1-bedroom/ic-ow-1.jpg",
+                  "alt": "Owner's Suite"
+                },
+                "categoryCode": "OS",
+                "isGuarantee": false,
+                "gallery": [],
+                "features": {
+                  "included": [
+                    "Dedicated stateroom attendant",
+                    "Daily cleaning service",
+                    "Exclusive bedding collection",
+                    "Stateroom climate control",
+                    "Ample closet and storage",
+                    "In-room HD-TV",
+                    "In-room safe for valuables",
+                    "Hair dryer",
+                    "Deluxe toiletries: shampoo, conditioner & body wash"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "Up to 4 guests"
+                      ]
+                    },
+                    {
+                      "code": "views",
+                      "title": "Views",
+                      "lines": [
+                        "Ocean view"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "overall_size",
+                      "title": "Size",
+                      "lines": [
+                        "Stateroom: 658 sq. ft.",
+                        "Balcony: 190 sq. ft."
+                      ]
+                    },
+                    {
+                      "code": "rooms",
+                      "title": "Living Spaces",
+                      "lines": [
+                        "Bedroom area",
+                        "Living area with dining table and sitting area",
+                        "Private balcony with seating area and private dining"
+                      ]
+                    },
+                    {
+                      "code": "bed",
+                      "title": "Beds",
+                      "lines": [
+                        "One Royal King bed (can convert into two twin-size beds)",
+                        "One double sofa bed"
+                      ]
+                    },
+                    {
+                      "code": "bathrooms",
+                      "title": "Bathrooms",
+                      "lines": [
+                        "One bathroom with tub and shower and two sinks"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 11336.69,
+                  "total": 22673.38
+                }
+              }
+            ],
+            "categoryCode": "OS",
+            "pricing": {
+              "amount": 11336.69,
+              "total": 22673.38
+            }
+          }
+        ],
+        "includesTaxesAndFees": true,
+        "voyageType": "OCEAN",
+        "taxesAndFees": {
+          "amount": 148.99,
+          "total": 297.98
+        },
+        "status": "OPEN"
+      }
+    ]
+  }
+}

@@ -1,0 +1,118 @@
+{
+  "_status": 200,
+  "body": {
+    "status": 200,
+    "errors": [],
+    "payload": {
+      "accountId": "REDACTED",
+      "consumerId": "REDACTED",
+      "contactInformation": {
+        "address": {
+          "addressOne": "",
+          "addressTwo": "",
+          "city": "",
+          "residencyCountryCode": "USA",
+          "state": "",
+          "zipCode": "REDACTED"
+        },
+        "email": "REDACTED"
+      },
+      "cruisingHistory": {},
+      "emailOptIns": [
+        {
+          "acceptDateTime": "20231228T030057UTC",
+          "brand": "R",
+          "category": "marketing",
+          "flag": "Y"
+        },
+        {
+          "acceptDateTime": "20231228T030057UTC",
+          "brand": "C",
+          "category": "marketing",
+          "flag": "Y"
+        }
+      ],
+      "notificationOptIns": [
+        {
+          "royal": "Y",
+          "celebrity": "Y"
+        }
+      ],
+      "emergencyContact": {
+        "firstName": "REDACTED",
+        "phoneNumber": ""
+      },
+      "legacyAccountInformation": {},
+      "loyaltyInformation": {
+        "captainsClubId": "REDACTED",
+        "crownAndAnchorId": "REDACTED",
+        "venetianSocietyId": "000000000",
+        "captainsClubLoyaltyTier": "SELECT",
+        "captainsClubLoyaltyIndividualPoints": 0,
+        "captainsClubLoyaltyRelationshipPoints": 0,
+        "celebrityBlueChipLoyaltyIndividualPoints": 0,
+        "celebrityBlueChipLoyaltyRelationshipPoints": 0,
+        "clubRoyaleId": "000000000",
+        "clubRoyaleLoyaltyTier": "PRIME",
+        "clubRoyaleLoyaltyIndividualPoints": 10151,
+        "clubRoyaleLoyaltyRelationshipPoints": 10151,
+        "crownAndAnchorSocietyLoyaltyTier": "EMERALD",
+        "crownAndAnchorSocietyLoyaltyIndividualPoints": 57,
+        "crownAndAnchorSocietyLoyaltyRelationshipPoints": 57,
+        "captainsClubNextTier": "ELITE",
+        "captainsClubRemainingPoints": 300,
+        "crownAndAnchorSocietyNextTier": "DIAMOND",
+        "crownAndAnchorSocietyRemainingPoints": 23,
+        "crownAndAnchorTrackerPercentage": 71,
+        "captainsClubTrackerPercentage": 0,
+        "captainsClubLoyaltyMatchTier": "Select",
+        "crownAndAnchorLoyaltyMatchTier": "Emerald",
+        "venetianSocietyLoyaltyMatchTier": "50 VS Days",
+        "venetianSocietyEnrollmentSubmitted": true,
+        "venetianSocietyLoyaltyTier": "50 VS Days",
+        "venetianSocietyNextTier": "100 VS Days",
+        "venetianSocietyIndividualPoints": 0,
+        "venetianSocietyRelationshipPoints": 0,
+        "venetianSocietyTrackerPercentage": 0,
+        "venetianSocietyRemainingPoints": 100
+      },
+      "marketingCountry": "USA",
+      "personalInformation": {
+        "birthdate": "REDACTED",
+        "firstName": "REDACTED",
+        "gender": "M",
+        "lastName": "REDACTED"
+      },
+      "postalOptIns": [],
+      "privacyPolicyAgreement": {
+        "acceptDateTime": "20241223T160937UTC",
+        "version": "1.8"
+      },
+      "ratings": {
+        "lastRatedOn": "20260412T164709Z",
+        "displayRateMyApp": false
+      },
+      "signInInformation": {
+        "securityQuestions": [
+          {
+            "question": "What elementary school did you go to?",
+            "questionKey": "WHAT_ELEMENTARY_SCHOOL_DID_YOU_GO_TO"
+          }
+        ]
+      },
+      "termsAndConditionsAgreement": {
+        "acceptDateTime": "20231008T085107UTC",
+        "version": "1.7"
+      },
+      "legacyLinkBookingsStatus": "NOT_AVAILABLE",
+      "travelDocumentInformation": {},
+      "uid": "redacted@example.com",
+      "uidType": "EMAIL",
+      "cobrandCardInfo": {
+        "coBrandPrimaryAccountNumber": "",
+        "activeCardHolder": false,
+        "priorCardCloseDate": ""
+      }
+    }
+  }
+}

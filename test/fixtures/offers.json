@@ -1,0 +1,9 @@
+{
+  "_status": 404,
+  "body": {
+    "error": true,
+    "code": "NOT_FOUND",
+    "message": "Not Found",
+    "requestId": "00000000-0000-0000-0000-000000000000"
+  }
+}

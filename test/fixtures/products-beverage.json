@@ -1,0 +1,1370 @@
+{
+  "_status": 200,
+  "body": {
+    "status": 200,
+    "error": null,
+    "warnings": null,
+    "payload": {
+      "products": [
+        {
+          "accessible": false,
+          "id": "3222",
+          "baseId": "B-3222",
+          "defaultVariantId": "3222",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "3222"
+          ],
+          "productTypeCategory": {
+            "id": "pt_beverage",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Deluxe Beverage Package",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/2026/08/royal-only-deluxe-beverage-package-icon-class.jpg",
+                "altText": "A wide assortment of beverages is lined up on a white table, including water, soda, coffee, mixed cocktails, wine, beer, hard seltzer, champagne, and named liquor bottles such as Bacardi, Ketel One, Johnnie Walker, Hendrick's Gin, and Patrón, set against a backdrop of palm fronds and a shaded outdoor deck.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/2026/05/coco-cay-perfect-day-deluxe-beverage-package-video-overview.mp4.mp4",
+                "altText": "guests enjoying the deluxe beverage packages",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "VIDEO"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [
+            {
+              "source": "3222",
+              "target": "YNH3",
+              "type": "UPGRADE"
+            }
+          ],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": {
+            "code": "SEP_2026_1_FS_R_BV_DELUXE_090326_20",
+            "title": "Deluxe FS Promo 20% OFF",
+            "promotionType": "PERCENT_OFF",
+            "startDate": null,
+            "endDate": null,
+            "description": "PRE-CRUISE SAVINGS",
+            "displayName": "(20% OFF) PRE-CRUISE SAVINGS",
+            "promotionValue": 20,
+            "discountedValue": 23.01
+          },
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_DAY",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": null,
+          "unit": {
+            "code": "perDay",
+            "name": "Per Day"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_AlcoholicBeveragePackages"
+          ],
+          "lowestAdultPrice": 91.99,
+          "msrpAdultPrice": 115,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": null,
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": null
+        },
+        {
+          "accessible": false,
+          "id": "0812",
+          "baseId": "B-0812",
+          "defaultVariantId": "0812",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "0812"
+          ],
+          "productTypeCategory": {
+            "id": "pt_beverage",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Refreshment Package",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/2026/royal-beverage-Refreshment_Package.jpg",
+                "altText": "Collection of refreshments part of the refreshment package.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/2026/05/coco-cay-perfect-day-refreshment-package-video-overview.mp4",
+                "altText": "guests enjoying the refreshment beverage packages",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "VIDEO"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": {
+            "code": "SEP_2026_1_FS_R_BV_REFRESHMENT_090326_20",
+            "title": "Refreshment FS Promo 20% Off",
+            "promotionType": "PERCENT_OFF",
+            "startDate": null,
+            "endDate": null,
+            "description": "PRE-CRUISE SAVINGS",
+            "displayName": "(20% OFF) PRE-CRUISE SAVINGS",
+            "promotionValue": 20,
+            "discountedValue": 9.01
+          },
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_NIGHT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": null,
+          "unit": {
+            "code": "perNight",
+            "name": "Per Night"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_NonAlcoholicBeveragePackages"
+          ],
+          "lowestAdultPrice": 32.99,
+          "msrpAdultPrice": 42,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": null,
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": null
+        },
+        {
+          "accessible": false,
+          "id": "0814",
+          "baseId": "B-0814",
+          "defaultVariantId": "0814",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "0814"
+          ],
+          "productTypeCategory": {
+            "id": "pt_beverage",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Classic Soda Package",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/2025/04/royal-only-classic-soda-package-two-tumblers.jpg",
+                "altText": "A smaller group of beverages including a Coca-Cola can, a glass of soda with ice, and two tall Royal Caribbean-branded tumblers—one red-orange and the other blue-purple. In the background, a blurred view of a cruise ship deck and a large, pink spiral water slide is visible.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/videos/royal-only-classic-soda-package-floating-call-outs-optimized.mp4",
+                "altText": "Montage of royal souvenir  cup and soft drink stations.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "VIDEO"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": {
+            "code": "SEP_2026_1_FS_R_BV_SODA_090326_20",
+            "title": "Classic Soda FS Promo 20% Off",
+            "promotionType": "PERCENT_OFF",
+            "startDate": null,
+            "endDate": null,
+            "description": "PRE-CRUISE SAVINGS",
+            "displayName": "(20% OFF) PRE-CRUISE SAVINGS",
+            "promotionValue": 20,
+            "discountedValue": 4.01
+          },
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_NIGHT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": null,
+          "unit": {
+            "code": "perNight",
+            "name": "Per Night"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_NonAlcoholicBeveragePackages"
+          ],
+          "lowestAdultPrice": 13.99,
+          "msrpAdultPrice": 18,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": null,
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": null
+        },
+        {
+          "accessible": false,
+          "id": "0902",
+          "baseId": "B-0902",
+          "defaultVariantId": "0902",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "0902",
+            "0904"
+          ],
+          "productTypeCategory": {
+            "id": "pt_beverage",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Evian Water Delivery (12 or 24 Bottles)",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/royal-only-evian-water-bottles.jpg",
+                "altText": "Three bottles of Evian natural spring water are displayed against a light blue background with subtle wavy patterns. ",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": {
+            "code": "SEP_2026_1_FS_R_BV_WATER_090326_40_LE",
+            "title": "Water FS Promo 40% Off LE",
+            "promotionType": "PERCENT_OFF",
+            "startDate": null,
+            "endDate": null,
+            "description": "PRE-CRUISE SAVINGS",
+            "displayName": "(40% OFF) PRE-CRUISE SAVINGS",
+            "promotionValue": 40,
+            "discountedValue": 18.01
+          },
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_UNIT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": null,
+          "unit": {
+            "code": "perUnit",
+            "name": "Per Person"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_NonAlcoholicBeveragePackages"
+          ],
+          "lowestAdultPrice": 26.99,
+          "msrpAdultPrice": 45,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": null,
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": null
+        },
+        {
+          "accessible": false,
+          "id": "0816",
+          "baseId": "B-0816",
+          "defaultVariantId": "0816",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "0816"
+          ],
+          "productTypeCategory": {
+            "id": "pt_beverage",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Specialty Coffee Card",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/2024/royal-cafe-select-card-cafe-promenade.jpg",
+                "altText": "Person holding a Cafe Select coffee tracking card in front of Cafe Promenade.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/2024/royal-cafe-select-latte-pour.mp4",
+                "altText": "Person pouring milk into a latte.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "VIDEO"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/2024/royal-cafe-select-whipped-cream-coffee-drink.mp4",
+                "altText": "Person pouring topping on a whipped cream coffee drink.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "VIDEO"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": {
+            "code": "ALL_R_EG_BV_COFFEE_050626_15_LE",
+            "title": "Coffee Card EG Promo 15% Off LEGEND",
+            "promotionType": "PERCENT_OFF",
+            "startDate": null,
+            "endDate": null,
+            "description": "PRE-CRUISE SAVINGS",
+            "displayName": "(15% OFF) PRE-CRUISE SAVINGS",
+            "promotionValue": 15,
+            "discountedValue": 6.01
+          },
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_PACKAGE",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": null,
+          "unit": {
+            "code": "perPackage",
+            "name": "Per Package"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_NonAlcoholicBeveragePackages"
+          ],
+          "lowestAdultPrice": 33.99,
+          "msrpAdultPrice": 40,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": null,
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": null
+        },
+        {
+          "accessible": false,
+          "id": "Y78Q",
+          "baseId": "AC-HUB-OBACT-004006",
+          "defaultVariantId": "Y78Q",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "Y78Q"
+          ],
+          "productTypeCategory": {
+            "id": "pt_onboardActivities",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Moët & Chandon Champagne Tasting Experience",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/royal-only-moet-champagne-tasting-experience.jpg",
+                "altText": "glasses of champagne.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 5,
+            "stockLevelStatus": "lowStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": null,
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_SEAT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": [
+            "< 3 hours"
+          ],
+          "unit": {
+            "code": "perSeat",
+            "name": "Per Seat"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_beverageExperiences"
+          ],
+          "lowestAdultPrice": 50,
+          "msrpAdultPrice": 50,
+          "adultTax": null,
+          "availableInventory": 5,
+          "currency": "USD",
+          "availableDays": [
+            7
+          ],
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": [
+            {
+              "day": 7,
+              "name": "Day 7 | CRUISING",
+              "port": "CRUISING"
+            }
+          ]
+        },
+        {
+          "accessible": false,
+          "id": "Y78K",
+          "baseId": "AC-HUB-OBACT-004001",
+          "defaultVariantId": "Y78K",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "Y78K"
+          ],
+          "productTypeCategory": {
+            "id": "pt_onboardActivities",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Women of Wine Tasting Experience",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/royal-only-women-of-wine-tasting-experience.jpg",
+                "altText": "Different color wines for a tasting while one glass of white is being poured.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": null,
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_SEAT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": [
+            "< 3 hours"
+          ],
+          "unit": {
+            "code": "perSeat",
+            "name": "Per Seat"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_beverageExperiences"
+          ],
+          "lowestAdultPrice": 50,
+          "msrpAdultPrice": 50,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": [
+            3
+          ],
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": [
+            {
+              "day": 3,
+              "name": "Day 3 | CRUISING",
+              "port": "CRUISING"
+            }
+          ]
+        },
+        {
+          "accessible": false,
+          "id": "Y78R",
+          "baseId": "AC-HUB-OBACT-004008",
+          "defaultVariantId": "Y78R",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "Y78R"
+          ],
+          "productTypeCategory": {
+            "id": "pt_onboardActivities",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Taste of the Caribbean Tasting Experience",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/royal-only-taste-of-caribbean-tasting-experience.jpg",
+                "altText": "Caribbean drinksand cocktails with fresh fruit.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 6,
+            "stockLevelStatus": "lowStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": null,
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_SEAT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": [
+            "< 3 hours"
+          ],
+          "unit": {
+            "code": "perSeat",
+            "name": "Per Seat"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_beverageExperiences"
+          ],
+          "lowestAdultPrice": 60,
+          "msrpAdultPrice": 60,
+          "adultTax": null,
+          "availableInventory": 6,
+          "currency": "USD",
+          "availableDays": [
+            6
+          ],
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": [
+            {
+              "day": 6,
+              "name": "Day 6 | CRUISING",
+              "port": "CRUISING"
+            }
+          ]
+        },
+        {
+          "accessible": false,
+          "id": "Y8TT",
+          "baseId": "BV-HUB-999-003601",
+          "defaultVariantId": "Y8TT",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "Y8TT",
+            "Y8TU"
+          ],
+          "productTypeCategory": {
+            "id": "pt_beverage",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "San Pellegrino Sparkling Water Delivery (8 or 12 Bottles)",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/beverage-packages/2024/royal-only-san-pellegrino-sparkling-water-package-tripplet.jpg",
+                "altText": "San Pellegrino Sparkling Water bottles on a blue wavy background.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": {
+            "code": "SEP_2026_1_FS_R_BV_SPARKLINGWATER_090326_20",
+            "title": "Sparkling Water FS Promo 20% Off",
+            "promotionType": "PERCENT_OFF",
+            "startDate": null,
+            "endDate": null,
+            "description": "PRE-CRUISE SAVINGS",
+            "displayName": "(20% OFF) PRE-CRUISE SAVINGS",
+            "promotionValue": 20,
+            "discountedValue": 5.01
+          },
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_UNIT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": null,
+          "unit": {
+            "code": "perUnit",
+            "name": "Per Person"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_NonAlcoholicBeveragePackages"
+          ],
+          "lowestAdultPrice": 16.99,
+          "msrpAdultPrice": 22,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": null,
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": null
+        },
+        {
+          "accessible": false,
+          "id": "YN1W",
+          "baseId": "AC-HUB-OBACT-009601",
+          "defaultVariantId": "YN1W",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "YN1W"
+          ],
+          "productTypeCategory": {
+            "id": "pt_onboardActivities",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Jack Daniel’s Bonded Series Immersive Whiskey Tasting",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/08/royal-only-jack-daniels-bonded-series-immersive-whiskey-tasting-bottles.jpg",
+                "altText": "3 Bottles of Jack Daniel's Whiskey in different varieties.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/08/royal-only-jack-daniels-bonded-series-immersive-whiskey-tasting-generic.jpg",
+                "altText": "Two shots of whiskey being poured into shot glasses.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": null,
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_SEAT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": [
+            "< 3 hours"
+          ],
+          "unit": {
+            "code": "perSeat",
+            "name": "Per Seat"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_beverageExperiences"
+          ],
+          "lowestAdultPrice": 60,
+          "msrpAdultPrice": 60,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": [
+            2
+          ],
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": [
+            {
+              "day": 2,
+              "name": "Day 2 | CRUISING",
+              "port": "CRUISING"
+            }
+          ]
+        },
+        {
+          "accessible": false,
+          "id": "YNMR",
+          "baseId": "AC-HUB-OBACT-011201",
+          "defaultVariantId": "YNMR",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "YNMR"
+          ],
+          "productTypeCategory": {
+            "id": "pt_onboardActivities",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Komos Tequila & Chocolate Pairing",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/12/royal-only-komos-tequila-tasting-trio.jpg",
+                "altText": "Three ceramic Komos tequila bottles—pink, cobalt blue, and matte white—stand side by side, each paired with a filled wine glass that reflects the tequila’s color. The bottles sit on a neutral stone surface against a light beige backdrop.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/12/royal-only-komos-tequila-tasting-anejo-cristalino.jpg",
+                "altText": "A cobalt blue Komos Añejo Cristalino tequila bottle stands next to a clear wine glass filled with tequila, set on a light stone surface with large blue and white rock textures in the background.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/12/royal-only-komos-tequila-tasting-anejo-reserva.jpg",
+                "altText": "A matte white Komos Añejo Reserva tequila bottle stands next to a wine glass filled with golden tequila, set on a light stone surface with a textured beige background and a circular golden decorative piece behind it.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/12/royal-only-komos-tequila-tasting-reposado-rosa.jpg",
+                "altText": "A pink Komos Reposado Rosa tequila bottle is displayed beside a wine glass filled with rosé-colored tequila, placed on a pale stone surface with a soft pink marble backdrop and pieces of white coral.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": null,
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_SEAT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": [
+            "< 3 hours"
+          ],
+          "unit": {
+            "code": "perSeat",
+            "name": "Per Seat"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_beverageExperiences"
+          ],
+          "lowestAdultPrice": 70,
+          "msrpAdultPrice": 70,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": [
+            7
+          ],
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": [
+            {
+              "day": 7,
+              "name": "Day 7 | CRUISING",
+              "port": "CRUISING"
+            }
+          ]
+        },
+        {
+          "accessible": false,
+          "id": "Y7Q1",
+          "baseId": "AC-HUB-OBACT-005111",
+          "defaultVariantId": "Y7Q1",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "Y7Q1"
+          ],
+          "productTypeCategory": {
+            "id": "pt_onboardActivities",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Playmaker's Owner's Box ",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/excalibur/food-beverage/royal-caribbean/playmakers/Playmakers-Owners-Box-Family.jpg",
+                "altText": "Family sitting in Playmakers Owners Box.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/excalibur/food-beverage/royal-caribbean/playmakers/Playmakers-Wings.jpg",
+                "altText": "Playmakers Wings with side of blue cheese sauce and carrot sticks.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 2,
+            "stockLevelStatus": "lowStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": null,
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_PACKAGE",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": [
+            "3-6 hours"
+          ],
+          "unit": {
+            "code": "perPackage",
+            "name": "Per Package"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_beverageExperiences"
+          ],
+          "lowestAdultPrice": 300,
+          "msrpAdultPrice": 300,
+          "adultTax": null,
+          "availableInventory": 2,
+          "currency": "USD",
+          "availableDays": [
+            2,
+            3,
+            6
+          ],
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": [
+            {
+              "day": 2,
+              "name": "Day 2 | CRUISING",
+              "port": "CRUISING"
+            },
+            {
+              "day": 3,
+              "name": "Day 3 | CRUISING",
+              "port": "CRUISING"
+            },
+            {
+              "day": 6,
+              "name": "Day 6 | CRUISING",
+              "port": "CRUISING"
+            }
+          ]
+        },
+        {
+          "accessible": false,
+          "id": "Y966",
+          "baseId": "AC-HUB-OBACT-007401",
+          "defaultVariantId": "Y966",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "Y966"
+          ],
+          "productTypeCategory": {
+            "id": "pt_onboardActivities",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "The Macallan Scotch Whiskey Tasting Experience",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/01/royal-only-macallan-scotch-whiskey-tasting-experience.jpg",
+                "altText": "Three bottles of Macallan Scotch Whiskey on a wooden table.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/commerce/products/royal/onboard-activities/2025/01/royal-only-macallan-scotch-whiskey-tasting-experience-glasses.jpg",
+                "altText": "Glasses of Macallan Scotch Whiskey on a table.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 9999,
+            "stockLevelStatus": "inStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": null,
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_SEAT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": [
+            "< 3 hours"
+          ],
+          "unit": {
+            "code": "perSeat",
+            "name": "Per Seat"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_beverageExperiences"
+          ],
+          "lowestAdultPrice": 60,
+          "msrpAdultPrice": 60,
+          "adultTax": null,
+          "availableInventory": 9999,
+          "currency": "USD",
+          "availableDays": [
+            3
+          ],
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": [
+            {
+              "day": 3,
+              "name": "Day 3 | CRUISING",
+              "port": "CRUISING"
+            }
+          ]
+        },
+        {
+          "accessible": false,
+          "id": "YO9D",
+          "baseId": "AC-HUB-OBACT-023301",
+          "defaultVariantId": "YO9D",
+          "defaultVariantTitle": null,
+          "variantIdList": [
+            "YO9D"
+          ],
+          "productTypeCategory": {
+            "id": "pt_onboardActivities",
+            "categoryDisplayName": null
+          },
+          "merchandisingCategory": null,
+          "title": "Royal Railway — Legend Station Wine Tasting",
+          "media": [
+            {
+              "source": {
+                "path": "/content/dam/excalibur/food-beverage/royal-caribbean/royal-railway/LE-Wine-Tasting-bottles.jpg",
+                "altText": "5 wine bottles lined up on a wooden table with a dark background. ",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/excalibur/food-beverage/royal-caribbean/royal-railway/LE-Railway-guests-enjoying-cocktails-and-dinner.jpg",
+                "altText": "Man and woman enjoying cocktails and dinner in a booth on the train car experience of Royal Railway.",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            },
+            {
+              "source": {
+                "path": "/content/dam/excalibur/food-beverage/royal-caribbean/royal-railway/LE-Wine-Tasting-glasses.jpg",
+                "altText": "group of people drinking wine and eating small tapas-like snacks",
+                "imagePlacement": null,
+                "customDuration": null
+              },
+              "primary": false,
+              "type": "IMAGE"
+            }
+          ],
+          "recommended": false,
+          "mostPopular": false,
+          "favorited": false,
+          "references": [],
+          "quantityType": null,
+          "consumerInterests": [],
+          "stock": {
+            "stockLevel": 0,
+            "stockLevelStatus": "outOfStock",
+            "doesStockOwnershipMatchEnvironment": true
+          },
+          "promoDescription": null,
+          "complimentary": false,
+          "alaCarte": false,
+          "dueAtVenue": false,
+          "diningType": null,
+          "salesUnit": "PER_SEAT",
+          "additionalInformation": null,
+          "atYourLeisure": false,
+          "cancellationEnabled": false,
+          "durationValues": [
+            "< 3 hours"
+          ],
+          "unit": {
+            "code": "perSeat",
+            "name": "Per Seat"
+          },
+          "baseOptions": null,
+          "subCategoryCodes": [
+            "m_beverageExperiences"
+          ],
+          "lowestAdultPrice": 70,
+          "msrpAdultPrice": 70,
+          "adultTax": null,
+          "availableInventory": 0,
+          "currency": "USD",
+          "availableDays": [
+            6
+          ],
+          "promoTagType": null,
+          "recommendedModel": null,
+          "priceRollupType": "TAX_ROLLUP",
+          "productBookingStatus": null,
+          "dayPorts": [
+            {
+              "day": 6,
+              "name": "Day 6 | CRUISING",
+              "port": "CRUISING"
+            }
+          ]
+        }
+      ],
+      "merchandisingCategoryWithChildren": {
+        "id": "beverage",
+        "categoryDisplayName": "Beverage Packages",
+        "categoryDescription": "From coffee to cocktails, and everything in between.",
+        "productCount": 14,
+        "media": [
+          {
+            "source": {
+              "path": "/content/dam/commerce/web-support/royal/beverage/plp/pmc-beverage-cocktails-top-down-shutterstock-stock-photo-000000000-plp-5-2.jpg",
+              "altText": "top down view of an assortment of beautiful cocktails.",
+              "imagePlacement": null,
+              "customDuration": null
+            },
+            "primary": false,
+            "type": "IMAGE"
+          }
+        ],
+        "order": null,
+        "unit": null,
+        "childCategories": [
+          {
+            "id": "m_beverage",
+            "categoryDisplayName": "Beverages",
+            "categoryDescription": " ",
+            "productCount": 0,
+            "media": null,
+            "order": 0,
+            "unit": null
+          },
+          {
+            "id": "m_beveragePackage",
+            "categoryDisplayName": "Beverage Packages",
+            "categoryDescription": "",
+            "productCount": 0,
+            "media": null,
+            "order": 0,
+            "unit": null
+          },
+          {
+            "id": "m_beverageExperiences",
+            "categoryDisplayName": "Beverage Experiences",
+            "categoryDescription": "Beverage Experiences",
+            "productCount": 8,
+            "media": null,
+            "order": 0,
+            "unit": null
+          },
+          {
+            "id": "m_AlcoholicBeveragePackages",
+            "categoryDisplayName": "Alcoholic Beverage Packages",
+            "categoryDescription": "Alcoholic Beverage Packages",
+            "productCount": 1,
+            "media": null,
+            "order": 1,
+            "unit": null
+          },
+          {
+            "id": "m_NonAlcoholicBeveragePackages",
+            "categoryDisplayName": "Non-Alcoholic Beverage Packages",
+            "categoryDescription": "Non-Alcoholic Beverage Packages",
+            "productCount": 5,
+            "media": null,
+            "order": 2,
+            "unit": null
+          },
+          {
+            "id": "m_AlcoholicDrinks",
+            "categoryDisplayName": "Drink Packages ",
+            "categoryDescription": "Drink Packages",
+            "productCount": 0,
+            "media": null,
+            "order": 2,
+            "unit": null
+          },
+          {
+            "id": "m_NonAlcoholicDrinks",
+            "categoryDisplayName": "Non- Alcoholic Drinks",
+            "categoryDescription": "Non-Alcoholic Drinks",
+            "productCount": 0,
+            "media": null,
+            "order": 2,
+            "unit": null
+          },
+          {
+            "id": "m_DrinksExperiences",
+            "categoryDisplayName": "Drink Experiences",
+            "categoryDescription": "<p>Drink Experiences</p>",
+            "productCount": 0,
+            "media": null,
+            "order": 3,
+            "unit": null
+          }
+        ]
+      },
+      "page": {
+        "pageSize": 25,
+        "totalResults": 14,
+        "totalPages": 1,
+        "currentPage": 0
+      },
+      "sorting": [
+        {
+          "sortCode": "rRank-asc",
+          "sortTitle": null,
+          "sortSelected": true
+        },
+        {
+          "sortCode": "rRank-desc",
+          "sortTitle": null,
+          "sortSelected": false
+        }
+      ],
+      "facets": [],
+      "breadcrumbs": [],
+      "health": null,
+      "promotions": null
+    }
+  }
+}

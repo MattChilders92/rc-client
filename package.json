@@ -1,0 +1,20 @@
+{
+  "name": "rc-client",
+  "version": "0.1.0",
+  "description": "Documented client for Royal Caribbean's web APIs — auth, account, casino offers, sailings, room and product pricing, bookings, deals",
+  "type": "module",
+  "license": "UNLICENSED",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "exports": { ".": "./src/index.ts" },
+  "files": ["src", "README.md", "docs"],
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.ts",
+    "capture": "node --disable-warning=ExperimentalWarning scripts/capture.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^26.4.0",
+    "typescript": "^5.9.3"
+  }
+}

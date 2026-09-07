@@ -1,0 +1,29 @@
+{
+  "_status": 200,
+  "body": {
+    "message": "Loyalty data retrieved successfully",
+    "data": {
+      "casinoLoyaltyId": "REDACTED",
+      "cruiseLoyaltyId": "REDACTED",
+      "consumerId": "REDACTED",
+      "lastName": "REDACTED",
+      "tier": "Prime",
+      "individualPoints": "10151.0",
+      "relationshipPoints": "10151.0",
+      "evaluationPeriodStartDateForPoints": "01-APR-2026",
+      "evaluationPeriodEndDateForPoints": "31-MAR-2027",
+      "address": {
+        "addressLine": "7916 Chukar Rd",
+        "city": "Yukon",
+        "state": "OK",
+        "postalCode": "REDACTED",
+        "province": null,
+        "country": "United States",
+        "errorInAddressGet": null
+      },
+      "status": null,
+      "message": null,
+      "multipleCasinoProfiles": false
+    }
+  }
+}

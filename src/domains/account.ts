@@ -1,0 +1,85 @@
+import type { RcSession } from '../auth/index.ts';
+import { guestHeaders } from '../headers.ts';
+import { request } from '../http.ts';
+import { RcShapeError } from '../errors.ts';
+
+/**
+ * The guest account: contact details plus every loyalty programme in one call.
+ *
+ * Everything of interest is under `payload`, and the loyalty fields are flat
+ * with long names (`clubRoyaleLoyaltyTier`) rather than nested per programme.
+ */
+
+const URL_ = 'https://aws-prd.api.rccl.com/en/royal/web/v3/guestAccounts';
+
+export interface RcAccount {
+  accountId: string;
+  /** Required in the casino offers request body. */
+  consumerId: string | null;
+  email: string | null;
+  firstName: string | null;
+  lastName: string | null;
+
+  /** Crown & Anchor number. The casino API keys offers off this. */
+  crownAndAnchorId: string | null;
+  crownAndAnchorTier: string | null;
+  crownAndAnchorPoints: number;
+  crownAndAnchorRelationshipPoints: number;
+
+  clubRoyaleTier: string | null;
+  clubRoyalePoints: number;
+  clubRoyaleRelationshipPoints: number;
+
+  captainsClubId: string | null;
+  captainsClubTier: string | null;
+
+  /** The untouched payload, so a field added later needs no library change. */
+  raw: unknown;
+}
+
+const num = (v: unknown): number => {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+};
+
+// Royal writes an absent tier as the string "NONE" rather than omitting it.
+const nn = (v: unknown): string | null =>
+  v === null || v === undefined || v === '' || v === 'NONE' ? null : String(v);
+
+export async function fetchAccount(session: RcSession): Promise<RcAccount> {
+  const url = `${URL_}/${session.accountId}`;
+  const res = await request<any>(url, { headers: guestHeaders(session) });
+
+  const p = res.data?.payload ?? res.data;
+  if (!p || typeof p !== 'object') {
+    throw new RcShapeError('Account response had no payload', {
+      status: res.status, url, body: res.data,
+    });
+  }
+
+  const loyalty = p.loyaltyInformation ?? {};
+  const contact = p.contactInformation ?? {};
+  const person = p.personalInformation ?? {};
+
+  return {
+    accountId: session.accountId,
+    consumerId: nn(p.consumerId),
+    email: nn(contact.email ?? p.email),
+    firstName: nn(person.firstName),
+    lastName: nn(person.lastName),
+
+    crownAndAnchorId: nn(loyalty.crownAndAnchorId),
+    crownAndAnchorTier: nn(loyalty.crownAndAnchorSocietyLoyaltyTier),
+    crownAndAnchorPoints: num(loyalty.crownAndAnchorSocietyLoyaltyIndividualPoints),
+    crownAndAnchorRelationshipPoints: num(loyalty.crownAndAnchorSocietyLoyaltyRelationshipPoints),
+
+    clubRoyaleTier: nn(loyalty.clubRoyaleLoyaltyTier),
+    clubRoyalePoints: num(loyalty.clubRoyaleLoyaltyIndividualPoints),
+    clubRoyaleRelationshipPoints: num(loyalty.clubRoyaleLoyaltyRelationshipPoints),
+
+    captainsClubId: nn(loyalty.captainsClubId),
+    captainsClubTier: nn(loyalty.captainsClubLoyaltyTier),
+
+    raw: p,
+  };
+}

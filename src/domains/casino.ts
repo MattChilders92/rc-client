@@ -1,0 +1,65 @@
+import type { RcSession } from '../auth/index.ts';
+import { casinoHeaders } from '../headers.ts';
+import { request } from '../http.ts';
+
+/**
+ * Club Royale standing from the casino system itself.
+ *
+ * Preferred over the loyalty block on the guest account: it also returns the
+ * casino profile id and the annual window tier points are evaluated over, and it
+ * is the API the offers page is actually built on.
+ *
+ * This endpoint validates its own schema and names any header it is missing in
+ * the response body, which makes it the easiest Royal API to debug.
+ */
+
+const URL_ = 'https://www.royalcaribbean.com/api/casino/v1/loyalty-data';
+
+export interface CasinoLoyalty {
+  /** Casino profile id — distinct from the Crown & Anchor number. */
+  casinoLoyaltyId: string | null;
+  cruiseLoyaltyId: string | null;
+  consumerId: string | null;
+  tier: string | null;
+  individualPoints: number;
+  relationshipPoints: number;
+  /** Tier is earned within an annual window; these are its bounds. */
+  periodStart: string | null;
+  periodEnd: string | null;
+  multipleCasinoProfiles: boolean;
+  raw: unknown;
+}
+
+const num = (v: unknown): number => {
+  const n = Number(v);
+  return Number.isFinite(n) ? n : 0;
+};
+
+const str = (v: unknown): string | null =>
+  v === null || v === undefined || v === '' ? null : String(v);
+
+/** Returns null when the account has no casino profile. */
+export async function fetchCasinoLoyalty(session: RcSession): Promise<CasinoLoyalty | null> {
+  const res = await request<any>(URL_, {
+    headers: casinoHeaders(session),
+    allowStatus: [404],
+  });
+  if (res.status === 404) return null;
+
+  // A schema complaint arrives as HTTP 200 carrying an error envelope.
+  if (res.data?.error || !res.data?.data) return null;
+  const d = res.data.data;
+
+  return {
+    casinoLoyaltyId: str(d.casinoLoyaltyId),
+    cruiseLoyaltyId: str(d.cruiseLoyaltyId),
+    consumerId: str(d.consumerId),
+    tier: str(d.tier),
+    individualPoints: num(d.individualPoints),
+    relationshipPoints: num(d.relationshipPoints),
+    periodStart: str(d.evaluationPeriodStartDateForPoints),
+    periodEnd: str(d.evaluationPeriodEndDateForPoints),
+    multipleCasinoProfiles: d.multipleCasinoProfiles === true,
+    raw: d,
+  };
+}
