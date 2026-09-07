@@ -357,8 +357,18 @@ tier      …/offers/{YY}{MM}{suffix}{tier}.pdf
   since the old platform's parser. Values look like `Spectrum Of The Seas®`,
   `September 1, 2026`, `Balcony - GTY`, `Cruise Fare For 2 Guests` (or `For 1
   Guest`: the second guest pays), `$250 FreePlay`, `$50`.
-- **Parse by position, not by tabs.** Every cell is its own text item, so a
-  cell's column is the header it sits under; the old parser split on tab
+- **Layouts vary by tier.** Tier 10 merges the bonus label into the stateroom
+  header (`Next Cruise Bonus Stateroom Type`) and has no FreePlay column;
+  `2609D02A` labels the stateroom column just `Offer` and carries no offer-type
+  column at all (its terms line says who pays). `HEADER_KEYS` maps every
+  spelling seen so far.
+- **Parse by position, not by tabs.** Every cell is its own text item, and
+  Royal centres each cell under its header, so a cell belongs to the header
+  whose centre is nearest its own (a ship name starts left of the `Ship`
+  header; a left-edge rule shifts every column). The old parser split on tab
   characters and depended on the extractor's join behaviour. This library
   carries no PDF dependency: callers hand `parseTierPages()` the per-page
-  lines of `{x, str}` cells (CruiseWatch does that with pdf.js).
+  lines of `{x, w, str}` cells (CruiseWatch does that with pdf.js).
+- **Row identity** is `instantSailingKey()`: ship | date | stateroom | offer
+  type. Stores should key on the same function so their conflict target can
+  never drift from the parser's dedupe.
