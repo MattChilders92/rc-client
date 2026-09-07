@@ -55,7 +55,12 @@ export interface RcOfferSailing {
 
 export interface RcOffer {
   offerCode: string;
-  /** Per-player association id. One offer code can carry several. */
+  /**
+   * Identifies one **redeemable grant**, not one offer. Royal issues the same
+   * offer several times to a player — a live payload carried `26TOR603` three
+   * times, identical in every other field — and each is separately redeemable.
+   * This, not `offerCode`, is the identity of a row.
+   */
   playerOfferId: string | null;
   campaignCode: string | null;
   campaignName: string | null;
@@ -79,6 +84,12 @@ export interface RcOffer {
    */
   sailings: RcOfferSailing[];
   status: string | null;
+  /**
+   * What Royal records against a grant once it is used. Shape unobserved: every
+   * grant on the account tested is unredeemed and this is null throughout, so it
+   * is passed through rather than interpreted.
+   */
+  redeemInfo: unknown;
   raw: unknown;
 }
 
@@ -184,6 +195,7 @@ export function mapOffer(o: any): RcOffer {
     perks,
     sailings: Array.isArray(co.sailings) ? co.sailings.map(mapSailing) : [],
     status: str(o?.status ?? co.status),
+    redeemInfo: o?.redeemInfo ?? null,
     raw: o,
   };
 }

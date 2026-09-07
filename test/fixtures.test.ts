@@ -106,14 +106,21 @@ test('free play comes from the perk name, since the code is opaque', async () =>
   assert.equal(withPerk.freePlay, 100);
 });
 
-test('one offer code can arrive several times, under different player ids', async () => {
+test('a repeated offer code is several redeemable grants, not one offer', async () => {
   stub('offers');
   const { offers } = await listOffers(session, { loyaltyId: '000000000' });
 
-  // Real payloads repeat a code across player-offer associations. Anything
-  // upserting on the code alone has to collapse these first.
+  // Royal issues the same offer repeatedly. Each copy is separately
+  // redeemable and differs only by playerOfferId, so that is the identity of a
+  // row -- keying on the offer code both undercounts what the player holds and
+  // makes the rows impossible to upsert.
   const codes = offers.map((o) => o.offerCode);
-  assert.ok(codes.length > new Set(codes).size, 'fixture must keep the duplicate');
+  assert.ok(codes.length > new Set(codes).size, 'fixture must keep the repeat');
+
+  const repeated = codes.find((c, i) => codes.indexOf(c) !== i);
+  const grants = offers.filter((o) => o.offerCode === repeated);
+  const ids = new Set(grants.map((g) => g.playerOfferId));
+  assert.equal(ids.size, grants.length, 'each grant carries its own playerOfferId');
 });
 
 test('a moved route throws instead of reporting an empty account', async () => {

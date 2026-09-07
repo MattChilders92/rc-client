@@ -11,7 +11,7 @@
         "campaignType": "Stateroom Offer",
         "redeemInfo": null,
         "status": "active",
-        "playerOfferId": "REDACTED",
+        "playerOfferId": "00000000-0000-0000-0000-000000000001",
         "bookingRequest": [],
         "campaignOffer": {
           "offerCode": "26BAF304",
@@ -51,7 +51,7 @@
         "campaignType": "Stateroom Offer",
         "redeemInfo": null,
         "status": "active",
-        "playerOfferId": "REDACTED",
+        "playerOfferId": "00000000-0000-0000-0000-000000000002",
         "bookingRequest": [],
         "campaignOffer": {
           "offerCode": "26MIX503",
@@ -98,7 +98,7 @@
         "campaignType": "Stateroom Offer",
         "redeemInfo": null,
         "status": "active",
-        "playerOfferId": "REDACTED",
+        "playerOfferId": "00000000-0000-0000-0000-000000000003",
         "bookingRequest": [],
         "campaignOffer": {
           "offerCode": "26TOR603",
@@ -134,7 +134,7 @@
         "campaignType": "Stateroom Offer",
         "redeemInfo": null,
         "status": "active",
-        "playerOfferId": "REDACTED",
+        "playerOfferId": "00000000-0000-0000-0000-000000000004",
         "bookingRequest": [],
         "campaignOffer": {
           "offerCode": "26TOR603",

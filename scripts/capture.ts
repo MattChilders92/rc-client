@@ -35,6 +35,25 @@ const REDACT_KEYS = new Set([
   'access_token', 'id_token', 'accesstoken', 'tokenid', 'playerofferid',
 ]);
 
+/**
+ * Ids that must stay *distinct* after redaction.
+ *
+ * One shared placeholder destroys the fact that two records are different
+ * things: three separately redeemable grants would come out looking like the
+ * same grant three times, and no test could tell. These get a stable surrogate
+ * per original value instead — no less scrubbed, but still countable.
+ */
+const DISTINCT_KEYS = new Set(['playerofferid']);
+const surrogates = new Map<string, string>();
+
+function surrogateFor(value: string): string {
+  const held = surrogates.get(value);
+  if (held) return held;
+  const made = `00000000-0000-0000-0000-${String(surrogates.size + 1).padStart(12, '0')}`;
+  surrogates.set(value, made);
+  return made;
+}
+
 /** Values matching these are scrubbed wherever they appear. */
 const PATTERNS: [RegExp, string][] = [
   [/[\w.+-]+@[\w-]+\.[\w.]+/g, 'redacted@example.com'],
@@ -45,6 +64,9 @@ const PATTERNS: [RegExp, string][] = [
 
 function redact(value: unknown, key = ''): unknown {
   if (typeof value === 'string') {
+    // Ahead of the blanket rules: a surrogate is already safe, and the uuid
+    // pattern below would otherwise flatten them all back into one value.
+    if (DISTINCT_KEYS.has(key.toLowerCase())) return surrogateFor(value);
     if (REDACT_KEYS.has(key.toLowerCase())) return 'REDACTED';
     let out = value;
     for (const [re, replacement] of PATTERNS) out = out.replace(re, replacement);

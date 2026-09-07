@@ -98,9 +98,12 @@ totalOffers, totalPages, pageNumber }`. Each entry keeps the familiar
 - **Free play is not a field.** It is in the perk *name* ("Bonus FP $75"); the
   perk codes on this version are opaque (`TBK6`), so a code-only `FP<n>` parse
   returns nothing.
-- **One offer code arrives several times**, once per player-offer association.
-  A live payload repeated `26TOR603` three times. Anything keyed on the offer
-  code alone must collapse them first.
+- **One offer code arrives several times, once per redeemable grant.** Royal
+  now issues the same offer repeatedly: a live payload repeated `26TOR603`
+  three times, identical but for `playerOfferId`, and each is separately
+  redeemable. `playerOfferId` is the identity of a row; the offer code is only
+  how they group for display. Anything keyed on the code alone both undercounts
+  what the player holds and cannot be upserted.
 - `sailings[]` is present but **always empty**, and no separate sailings route
   exists on this version — `/v2/offers/detail`, `/v2/offers/{code}`,
   `/v2/offers/{id}/sailings`, `/v2/campaigns` and an `includeSailings` /
