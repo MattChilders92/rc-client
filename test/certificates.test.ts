@@ -115,6 +115,20 @@ test('cells centred under their headers still land in the right column (real 260
   assert.equal(sailings[0]!.secondGuestPays, true);
 });
 
+test('a stateroom column labelled "Next Cruise Bonus Offer" is still the stateroom (real 2608D07 geometry)', () => {
+  const page: PageLines = [
+    row(982, [[122, 'Offer Code'], [322, 'Ship'], [523, 'Departure Port'], [759, 'Sail Date'], [1032, 'Itinerary'],
+      [1261, 'Next Cruise Bonus Offer'], [1529, 'Offer Type']]),
+    row(955, [[130, '2608D07'], [230, 'Enchantment Of The Seas®'], [525, 'Tampa, Florida'], [735, 'August 8, 2026'],
+      [930, '7 Night Western Caribbean Cruise'], [1260, 'Oceanview - GOBO - GTY'], [1478, 'Cruise Fare For 1 Guest']]),
+  ];
+  const { sailings } = parseTierPages([page]);
+  assert.equal(sailings.length, 1);
+  assert.equal(sailings[0]!.stateroomType, 'Oceanview - GOBO - GTY');
+  assert.equal(sailings[0]!.roomType, 'OCEANVIEW');
+  assert.equal(sailings[0]!.offerType, 'Cruise Fare For 1 Guest');
+});
+
 test('dates and room types normalise the way the pricing side expects', () => {
   assert.equal(normalizeSailDate('September 1, 2026'), '2026-09-01');
   assert.equal(normalizeSailDate('10/5/2026'), '2026-10-05');
@@ -122,6 +136,7 @@ test('dates and room types normalise the way the pricing side expects', () => {
   assert.equal(normalizeSailDate('someday'), null);
   assert.equal(roomTypeOf('Oceanview - GTY'), 'OCEANVIEW');
   assert.equal(roomTypeOf('Junior Suite'), 'SUITE');
+  for (const l of ['Owners Loft', 'Sky Loft', 'Aqua Theater', 'Aquatheater', 'Crown Loft']) assert.equal(roomTypeOf(l), 'SUITE', l);
   assert.equal(tierTradeInValue('02A'), 1500);
   assert.equal(tierTradeInValue('VIP1'), null);
 });

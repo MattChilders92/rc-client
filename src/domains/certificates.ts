@@ -250,7 +250,9 @@ export function roomTypeOf(stateroom: string): string {
   if (u.includes('INTERIOR') || u.includes('INSIDE')) return 'INTERIOR';
   if (u.includes('OCEAN') || u.includes('OUTSIDE')) return 'OCEANVIEW';
   if (u.includes('BALCONY') || u.includes('VERANDA')) return 'BALCONY';
-  if (u.includes('SUITE')) return 'SUITE';
+  // The VIP tiers name suite categories without the word: Owners Loft, Sky
+  // Loft, Star Loft, Royal Loft, Crown Loft, Aqua Theater / Aquatheater.
+  if (/SUITE|LOFT|AQUA ?THEAT|OWNER|VILLA|PENTHOUSE/.test(u)) return 'SUITE';
   return 'INTERIOR';
 }
 
@@ -266,7 +268,21 @@ const HEADER_KEYS: Record<string, keyof RawRow> = {
   'next cruise bonus stateroom type': 'stateroom',
   // Some tiers label the stateroom column just "Offer" and carry no offer-type column.
   offer: 'stateroom',
+  'next cruise bonus offer': 'stateroom',
 };
+/**
+ * Royal re-labels the stateroom column per tier ('Stateroom Type', 'Offer',
+ * 'Next Cruise Bonus Offer', 'Next Cruise Bonus Stateroom Type'); an unmapped
+ * header would let its cells drift to the nearest mapped neighbour, so any
+ * unknown label that is not 'Offer Type' and mentions stateroom or a bonus is
+ * taken as the stateroom column.
+ */
+function headerKey(label: string): keyof RawRow | undefined {
+  const l = label.trim().toLowerCase();
+  if (HEADER_KEYS[l]) return HEADER_KEYS[l];
+  if (l !== 'offer type' && /stateroom|bonus/.test(l)) return 'stateroom';
+  return undefined;
+}
 interface RawRow {
   offerCode?: string; ship?: string; port?: string; sailDate?: string; itinerary?: string;
   stateroom?: string; offerType?: string; bonus?: string; obc?: string;
@@ -296,7 +312,7 @@ export function parseTierPages(pages: PageLines[]): TierParse {
 
       if (first === 'offer code') {
         columns = cells
-          .map((c) => ({ x: center(c), key: HEADER_KEYS[c.str.trim().toLowerCase()] }))
+          .map((c) => ({ x: center(c), key: headerKey(c.str) }))
           .filter((c): c is { x: number; key: keyof RawRow } => !!c.key);
         continue;
       }
