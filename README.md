@@ -54,8 +54,14 @@ different ways, and a mismatch returns `422` or a bare `404`, never `401`:
 | commerce | `access-token` + `appkey` + `account-id` | catalog, bookings |
 | casino | `authorization: Bearer` + `x-account-id` | `/api/casino/**` |
 | anonymous | none | itinerary, cruise search |
+| mobile | `Authorization: bearer` + `Access-Token` + `appKey` + `Account-Id` | the phone app’s `api.rccl.com/en/royal/mobile/*` gateway |
 
-`src/headers.ts` is the only place this is encoded.
+`src/headers.ts` is the only place this is encoded. The **mobile** style is the
+phone app’s and is documented, not implemented — the app uses a native login
+(`mobile/v3/guestAccounts/authentication/login`, not the web OAuth2 grant), an
+env-info config service for the appkey/base-URL, and Akamai Bot Manager sensor
+data; its value is on-board data (folio, muster, virtual queue, digital key),
+not offers. See `docs/endpoints.md` → *The mobile app*.
 
 ## Ambiguous 404s
 
