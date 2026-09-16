@@ -43,5 +43,7 @@ export {
   type TextCell, type TextLine, type PageLines,
 } from './domains/certificates.ts';
 export {
-  searchCruises, type RcCruise, type RcSailingSummary, type SearchParams, type SearchResult,
+  searchCruises, fetchItineraryPorts, parseItineraryPorts,
+  type RcCruise, type RcSailingSummary, type SearchParams, type SearchResult,
+  type RcItineraryPorts, type RcItineraryDay,
 } from './domains/search.ts';

@@ -152,3 +152,116 @@ export async function searchCruises(params: SearchParams = {}): Promise<SearchRe
     }),
   };
 }
+
+/**
+ * Itinerary ports, from the same public cruise search.
+ *
+ * `cruiseSearch` returns each cruise's itinerary with a day-by-day port list,
+ * which is the only credential-free source for where a sailing actually calls —
+ * the casino offer feed carries the departure port and nothing else. Ports
+ * belong to the itinerary rather than the sail date, so one fetch serves every
+ * date that itinerary runs.
+ */
+const PORTS_QUERY = `query cruiseSearch_Ports($filters: String, $pagination: CruiseSearchPagination) {
+  cruiseSearch(filters: $filters, pagination: $pagination) {
+    results {
+      total
+      cruises {
+        masterSailing { itinerary {
+          code name totalNights
+          departurePort { code name }
+          ship { code name }
+          days { number ports { port { code name } } }
+        } }
+        sailings { sailDate itinerary { code } }
+      }
+    }
+  }
+}`;
+
+/** Royal's sentinel for a day at sea; it is not a port. */
+const SEA_DAY = 'CRU';
+
+export interface RcItineraryDay {
+  day: number;
+  ports: { code: string; name: string }[];
+}
+
+export interface RcItineraryPorts {
+  itineraryCode: string;
+  itineraryName: string | null;
+  nights: number | null;
+  shipCode: string | null;
+  departurePort: { code: string; name: string } | null;
+  /** Every day, including sea days, which keep their number and an empty port list. */
+  days: RcItineraryDay[];
+  /** The dates this itinerary is offered on, as the search reported them. */
+  sailDates: string[];
+}
+
+const text = (v: unknown): string | null =>
+  typeof v === 'string' && v.trim() !== '' ? v.trim() : null;
+
+/** Pure, so the shape is tested without a network call. */
+export function parseItineraryPorts(cruise: unknown): RcItineraryPorts | null {
+  const c = cruise as any;
+  const it = c?.masterSailing?.itinerary;
+  const code = text(it?.code);
+  if (!code) return null;
+
+  const days: RcItineraryDay[] = Array.isArray(it.days)
+    ? it.days.map((d: any, i: number) => ({
+        day: Number.isFinite(d?.number) ? Number(d.number) : i + 1,
+        ports: (Array.isArray(d?.ports) ? d.ports : [])
+          .map((p: any) => ({ code: text(p?.port?.code), name: text(p?.port?.name) }))
+          .filter((p: any): p is { code: string; name: string | null } =>
+            p.code !== null && p.code !== SEA_DAY)
+          .map((p: any) => ({ code: p.code as string, name: p.name ?? p.code })),
+      }))
+    : [];
+
+  const dep = text(it.departurePort?.code)
+    ? { code: text(it.departurePort.code)!, name: text(it.departurePort.name) ?? text(it.departurePort.code)! }
+    : null;
+
+  return {
+    itineraryCode: code,
+    itineraryName: text(it.name),
+    nights: Number.isFinite(it.totalNights) ? Number(it.totalNights) : null,
+    shipCode: text(it.ship?.code),
+    departurePort: dep,
+    days,
+    sailDates: (Array.isArray(c.sailings) ? c.sailings : [])
+      .map((s: any) => text(s?.sailDate))
+      .filter((d: string | null): d is string => d !== null),
+  };
+}
+
+/** One page of the catalogue. `total` lets the caller page to the end. */
+export async function fetchItineraryPorts(
+  opts: { count?: number; skip?: number } = {},
+): Promise<{ itineraries: RcItineraryPorts[]; total: number }> {
+  const res = await request<any>(URL_, {
+    method: 'POST',
+    headers: headers(),
+    body: {
+      operationName: 'cruiseSearch_Ports',
+      variables: { filters: '{}', pagination: { count: opts.count ?? 100, skip: opts.skip ?? 0 } },
+      query: PORTS_QUERY,
+    },
+  });
+
+  // GraphQL reports failures inside a 200, so errors have to be read out.
+  if (Array.isArray(res.data?.errors) && res.data.errors.length) {
+    const first = res.data.errors[0];
+    throw new Error(`cruiseSearch ports failed: ${first?.message ?? 'unknown GraphQL error'}`);
+  }
+  const results = res.data?.data?.cruiseSearch?.results ?? {};
+  const cruises: any[] = Array.isArray(results.cruises) ? results.cruises : [];
+  return {
+    itineraries: cruises
+      .map(parseItineraryPorts)
+      .filter((i: RcItineraryPorts | null): i is RcItineraryPorts => i !== null),
+    total: Number(results.total) || cruises.length,
+  };
+}
