@@ -2,6 +2,7 @@ import type { RcSession } from '../auth/index.ts';
 import { guestHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { RcShapeError } from '../errors.ts';
+import { num, str } from '../coerce.ts';
 
 /**
  * The guest account: contact details plus every loyalty programme in one call.
@@ -37,14 +38,10 @@ export interface RcAccount {
   raw: unknown;
 }
 
-const num = (v: unknown): number => {
-  const n = Number(v);
-  return Number.isFinite(n) ? n : 0;
-};
-
-// Royal writes an absent tier as the string "NONE" rather than omitting it.
-const nn = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' || v === 'NONE' ? null : String(v);
+// Royal writes an absent tier as the string "NONE" rather than omitting it;
+// unlike the shared `str`, this does not trim (call sites never see the kind
+// of stray whitespace that would matter).
+const nn = (v: unknown): string | null => (v === 'NONE' ? null : str(v));
 
 export async function fetchAccount(session: RcSession): Promise<RcAccount> {
   const url = `${URL_}/${session.accountId}`;
@@ -70,12 +67,13 @@ export async function fetchAccount(session: RcSession): Promise<RcAccount> {
 
     crownAndAnchorId: nn(loyalty.crownAndAnchorId),
     crownAndAnchorTier: nn(loyalty.crownAndAnchorSocietyLoyaltyTier),
-    crownAndAnchorPoints: num(loyalty.crownAndAnchorSocietyLoyaltyIndividualPoints),
-    crownAndAnchorRelationshipPoints: num(loyalty.crownAndAnchorSocietyLoyaltyRelationshipPoints),
+    crownAndAnchorPoints: num(loyalty.crownAndAnchorSocietyLoyaltyIndividualPoints) ?? 0,
+    crownAndAnchorRelationshipPoints:
+      num(loyalty.crownAndAnchorSocietyLoyaltyRelationshipPoints) ?? 0,
 
     clubRoyaleTier: nn(loyalty.clubRoyaleLoyaltyTier),
-    clubRoyalePoints: num(loyalty.clubRoyaleLoyaltyIndividualPoints),
-    clubRoyaleRelationshipPoints: num(loyalty.clubRoyaleLoyaltyRelationshipPoints),
+    clubRoyalePoints: num(loyalty.clubRoyaleLoyaltyIndividualPoints) ?? 0,
+    clubRoyaleRelationshipPoints: num(loyalty.clubRoyaleLoyaltyRelationshipPoints) ?? 0,
 
     captainsClubId: nn(loyalty.captainsClubId),
     captainsClubTier: nn(loyalty.captainsClubLoyaltyTier),

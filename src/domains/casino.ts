@@ -1,6 +1,7 @@
 import type { RcSession } from '../auth/index.ts';
 import { casinoHeaders } from '../headers.ts';
 import { request } from '../http.ts';
+import { num, str } from '../coerce.ts';
 
 /**
  * Club Royale standing from the casino system itself.
@@ -30,14 +31,6 @@ export interface CasinoLoyalty {
   raw: unknown;
 }
 
-const num = (v: unknown): number => {
-  const n = Number(v);
-  return Number.isFinite(n) ? n : 0;
-};
-
-const str = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' ? null : String(v);
-
 /** Returns null when the account has no casino profile. */
 export async function fetchCasinoLoyalty(session: RcSession): Promise<CasinoLoyalty | null> {
   const res = await request<any>(URL_, {
@@ -55,8 +48,8 @@ export async function fetchCasinoLoyalty(session: RcSession): Promise<CasinoLoya
     cruiseLoyaltyId: str(d.cruiseLoyaltyId),
     consumerId: str(d.consumerId),
     tier: str(d.tier),
-    individualPoints: num(d.individualPoints),
-    relationshipPoints: num(d.relationshipPoints),
+    individualPoints: num(d.individualPoints) ?? 0,
+    relationshipPoints: num(d.relationshipPoints) ?? 0,
     periodStart: str(d.evaluationPeriodStartDateForPoints),
     periodEnd: str(d.evaluationPeriodEndDateForPoints),
     multipleCasinoProfiles: d.multipleCasinoProfiles === true,

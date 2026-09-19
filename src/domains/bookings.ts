@@ -1,6 +1,7 @@
 import type { RcSession } from '../auth/index.ts';
 import { commerceHeaders } from '../headers.ts';
 import { request } from '../http.ts';
+import { str } from '../coerce.ts';
 
 /**
  * The guest's own reservations.
@@ -51,9 +52,6 @@ export interface RcBooking {
 
   raw: unknown;
 }
-
-const str = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' ? null : String(v);
 
 /** Royal writes dates as `YYYYMMDD` here and ISO elsewhere. */
 const day = (v: unknown): string | null => {

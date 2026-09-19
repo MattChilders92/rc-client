@@ -2,6 +2,7 @@ import type { RcSession } from '../auth/index.ts';
 import { RcRouteGoneError } from '../errors.ts';
 import { casinoHeaders } from '../headers.ts';
 import { request } from '../http.ts';
+import { num, str } from '../coerce.ts';
 
 /**
  * Club Royale casino offers.
@@ -159,12 +160,12 @@ export interface OffersResult {
   player: { firstName: string | null; lastName: string | null; loyaltyId: string | null };
 }
 
-const str = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' ? null : String(v);
-
+// Rounds to the nearest integer rather than truncating toward zero, unlike
+// the shared `int` — these fields are already whole numbers from Royal, so
+// this only matters for float noise, but the rounding is preserved exactly.
 const int = (v: unknown): number | null => {
-  const n = Number(v);
-  return Number.isFinite(n) ? Math.round(n) : null;
+  const n = num(v);
+  return n === null ? null : Math.round(n);
 };
 
 const day = (v: unknown): string | null => {

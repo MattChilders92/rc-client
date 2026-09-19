@@ -1,4 +1,5 @@
 import { request, USER_AGENT } from '../http.ts';
+import { str } from '../coerce.ts';
 
 /**
  * Public cruise search — the sailings and itineraries behind royalcaribbean.com's
@@ -71,9 +72,6 @@ export interface SearchParams {
   limit?: number;
   page?: number;
 }
-
-const str = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' ? null : String(v);
 
 function headers(): Record<string, string> {
   return {
@@ -199,40 +197,37 @@ export interface RcItineraryPorts {
   sailDates: string[];
 }
 
-const text = (v: unknown): string | null =>
-  typeof v === 'string' && v.trim() !== '' ? v.trim() : null;
-
 /** Pure, so the shape is tested without a network call. */
 export function parseItineraryPorts(cruise: unknown): RcItineraryPorts | null {
   const c = cruise as any;
   const it = c?.masterSailing?.itinerary;
-  const code = text(it?.code);
+  const code = str(it?.code);
   if (!code) return null;
 
   const days: RcItineraryDay[] = Array.isArray(it.days)
     ? it.days.map((d: any, i: number) => ({
         day: Number.isFinite(d?.number) ? Number(d.number) : i + 1,
         ports: (Array.isArray(d?.ports) ? d.ports : [])
-          .map((p: any) => ({ code: text(p?.port?.code), name: text(p?.port?.name) }))
+          .map((p: any) => ({ code: str(p?.port?.code), name: str(p?.port?.name) }))
           .filter((p: any): p is { code: string; name: string | null } =>
             p.code !== null && p.code !== SEA_DAY)
           .map((p: any) => ({ code: p.code as string, name: p.name ?? p.code })),
       }))
     : [];
 
-  const dep = text(it.departurePort?.code)
-    ? { code: text(it.departurePort.code)!, name: text(it.departurePort.name) ?? text(it.departurePort.code)! }
+  const dep = str(it.departurePort?.code)
+    ? { code: str(it.departurePort.code)!, name: str(it.departurePort.name) ?? str(it.departurePort.code)! }
     : null;
 
   return {
     itineraryCode: code,
-    itineraryName: text(it.name),
+    itineraryName: str(it.name),
     nights: Number.isFinite(it.totalNights) ? Number(it.totalNights) : null,
-    shipCode: text(it.ship?.code),
+    shipCode: str(it.ship?.code),
     departurePort: dep,
     days,
     sailDates: (Array.isArray(c.sailings) ? c.sailings : [])
-      .map((s: any) => text(s?.sailDate))
+      .map((s: any) => str(s?.sailDate))
       .filter((d: string | null): d is string => d !== null),
   };
 }

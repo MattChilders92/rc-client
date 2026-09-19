@@ -1,5 +1,6 @@
 import { anonymousHeaders } from '../headers.ts';
 import { request } from '../http.ts';
+import { num as coerceNum, str } from '../coerce.ts';
 
 /**
  * Cabin categories and fares for a sailing.
@@ -50,13 +51,12 @@ export interface RcRoom {
   raw: unknown;
 }
 
+// Rounds to cents — unlike the shared `num` — because these are money fields
+// and Royal's pricing carries float noise past two decimal places.
 const num = (v: unknown): number | null => {
-  const n = Number(v);
-  return Number.isFinite(n) ? Math.round(n * 100) / 100 : null;
+  const n = coerceNum(v);
+  return n === null ? null : Math.round(n * 100) / 100;
 };
-
-const str = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' ? null : String(v);
 
 /**
  * A stable identity for a cabin. Royal reuses `categoryCode` across several

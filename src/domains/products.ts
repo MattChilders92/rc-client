@@ -1,6 +1,7 @@
 import type { RcSession } from '../auth/index.ts';
 import { commerceHeaders } from '../headers.ts';
 import { request } from '../http.ts';
+import { num } from '../coerce.ts';
 
 /**
  * Onboard products: shore excursions, drink packages, dining and internet.
@@ -39,9 +40,11 @@ export interface ProductQuery {
 
 const PAGE_SIZE = 25;
 
+// Rounds to cents — unlike the shared `money` — because Royal's price fields
+// carry float noise past two decimal places.
 const money = (v: unknown): number | null => {
-  const n = Number(v);
-  return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : null;
+  const n = num(v);
+  return n !== null && n > 0 ? Math.round(n * 100) / 100 : null;
 };
 
 function pageUrl(q: ProductQuery, category: ProductCategory, page: number): string {
