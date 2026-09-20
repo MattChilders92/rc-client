@@ -1,4 +1,7 @@
-import { request, USER_AGENT } from '../http.ts';
+import { request } from '../http.ts';
+import { str } from '../coerce.ts';
+import { RcRequestError, RcShapeError } from '../errors.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Public cruise search — the sailings and itineraries behind royalcaribbean.com's
@@ -37,6 +40,7 @@ const QUERY = `query cruiseSearch_Cruises($filters: String, $qualifiers: String,
   }
 }`;
 
+/** One dated departure of an `RcCruise`. */
 export interface RcSailingSummary {
   sailingId: string;
   sailDate: string | null;
@@ -46,6 +50,7 @@ export interface RcSailingSummary {
   bookingLink: string | null;
 }
 
+/** One itinerary from the public search, with the individual dated sailings it runs. */
 export interface RcCruise {
   id: string;
   shipCode: string | null;
@@ -59,23 +64,25 @@ export interface RcCruise {
   sailings: RcSailingSummary[];
 }
 
+/** What `searchCruises` returns: one page of matching cruises plus the total across all pages. */
 export interface SearchResult {
   cruises: RcCruise[];
   total: number;
 }
 
+/** Parameters for `searchCruises`. Every field is optional; the defaults mirror an unfiltered site search. */
 export interface SearchParams {
   /** Royal's own filter string, e.g. `{"ship":["LE"]}`. Defaults to no filter. */
   filters?: string;
+  /** Defaults to `RECOMMENDED`. */
   sortBy?: 'RECOMMENDED' | 'PRICE' | 'DATE';
+  /** Results per page. Defaults to 25. */
   limit?: number;
+  /** 1-based. Defaults to 1. */
   page?: number;
 }
 
-const str = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' ? null : String(v);
-
-function headers(): Record<string, string> {
+function headers(config: RcConfig): Record<string, string> {
   return {
     accept: '*/*',
     'accept-language': 'en-US,en;q=0.9',
@@ -92,20 +99,25 @@ function headers(): Record<string, string> {
     office: 'MIA',
     pragma: 'no-cache',
     'request-timeout': '20',
-    'user-agent': USER_AGENT,
+    'user-agent': config.userAgent,
     referer: 'https://www.royalcaribbean.com/',
     // The site sends a session uuid; any valid one is accepted.
     'x-session-id': crypto.randomUUID(),
   };
 }
 
-export async function searchCruises(params: SearchParams = {}): Promise<SearchResult> {
+/** Public cruise search: no credentials, one GraphQL call, one page of results. */
+export async function searchCruises(
+  params: SearchParams = {},
+  config: Partial<RcConfig> = {},
+): Promise<SearchResult> {
+  const cfg = resolveConfig(config);
   const limit = params.limit ?? 25;
   const page = params.page ?? 1;
 
   const res = await request<any>(URL_, {
     method: 'POST',
-    headers: headers(),
+    headers: headers(cfg),
     body: {
       operationName: 'cruiseSearch_Cruises',
       variables: {
@@ -115,12 +127,27 @@ export async function searchCruises(params: SearchParams = {}): Promise<SearchRe
       },
       query: QUERY,
     },
+    config: cfg,
   });
+
+  // Royal's edge occasionally answers this POST with an HTML challenge page
+  // rather than the GraphQL envelope, still as a 200. Read as text, that
+  // parses to no errors and no results, which would otherwise come out as a
+  // silent "no cruises found" — the exact failure mode this library exists
+  // to prevent.
+  if (typeof res.data !== 'object' || res.data === null) {
+    throw new RcShapeError('Cruise search returned a non-JSON body', {
+      status: res.status, url: URL_, body: res.data,
+    });
+  }
 
   // GraphQL reports failures inside a 200, so errors have to be read out.
   if (Array.isArray(res.data?.errors) && res.data.errors.length) {
     const first = res.data.errors[0];
-    throw new Error(`Cruise search failed: ${first?.message ?? 'unknown GraphQL error'}`);
+    throw new RcRequestError(
+      `Cruise search rejected by GraphQL: ${first?.message ?? 'unknown GraphQL error'}`,
+      { status: res.status, url: URL_, body: res.data.errors },
+    );
   }
 
   const results = res.data?.data?.cruiseSearch?.results ?? {};
@@ -182,11 +209,13 @@ const PORTS_QUERY = `query cruiseSearch_Ports($filters: String, $pagination: Cru
 /** Royal's sentinel for a day at sea; it is not a port. */
 const SEA_DAY = 'CRU';
 
+/** One day of an itinerary — an empty `ports` list means a day at sea. */
 export interface RcItineraryDay {
   day: number;
   ports: { code: string; name: string }[];
 }
 
+/** One itinerary's day-by-day ports, as `fetchItineraryPorts`/`parseItineraryPorts` return it. */
 export interface RcItineraryPorts {
   itineraryCode: string;
   itineraryName: string | null;
@@ -199,40 +228,37 @@ export interface RcItineraryPorts {
   sailDates: string[];
 }
 
-const text = (v: unknown): string | null =>
-  typeof v === 'string' && v.trim() !== '' ? v.trim() : null;
-
 /** Pure, so the shape is tested without a network call. */
 export function parseItineraryPorts(cruise: unknown): RcItineraryPorts | null {
   const c = cruise as any;
   const it = c?.masterSailing?.itinerary;
-  const code = text(it?.code);
+  const code = str(it?.code);
   if (!code) return null;
 
   const days: RcItineraryDay[] = Array.isArray(it.days)
     ? it.days.map((d: any, i: number) => ({
         day: Number.isFinite(d?.number) ? Number(d.number) : i + 1,
         ports: (Array.isArray(d?.ports) ? d.ports : [])
-          .map((p: any) => ({ code: text(p?.port?.code), name: text(p?.port?.name) }))
+          .map((p: any) => ({ code: str(p?.port?.code), name: str(p?.port?.name) }))
           .filter((p: any): p is { code: string; name: string | null } =>
             p.code !== null && p.code !== SEA_DAY)
           .map((p: any) => ({ code: p.code as string, name: p.name ?? p.code })),
       }))
     : [];
 
-  const dep = text(it.departurePort?.code)
-    ? { code: text(it.departurePort.code)!, name: text(it.departurePort.name) ?? text(it.departurePort.code)! }
+  const dep = str(it.departurePort?.code)
+    ? { code: str(it.departurePort.code)!, name: str(it.departurePort.name) ?? str(it.departurePort.code)! }
     : null;
 
   return {
     itineraryCode: code,
-    itineraryName: text(it.name),
+    itineraryName: str(it.name),
     nights: Number.isFinite(it.totalNights) ? Number(it.totalNights) : null,
-    shipCode: text(it.ship?.code),
+    shipCode: str(it.ship?.code),
     departurePort: dep,
     days,
     sailDates: (Array.isArray(c.sailings) ? c.sailings : [])
-      .map((s: any) => text(s?.sailDate))
+      .map((s: any) => str(s?.sailDate))
       .filter((d: string | null): d is string => d !== null),
   };
 }
@@ -240,21 +266,35 @@ export function parseItineraryPorts(cruise: unknown): RcItineraryPorts | null {
 /** One page of the catalogue. `total` lets the caller page to the end. */
 export async function fetchItineraryPorts(
   opts: { count?: number; skip?: number } = {},
+  config: Partial<RcConfig> = {},
 ): Promise<{ itineraries: RcItineraryPorts[]; total: number }> {
+  const cfg = resolveConfig(config);
   const res = await request<any>(URL_, {
     method: 'POST',
-    headers: headers(),
+    headers: headers(cfg),
     body: {
       operationName: 'cruiseSearch_Ports',
       variables: { filters: '{}', pagination: { count: opts.count ?? 100, skip: opts.skip ?? 0 } },
       query: PORTS_QUERY,
     },
+    config: cfg,
   });
+
+  // Same non-JSON guard as searchCruises: a challenge page read as text would
+  // otherwise map to zero itineraries rather than a failure.
+  if (typeof res.data !== 'object' || res.data === null) {
+    throw new RcShapeError('Cruise search returned a non-JSON body', {
+      status: res.status, url: URL_, body: res.data,
+    });
+  }
 
   // GraphQL reports failures inside a 200, so errors have to be read out.
   if (Array.isArray(res.data?.errors) && res.data.errors.length) {
     const first = res.data.errors[0];
-    throw new Error(`cruiseSearch ports failed: ${first?.message ?? 'unknown GraphQL error'}`);
+    throw new RcRequestError(
+      `Cruise search (ports) rejected by GraphQL: ${first?.message ?? 'unknown GraphQL error'}`,
+      { status: res.status, url: URL_, body: res.data.errors },
+    );
   }
   const results = res.data?.data?.cruiseSearch?.results ?? {};
   const cruises: any[] = Array.isArray(results.cruises) ? results.cruises : [];

@@ -2,6 +2,8 @@ import type { RcSession } from '../auth/index.ts';
 import { guestHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { RcShapeError } from '../errors.ts';
+import { num, str } from '../coerce.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * The guest account: contact details plus every loyalty programme in one call.
@@ -12,6 +14,7 @@ import { RcShapeError } from '../errors.ts';
 
 const URL_ = 'https://aws-prd.api.rccl.com/en/royal/web/v3/guestAccounts';
 
+/** The guest account, flattened from `payload` — contact details plus every loyalty programme. */
 export interface RcAccount {
   accountId: string;
   /** Required in the casino offers request body. */
@@ -37,18 +40,16 @@ export interface RcAccount {
   raw: unknown;
 }
 
-const num = (v: unknown): number => {
-  const n = Number(v);
-  return Number.isFinite(n) ? n : 0;
-};
+// Royal writes an absent tier as the literal string "NONE" rather than
+// omitting the field, so that value is mapped to null before the shared
+// `str` applies (which also trims and rejects non-string/non-number input).
+const nn = (v: unknown): string | null => (v === 'NONE' ? null : str(v));
 
-// Royal writes an absent tier as the string "NONE" rather than omitting it.
-const nn = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' || v === 'NONE' ? null : String(v);
-
-export async function fetchAccount(session: RcSession): Promise<RcAccount> {
+/** The signed-in guest's account: contact details plus every loyalty programme, in one call. */
+export async function fetchAccount(session: RcSession, config: Partial<RcConfig> = {}): Promise<RcAccount> {
+  const cfg = resolveConfig(config);
   const url = `${URL_}/${session.accountId}`;
-  const res = await request<any>(url, { headers: guestHeaders(session) });
+  const res = await request<any>(url, { headers: guestHeaders(session, cfg), config: cfg });
 
   const p = res.data?.payload ?? res.data;
   if (!p || typeof p !== 'object') {
@@ -70,12 +71,13 @@ export async function fetchAccount(session: RcSession): Promise<RcAccount> {
 
     crownAndAnchorId: nn(loyalty.crownAndAnchorId),
     crownAndAnchorTier: nn(loyalty.crownAndAnchorSocietyLoyaltyTier),
-    crownAndAnchorPoints: num(loyalty.crownAndAnchorSocietyLoyaltyIndividualPoints),
-    crownAndAnchorRelationshipPoints: num(loyalty.crownAndAnchorSocietyLoyaltyRelationshipPoints),
+    crownAndAnchorPoints: num(loyalty.crownAndAnchorSocietyLoyaltyIndividualPoints) ?? 0,
+    crownAndAnchorRelationshipPoints:
+      num(loyalty.crownAndAnchorSocietyLoyaltyRelationshipPoints) ?? 0,
 
     clubRoyaleTier: nn(loyalty.clubRoyaleLoyaltyTier),
-    clubRoyalePoints: num(loyalty.clubRoyaleLoyaltyIndividualPoints),
-    clubRoyaleRelationshipPoints: num(loyalty.clubRoyaleLoyaltyRelationshipPoints),
+    clubRoyalePoints: num(loyalty.clubRoyaleLoyaltyIndividualPoints) ?? 0,
+    clubRoyaleRelationshipPoints: num(loyalty.clubRoyaleLoyaltyRelationshipPoints) ?? 0,
 
     captainsClubId: nn(loyalty.captainsClubId),
     captainsClubTier: nn(loyalty.captainsClubLoyaltyTier),

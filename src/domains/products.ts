@@ -1,6 +1,8 @@
 import type { RcSession } from '../auth/index.ts';
 import { commerceHeaders } from '../headers.ts';
 import { request } from '../http.ts';
+import { num } from '../coerce.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Onboard products: shore excursions, drink packages, dining and internet.
@@ -12,9 +14,12 @@ import { request } from '../http.ts';
 
 const BASE = 'https://aws-prd.api.rccl.com/en/royal/web/commerce-api/catalog/v2';
 
+/** Every category this endpoint serves; `fetchProducts` queries all of them unless told otherwise. */
 export const PRODUCT_CATEGORIES = ['beverage', 'shorex', 'internet', 'dining'] as const;
+/** A catalogue Royal sells onboard products under; each is fetched separately. */
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
 
+/** One onboard product: an excursion, drink package, dining reservation or internet plan. */
 export interface RcProduct {
   code: string;
   category: ProductCategory;
@@ -28,6 +33,7 @@ export interface RcProduct {
   raw: unknown;
 }
 
+/** What sailing (and which categories) to fetch the catalogue for. */
 export interface ProductQuery {
   shipCode: string;
   /** Sailing date, `YYYY-MM-DD`. Converted to Royal's compact form internally. */
@@ -35,13 +41,17 @@ export interface ProductQuery {
   endDate: string;
   categories?: readonly ProductCategory[];
   currency?: string;
+  /** Catalogue region; `ALCAN` is what the US site sends. */
+  regionCode?: string;
 }
 
 const PAGE_SIZE = 25;
 
+// Rounds to cents — unlike the shared `money` — because Royal's price fields
+// carry float noise past two decimal places.
 const money = (v: unknown): number | null => {
-  const n = Number(v);
-  return Number.isFinite(n) && n > 0 ? Math.round(n * 100) / 100 : null;
+  const n = num(v);
+  return n !== null && n > 0 ? Math.round(n * 100) / 100 : null;
 };
 
 function pageUrl(q: ProductQuery, category: ProductCategory, page: number): string {
@@ -52,7 +62,7 @@ function pageUrl(q: ProductQuery, category: ProductCategory, page: number): stri
   u.searchParams.set('currentPage', String(page));
   u.searchParams.set('pageSize', String(PAGE_SIZE));
   u.searchParams.set('currencyIso', q.currency ?? 'USD');
-  u.searchParams.set('regionCode', 'ALCAN');
+  u.searchParams.set('regionCode', q.regionCode ?? 'ALCAN');
   return u.toString();
 }
 
@@ -76,13 +86,15 @@ export async function fetchCategory(
   session: RcSession,
   query: ProductQuery,
   category: ProductCategory,
+  config: Partial<RcConfig> = {},
 ): Promise<RcProduct[]> {
-  const headers = commerceHeaders(session);
+  const cfg = resolveConfig(config);
+  const headers = commerceHeaders(session, cfg);
   const body = { textSearch: null, sortKey: 'rRank-asc', filterFacets: null };
 
   const page = async (n: number) => {
     const res = await request<any>(pageUrl(query, category, n), {
-      method: 'POST', headers, body,
+      method: 'POST', headers, body, config: cfg,
     });
     const products: any[] = res.data?.products ?? res.data?.payload?.products ?? [];
     const total = Number(
@@ -102,6 +114,7 @@ export async function fetchCategory(
   return all.map((p) => mapProduct(p, category)).filter((p) => p.code);
 }
 
+/** What `fetchProducts` returns: everything that loaded, plus which categories didn't. */
 export interface ProductsResult {
   products: RcProduct[];
   /** Categories that failed, so a partial result is never mistaken for a full one. */
@@ -112,14 +125,16 @@ export interface ProductsResult {
 export async function fetchProducts(
   session: RcSession,
   query: ProductQuery,
+  config: Partial<RcConfig> = {},
 ): Promise<ProductsResult> {
+  const cfg = resolveConfig(config);
   const categories = query.categories ?? PRODUCT_CATEGORIES;
   const products: RcProduct[] = [];
   const failed: ProductsResult['failed'] = [];
 
   for (const category of categories) {
     try {
-      products.push(...(await fetchCategory(session, query, category)));
+      products.push(...(await fetchCategory(session, query, category, cfg)));
     } catch (err) {
       // One category failing must not cost the others.
       failed.push({ category, reason: (err as Error).message });

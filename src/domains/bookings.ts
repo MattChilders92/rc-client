@@ -1,6 +1,8 @@
 import type { RcSession } from '../auth/index.ts';
 import { commerceHeaders } from '../headers.ts';
 import { request } from '../http.ts';
+import { str } from '../coerce.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * The guest's own reservations.
@@ -24,6 +26,7 @@ import { request } from '../http.ts';
 
 const BASE = 'https://aws-prd.api.rccl.com';
 
+/** One reservation on the profile. Sailing fields are null unless `enriched` is true. */
 export interface RcBooking {
   /** Reservation number, as printed on the booking confirmation. */
   bookingId: string;
@@ -51,9 +54,6 @@ export interface RcBooking {
 
   raw: unknown;
 }
-
-const str = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' ? null : String(v);
 
 /** Royal writes dates as `YYYYMMDD` here and ISO elsewhere. */
 const day = (v: unknown): string | null => {
@@ -105,7 +105,12 @@ function applyEnrichment(booking: RcBooking, detail: any): RcBooking {
   };
 }
 
+/**
+ * Which brand's reservations to list, and whether to pay for the second call
+ * that fills in ship, date and cabin.
+ */
 export interface ListBookingsOptions {
+  /** `R` for Royal Caribbean, `C` for Celebrity. Defaults to `R`. */
   brand?: 'R' | 'C';
   /**
    * Skip the enrichment call. The links alone say which reservations exist, and
@@ -123,10 +128,12 @@ export interface ListBookingsOptions {
 export async function listBookings(
   session: RcSession,
   opts: ListBookingsOptions = {},
+  config: Partial<RcConfig> = {},
 ): Promise<RcBooking[]> {
+  const cfg = resolveConfig(config);
   const brand = opts.brand ?? 'R';
   const headers = {
-    ...commerceHeaders(session),
+    ...commerceHeaders(session, cfg),
     // The bookings service expects the customer-journey app identity.
     'req-app-id': 'Royal.Web.CustomerJourney',
     'req-app-vers': '1.0.7',
@@ -135,7 +142,7 @@ export async function listBookings(
 
   const links = await request<any>(
     `${BASE}/v1/profileBookings/${encodeURIComponent(session.accountId)}?brand=${brand}`,
-    { headers, allowStatus: [404] },
+    { headers, allowStatus: [404], config: cfg },
   );
   if (links.status === 404) return [];
 
@@ -153,7 +160,7 @@ export async function listBookings(
     const enriched = await request<any>(
       `${BASE}/v1/profileBookings/enriched/${encodeURIComponent(session.accountId)}` +
       `?brand=${brand}&includeCheckin=true`,
-      { headers, allowStatus: [404] },
+      { headers, allowStatus: [404], config: cfg },
     );
     const details: any[] = enriched.data?.payload?.profileBookings ?? [];
     const byId = new Map(

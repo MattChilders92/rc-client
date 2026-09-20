@@ -2,6 +2,8 @@ import type { RcSession } from '../auth/index.ts';
 import { RcRouteGoneError } from '../errors.ts';
 import { casinoHeaders } from '../headers.ts';
 import { request } from '../http.ts';
+import { num, str } from '../coerce.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Club Royale casino offers.
@@ -37,10 +39,12 @@ export const SORT_FIELDS = [
   'sailDate', 'createdAt', 'offer.offerCode', 'offer.offerType', 'offer.reserveByDate',
   'offer.startDate', 'offer.sailByDate', 'offer.tradeInValue', 'offer.campaign.campaignType',
 ] as const;
+/** One of `SORT_FIELDS` — the only values Royal's schema check will accept for `sortBy`. */
 export type OfferSortField = (typeof SORT_FIELDS)[number];
 
 const PAGE_LIMIT = 100;
 
+/** One line item on an offer, e.g. free play or onboard credit. */
 export interface RcPerk {
   /** Opaque internal code (`TBK6`), not the free-play amount. */
   perkCode: string;
@@ -57,6 +61,7 @@ export interface RcOfferSailing {
   shipName: string | null;
   departurePort: { code: string | null; name: string | null } | null;
   sailDate: string | null;
+  /** `null` means Royal sent no value here; it is never `0`. */
   totalNights: number | null;
   itineraryCode: string | null;
   itineraryName: string | null;
@@ -87,7 +92,9 @@ export interface RcOfferDetail extends RcOffer {
   startDate: string | null;
   sailByDate: string | null;
   bookingFeeAmount: number | null;
+  /** `null` means Royal sent no value here; it is never `0`. */
   roomCount: number | null;
+  /** `null` means Royal sent no value here; it is never `0`. */
   allowedNumberOfPerks: number | null;
   /** How `sailings` should be read against `exclusionList`, as Royal reports it. */
   sailingInclusionMode: string | null;
@@ -97,6 +104,7 @@ export interface RcOfferDetail extends RcOffer {
   digitalRedemptionOnly: boolean;
 }
 
+/** One casino offer as `listOffers` returns it — `sailings` is always empty here; see `RcOfferDetail`. */
 export interface RcOffer {
   offerCode: string;
   /**
@@ -124,6 +132,7 @@ export interface RcOffer {
   description: string | null;
   /** Parsed out of the perk names; Royal does not return it as a field. */
   freePlay: number | null;
+  /** `null` means Royal sent no value here; it is never `0`. */
   tradeInValue: number | null;
   bookBy: string | null;
   perks: RcPerk[];
@@ -142,6 +151,11 @@ export interface RcOffer {
   raw: unknown;
 }
 
+/**
+ * What `listOffers` returns: every offer on the account, and whether an empty
+ * list means Royal answered "none". A route that has moved never produces one
+ * of these — it throws `RcRouteGoneError` instead.
+ */
 export interface OffersResult {
   offers: RcOffer[];
   /**
@@ -159,12 +173,17 @@ export interface OffersResult {
   player: { firstName: string | null; lastName: string | null; loyaltyId: string | null };
 }
 
-const str = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' ? null : String(v);
-
+// Rounds to the nearest integer rather than truncating toward zero, unlike
+// the shared `int` — these fields are already whole numbers from Royal, so
+// this only matters for float noise, but the rounding is preserved exactly.
+// What is *not* preserved: the local helper this replaced used bare
+// `Number(v)`, which coerces a `null` or `''` input to `0`. Going through the
+// shared `num` instead yields `null` for both. That's intended, not a
+// regression — `totalNights`/`roomCount`/`allowedNumberOfPerks`/`tradeInValue`
+// are all `number | null`, and a field Royal left absent is not a zero.
 const int = (v: unknown): number | null => {
-  const n = Number(v);
-  return Number.isFinite(n) ? Math.round(n) : null;
+  const n = num(v);
+  return n === null ? null : Math.round(n);
 };
 
 const day = (v: unknown): string | null => {
@@ -259,6 +278,7 @@ function mapOfferDetail(o: any): RcOfferDetail {
   };
 }
 
+/** Map one raw casino-API offer record into `RcOffer`. Exported for callers who page the raw API themselves. */
 export function mapOffer(o: any): RcOffer {
   const co = o?.campaignOffer ?? {};
   const perks = readPerks(co.perkCodes);
@@ -292,7 +312,9 @@ export function mapOffer(o: any): RcOffer {
 export const isRouterNotFound = (data: unknown): boolean =>
   !!data && typeof data === 'object' && (data as any).code === 'NOT_FOUND';
 
-async function page(session: RcSession, loyaltyId: string, n: number, sortBy: OfferSortField) {
+async function page(
+  session: RcSession, loyaltyId: string, n: number, sortBy: OfferSortField, config: RcConfig,
+) {
   const query = new URLSearchParams({
     page: String(n),
     limit: String(PAGE_LIMIT),
@@ -303,7 +325,7 @@ async function page(session: RcSession, loyaltyId: string, n: number, sortBy: Of
   return request<any>(`${LIST}?${query}`, {
     method: 'GET',
     headers: {
-      ...casinoHeaders(session, { loyaltyId }),
+      ...casinoHeaders(session, { loyaltyId }, config),
       // The casino hub sends these on every call; empty is what it sends for a
       // guest who is not currently aboard.
       'x-environment-marker': '',
@@ -313,9 +335,11 @@ async function page(session: RcSession, loyaltyId: string, n: number, sortBy: Of
     // either "no offers" or "the route moved", and only the body separates
     // them. Classified in listOffers.
     allowStatus: [404],
+    config,
   });
 }
 
+/** Whose offers to list. The API keys on the loyalty number, not the account id. */
 export interface ListOffersParams {
   /** Crown & Anchor number, from `account.crownAndAnchorId`. */
   loyaltyId: string;
@@ -326,8 +350,10 @@ export interface ListOffersParams {
 export async function listOffers(
   session: RcSession,
   { loyaltyId, sortBy = 'offer.reserveByDate' }: ListOffersParams,
+  config: Partial<RcConfig> = {},
 ): Promise<OffersResult> {
-  const first = await page(session, loyaltyId, 1, sortBy);
+  const cfg = resolveConfig(config);
+  const first = await page(session, loyaltyId, 1, sortBy, cfg);
 
   const player = {
     firstName: str(first.data?.firstName),
@@ -350,7 +376,7 @@ export async function listOffers(
   const totalPages = Number(first.data?.totalPages) || 1;
 
   for (let n = 2; n <= totalPages; n++) {
-    const next = await page(session, loyaltyId, n, sortBy);
+    const next = await page(session, loyaltyId, n, sortBy, cfg);
     if (Array.isArray(next.data?.offers)) raw.push(...next.data.offers);
   }
 
@@ -362,6 +388,10 @@ export async function listOffers(
   };
 }
 
+/**
+ * Identifies one grant. An offer code alone is not enough: the same code can be
+ * granted several times, and each grant has its own eligible sailings.
+ */
 export interface OfferDetailParams {
   /** Crown & Anchor number, from `account.crownAndAnchorId`. */
   loyaltyId: string;
@@ -384,7 +414,9 @@ export interface OfferDetailParams {
 export async function fetchOfferDetail(
   session: RcSession,
   { loyaltyId, offerCode, playerOfferId }: OfferDetailParams,
+  config: Partial<RcConfig> = {},
 ): Promise<RcOfferDetail | null> {
+  const cfg = resolveConfig(config);
   const query = new URLSearchParams({
     offerCode,
     playerOfferId,
@@ -398,11 +430,12 @@ export async function fetchOfferDetail(
   const res = await request<any>(`${DETAILS}?${query}`, {
     method: 'GET',
     headers: {
-      ...casinoHeaders(session, { loyaltyId }),
+      ...casinoHeaders(session, { loyaltyId }, cfg),
       'x-environment-marker': '',
       'x-environment-ship-code': '',
     },
     allowStatus: [404],
+    config: cfg,
   });
 
   if (res.status === 404) {

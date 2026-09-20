@@ -13,6 +13,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { signIn } from '../src/auth/index.ts';
 import { casinoHeaders, commerceHeaders, guestHeaders } from '../src/headers.ts';
+import { REDACT_KEYS } from './redaction.ts';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'test', 'fixtures');
@@ -23,17 +24,6 @@ if (!username || !password) {
   console.error('Set RC_USERNAME and RC_PASSWORD.');
   process.exit(1);
 }
-
-/** Keys whose values are replaced wholesale. */
-const REDACT_KEYS = new Set([
-  'firstname', 'lastname', 'middlename', 'email', 'emailaddress',
-  'phone', 'mobilenumber', 'address', 'addressline1', 'addressline2',
-  'postalcode', 'zipcode', 'birthdate', 'dateofbirth',
-  'accountid', 'consumerid', 'vdsid', 'vdsids',
-  'crownandanchorid', 'casinoloyaltyid', 'cruiseloyaltyid', 'loyaltyid',
-  'captainsclubid', 'reservationid', 'bookingid', 'passengerid',
-  'access_token', 'id_token', 'accesstoken', 'tokenid', 'playerofferid',
-]);
 
 /**
  * Ids that must stay *distinct* after redaction.
@@ -75,7 +65,13 @@ function redact(value: unknown, key = ''): unknown {
   if (typeof value === 'number') {
     return REDACT_KEYS.has(key.toLowerCase()) ? 0 : value;
   }
-  if (Array.isArray(value)) return value.map((v) => redact(v));
+  if (Array.isArray(value)) {
+    // Carry the parent key down: a redacted key can hold an array of
+    // primitives directly (vdsIds: [...]) rather than an object, and those
+    // elements are exactly as identifying as a bare value under that key
+    // would be. An object element still gets redacted key-by-key as usual.
+    return value.map((v) => redact(v, key));
+  }
   if (value && typeof value === 'object') {
     return Object.fromEntries(
       Object.entries(value).map(([k, v]) => [k, redact(v, k)]),
@@ -105,6 +101,7 @@ async function grab(name: string, url: string, init: RequestInit): Promise<void>
 }
 
 const session = await signIn({ username, password });
+// Prints the account uuid to stdout — don't paste this script's output publicly.
 console.log(`signed in as ${session.accountId}\n`);
 
 const account = await fetch(

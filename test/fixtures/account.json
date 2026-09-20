@@ -80,7 +80,7 @@
       "personalInformation": {
         "birthdate": "REDACTED",
         "firstName": "REDACTED",
-        "gender": "M",
+        "gender": "REDACTED",
         "lastName": "REDACTED"
       },
       "postalOptIns": [],

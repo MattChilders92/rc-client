@@ -54,12 +54,42 @@ encode what we believe the API returns, which is precisely the belief that keeps
 turning out to be wrong. `npm run capture` re-records; PII is scrubbed on the way
 in because fixtures are committed.
 
-## Not done
+## Return shapes
 
-- `offers` is implemented against the current endpoint but has only been
-  exercised against an account with no offers. The mapping of a populated
-  payload — particularly `campaignType` strings and per-offer `sailings[]` — is
-  unverified.
-- The Celebrity agency id (`388809`) is inferred from Royal's own requests, not
-  confirmed against a Celebrity account.
-- Celebrity endpoints are reachable through the same shapes but untested.
+A function returns a bare array when the call cannot partially fail
+(`fetchRooms`, `listBookings`), and a wrapper object when it carries an
+outcome or a partial-failure count (`OffersResult.outcome`,
+`ProductsResult.failed`, `SearchResult.total`).
+
+A `null` in any `number | null` field means Royal sent no value for it — it
+is never `0`. `RcRoom.allIn`/`perPerson`/`taxes`/`roomsLeft` and an offer's
+`totalNights`/`roomCount`/`allowedNumberOfPerks`/`tradeInValue` are all
+typed this way for exactly that reason: the coercion helpers in `coerce.ts`
+return `null` for an absent or unparseable value rather than the `0` a bare
+`Number(v)` would produce, because a cabin with no stated price is not a
+cabin that costs nothing.
+
+## Configuration, not constants
+
+`RcConfig` exists because the values callers most need to change — the app
+key, the user agent, per-request timeout and retry count — used to be module
+constants, which meant changing any of them meant forking the library. The
+public app key ships as the default because without it there is no sign-in:
+Royal's own web client sends it on every request, and a caller who supplies
+nothing still needs to reach the sign-in endpoint.
+
+## Typed errors, no exceptions
+
+Every thrown value is an `Rc*Error` — never a bare `Error`, a string, or
+Royal's own response body. A test pins the two places that used to differ
+(a GraphQL rejection and a failed PDF download) so both stay typed rather than
+drifting back to an ad hoc throw.
+
+## Verified and not
+
+- `offers` is verified against a live payload of 13 real offers, including
+  free-play perks, trade-in values and a repeated offer code. See
+  [README.md](../README.md).
+- There is no Celebrity agency id anywhere in this code. Only room pricing
+  (`RoomQuery.brand`) has a `Brand` switch between Royal and Celebrity; every
+  other endpoint — offers, products, bookings, search — is Royal-only.

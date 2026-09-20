@@ -1,6 +1,7 @@
 import {
   RcAuthError, RcError, RcRequestError, RcRouteGoneError, RcUnavailableError,
 } from './errors.ts';
+import { resolveConfig, type RcConfig } from './config.ts';
 
 /**
  * The single place a request leaves this library.
@@ -10,27 +11,40 @@ import {
  * client replace the near-duplicate Node and Deno copies that exist today.
  */
 
-export const USER_AGENT =
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36';
-
-/** Royal's public web app key, sent by their own site. */
-export const RC_APPKEY = 'hyNNqIPHHzaLzVpcICPdAdbFV8yvTsAm';
-
+/**
+ * Options for one `request()`. Everything is optional; the defaults come from
+ * `config`, and an explicit `timeoutMs` or `retries` here always wins over it.
+ */
 export interface RequestOptions {
+  /** Defaults to `GET`. */
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  /** Merged over a default `user-agent`. Build these with the header helpers. */
   headers?: Record<string, string>;
   /** Serialised as JSON unless it is already a string. */
   body?: unknown;
+  /** Per attempt, not for the whole call including retries. */
   timeoutMs?: number;
-  /** Statuses to return rather than throw, so callers can interpret them. */
+  /**
+   * Statuses to return rather than throw, so callers can interpret them. A 404
+   * throws `RcRouteGoneError` unless it is listed here — the deliberate opt-in
+   * for endpoints where 404 means "this account has none".
+   */
   allowStatus?: number[];
+  /** Extra attempts after the first, for network failures and 429/5xx. `0` disables. */
   retries?: number;
+  /** Aborts the call, in addition to the per-attempt timeout. */
   signal?: AbortSignal;
+  /** Defaults for timeout, retries and user agent. Explicit `timeoutMs`/`retries` win. */
+  config?: Partial<RcConfig>;
 }
 
+/** What `request()` returns for a status it did not throw on. */
 export interface RcResponse<T> {
+  /** The HTTP status, which may be one the caller allowed via `allowStatus`. */
   status: number;
+  /** The body, JSON-parsed when it parsed, else the raw text. */
   data: T;
+  /** Response headers, for `retry-after` and the like. */
   headers: Headers;
 }
 
@@ -59,12 +73,31 @@ export async function request<T = unknown>(
   url: string,
   opts: RequestOptions = {},
 ): Promise<RcResponse<T>> {
+  const cfg = resolveConfig(opts.config);
   const {
     method = 'GET', headers = {}, body,
-    timeoutMs = 45_000, allowStatus = [], retries = 2, signal,
+    timeoutMs = cfg.timeoutMs, allowStatus = [], retries = cfg.retries, signal,
   } = opts;
 
   let lastError: unknown;
+
+  /**
+   * Decide whether a network-level failure (a failed connect, or a body that
+   * stopped arriving mid-read) gets another attempt. Both burn the same
+   * budget and use the same backoff — a reset mid-body is not meaningfully
+   * different from one that never connected. An already-aborted `signal`
+   * stops immediately rather than sleeping first: honouring the caller's
+   * cancellation matters more than spending the rest of the retry budget on
+   * a call that is already dead.
+   */
+  async function retryOrThrow(attempt: number, err: unknown): Promise<void> {
+    if (attempt < retries) {
+      if (signal?.aborted) throw new RcError('Request aborted', { url });
+      await sleep(300 * 2 ** attempt);
+      return;
+    }
+    throw new RcError(`Network failure: ${(err as Error).message}`, { url });
+  }
 
   for (let attempt = 0; attempt <= retries; attempt++) {
     const timeout = AbortSignal.timeout(timeoutMs);
@@ -74,7 +107,7 @@ export async function request<T = unknown>(
     try {
       res = await fetch(url, {
         method,
-        headers: { 'user-agent': USER_AGENT, ...headers },
+        headers: { 'user-agent': cfg.userAgent, ...headers },
         body: body === undefined ? undefined
           : typeof body === 'string' ? body : JSON.stringify(body),
         redirect: 'follow',
@@ -82,14 +115,22 @@ export async function request<T = unknown>(
       });
     } catch (err) {
       lastError = err;
-      if (attempt < retries) {
-        await sleep(300 * 2 ** attempt);
-        continue;
-      }
-      throw new RcError(`Network failure: ${(err as Error).message}`, { url });
+      await retryOrThrow(attempt, err);
+      continue;
     }
 
-    const text = await res.text();
+    let text: string;
+    try {
+      text = await res.text();
+    } catch (err) {
+      // A connection reset mid-body (e.g. undici's bare `TypeError:
+      // terminated`) reaches here — it must not escape untyped just because
+      // the connect itself succeeded.
+      lastError = err;
+      await retryOrThrow(attempt, err);
+      continue;
+    }
+
     let data: unknown = text;
     if (text) {
       try { data = JSON.parse(text); } catch { /* keep the raw text */ }
@@ -100,6 +141,7 @@ export async function request<T = unknown>(
     }
 
     if (RETRYABLE.has(res.status) && attempt < retries) {
+      if (signal?.aborted) throw new RcError('Request aborted', { url });
       const wait = retryAfterMs(res.headers) ?? 500 * 2 ** attempt;
       await sleep(wait);
       continue;

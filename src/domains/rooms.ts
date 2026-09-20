@@ -1,5 +1,7 @@
 import { anonymousHeaders } from '../headers.ts';
 import { request } from '../http.ts';
+import { num as coerceNum, str } from '../coerce.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Cabin categories and fares for a sailing.
@@ -18,18 +20,30 @@ const BASE: Record<Brand, string> = {
   CEL: 'https://www.celebritycruises.com/itinerary/api/v1',
 };
 
+/** Which site's inventory to query — Royal Caribbean or Celebrity. Each has its own base URL. */
 export type Brand = 'RC' | 'CEL';
 
+/** What to look up cabins for: sailing, party size, and locale. */
 export interface RoomQuery {
+  /** Royal's sailing identifier, as used across the booking APIs. */
   packageCode: string;
+  /** `YYYY-MM-DD`. */
   sailDate: string;
+  /** Defaults to 2. */
   adults?: number;
+  /** Defaults to 0. */
   children?: number;
+  /** `RC` or `CEL`. Defaults to `RC`. */
   brand?: Brand;
+  /** ISO country the guest is booking from. Defaults to `USA`. */
   countryCode?: string;
+  /** Defaults to `USD`. */
   currencyCode?: string;
+  /** Royal's booking-office code; `MIA` is the US site. */
+  officeCode?: string;
 }
 
+/** One bookable cabin category/subtype at one occupancy. */
 export interface RcRoom {
   categoryCode: string;
   subtypeCode: string | null;
@@ -38,25 +52,31 @@ export interface RcRoom {
   type: string | null;
   guarantee: boolean;
   maxOccupancy: number | null;
+  /** `null` means Royal sent no count here; it is never `0`, which would read as "sold out". */
   roomsLeft: number | null;
-  /** What the cabin actually costs, discounts applied and taxes included. */
+  /** What the cabin actually costs, discounts applied and taxes included. `null` means Royal sent no price; it is never `0`. */
   allIn: number | null;
+  /** `null` means Royal sent no price; it is never `0`. */
   perPerson: number | null;
   /** List fare before discounts. Never what anyone pays. */
   grossFare: number | null;
+  /** `null` means Royal sent no value; it is never `0`. */
   taxes: number | null;
   /** The occupancy this price was quoted for. */
   occupancy: { adults: number; children: number };
   raw: unknown;
 }
 
+// Rounds to cents — unlike the shared `num` — because these are money fields
+// and Royal's pricing carries float noise past two decimal places. A null or
+// empty input still yields null here too, same as the shared `num`: the
+// local helper this replaced used bare `Number(v)`, which coerces `null`/`''`
+// to `0`, but `allIn`/`perPerson`/`taxes` are `number | null` and a missing
+// price is not the same thing as a cabin that costs nothing.
 const num = (v: unknown): number | null => {
-  const n = Number(v);
-  return Number.isFinite(n) ? Math.round(n * 100) / 100 : null;
+  const n = coerceNum(v);
+  return n === null ? null : Math.round(n * 100) / 100;
 };
-
-const str = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' ? null : String(v);
 
 /**
  * A stable identity for a cabin. Royal reuses `categoryCode` across several
@@ -80,7 +100,7 @@ function url(q: RoomQuery): string {
     countryCode: q.countryCode ?? 'USA',
     currencyCode: q.currencyCode ?? 'USD',
     languageCode: 'en',
-    officeCode: 'MIA',
+    officeCode: q.officeCode ?? 'MIA',
   });
   return `${base}/sailings?${params}`;
 }
@@ -119,7 +139,7 @@ function mapRoom(
     type: TYPE_BY_GROUP[String(group?.code ?? '')] ?? str(group?.name),
     guarantee: sub?.isGuarantee === true,
     maxOccupancy: readMaxOccupancy(sub?.features),
-    roomsLeft: sub?.roomsLeft === undefined ? null : Number(sub.roomsLeft),
+    roomsLeft: coerceNum(sub?.roomsLeft),
     allIn: num(pricing.total),
     perPerson: num(pricing.amount),
     // This endpoint quotes the fare already discounted and gives no list price.
@@ -170,13 +190,18 @@ function collect(body: any, occupancy: { adults: number; children: number }): Rc
 }
 
 /** Cabins bookable at one specific occupancy. */
-export async function fetchRooms(query: RoomQuery): Promise<RcRoom[]> {
+export async function fetchRooms(
+  query: RoomQuery,
+  config: Partial<RcConfig> = {},
+): Promise<RcRoom[]> {
+  const cfg = resolveConfig(config);
   const occupancy = { adults: query.adults ?? 2, children: query.children ?? 0 };
   const target = url(query);
   const res = await request<any>(target, {
-    headers: anonymousHeaders(),
+    headers: anonymousHeaders(cfg),
     // A sailing that does not exist, or has nothing for this party size.
     allowStatus: [404],
+    config: cfg,
   });
   if (res.status === 404) return [];
   return collect(res.data, occupancy);
@@ -204,11 +229,13 @@ export const COVERAGE_OCCUPANCIES: ReadonlyArray<{ adults: number; children: num
 export async function sweepOccupancy(
   query: Omit<RoomQuery, 'adults' | 'children'>,
   occupancies: ReadonlyArray<{ adults: number; children: number }> = COVERAGE_OCCUPANCIES,
+  config: Partial<RcConfig> = {},
 ): Promise<Map<string, RcRoom>> {
+  const cfg = resolveConfig(config);
   const found = new Map<string, RcRoom>();
 
   for (const occ of occupancies) {
-    const rooms = await fetchRooms({ ...query, ...occ });
+    const rooms = await fetchRooms({ ...query, ...occ }, cfg);
     for (const room of rooms) {
       const key = roomKey(room);
       if (!found.has(key)) found.set(key, room);

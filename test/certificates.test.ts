@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {
   candidateCampaigns, campaignPdfUrl, splitOfferCode, parseCampaignPage, parseTierPages,
   normalizeSailDate, roomTypeOf, tierTradeInValue, type PageLines,
-} from '../src/domains/certificates.ts';
+} from '../src/domains/certificates/index.ts';
 
 // These fixtures are transcribed from the public 2609A campaign and 2609A04
 // tier PDFs. They are Royal's marketing documents, not anyone's data.

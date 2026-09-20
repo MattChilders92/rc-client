@@ -8,6 +8,10 @@
  * string to be pattern-matched at the call site.
  */
 
+/**
+ * Base of every failure this library throws. `status` and `url` are always
+ * set; `body` is Royal's own error envelope when there was one.
+ */
 export class RcError extends Error {
   readonly status: number | null;
   readonly url: string;

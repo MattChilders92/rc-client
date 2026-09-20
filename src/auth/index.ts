@@ -1,5 +1,6 @@
 import { RcAuthError, RcShapeError } from '../errors.ts';
-import { RC_APPKEY, USER_AGENT, request } from '../http.ts';
+import { request } from '../http.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Sign-in, exactly as Royal's own web client does it.
@@ -23,14 +24,19 @@ const AUTHENTICATE_URL = 'https://www.royalcaribbean.com/auth/json/authenticate'
 const AUTHORIZE_URL =
   'https://aws-prd.api.rccl.com/v1/oauth2-authorize/en/royal/web/v1/authorize';
 
+/** What `signIn` returns: the bearer token plus the ids every other API keys on. */
 export interface RcSession {
+  /** The bearer token itself, presented differently by each API — see `headers.ts`. */
   accessToken: string;
   /** Account uuid, from the id_token `sub` claim. */
   accountId: string;
+  /** From the id_token `vdsid` claim, when Royal sent one. Not present on every account. */
   vdsId?: string;
+  /** When the token stops being valid, already backed off a minute so it is never spent in its final seconds. */
   expiresAt: Date;
 }
 
+/** Royal's own username/password. There is no other supported login method. */
 export interface Credentials {
   username: string;
   password: string;
@@ -43,11 +49,24 @@ function decodeJwt(token: string): Record<string, unknown> {
   const normalised = part.replace(/-/g, '+').replace(/_/g, '/');
   // atob + TextDecoder are available on every target runtime; Buffer would tie
   // this library to Node, and atob alone mangles any non-ASCII claim.
-  const bytes = Uint8Array.from(atob(normalised), (c) => c.charCodeAt(0));
-  return JSON.parse(new TextDecoder().decode(bytes));
+  try {
+    const bytes = Uint8Array.from(atob(normalised), (c) => c.charCodeAt(0));
+    return JSON.parse(new TextDecoder().decode(bytes));
+  } catch {
+    // atob throws a DOMException on a base64-invalid segment; JSON.parse
+    // throws SyntaxError on base64-valid non-JSON. Neither is an Rc*Error on
+    // its own, so both are folded into one here.
+    throw new RcShapeError('id_token payload was not decodable JSON', { url: AUTHORIZE_URL });
+  }
 }
 
-export async function signIn(credentials: Credentials): Promise<RcSession> {
+/**
+ * Runs the two-step flow documented above and returns a session: the access
+ * token, the account id decoded out of the id_token, and `expiresAt` backed
+ * off by a minute so a token is never spent in its final seconds.
+ */
+export async function signIn(credentials: Credentials, config: Partial<RcConfig> = {}): Promise<RcSession> {
+  const cfg = resolveConfig(config);
   const { username, password } = credentials;
 
   // Step 1 — OpenAM session. Credentials travel as headers, and the body is
@@ -67,6 +86,7 @@ export async function signIn(credentials: Credentials): Promise<RcSession> {
     },
     // A rejected password is final; retrying it only risks a lockout.
     retries: 0,
+    config: cfg,
   }).catch((err) => {
     if (err instanceof RcAuthError) throw err;
     throw err;
@@ -87,14 +107,15 @@ export async function signIn(credentials: Credentials): Promise<RcSession> {
     headers: {
       accept: '*/*',
       'accept-language': 'en-US,en;q=0.9',
-      appkey: RC_APPKEY,
+      appkey: cfg.appKey,
       'cache-control': 'no-cache',
       'content-type': 'application/json',
       pragma: 'no-cache',
       referer: 'https://www.royalcaribbean.com/',
-      'user-agent': USER_AGENT,
+      'user-agent': cfg.userAgent,
     },
     body: { client: 'login-component', tokenId },
+    config: cfg,
   });
 
   const { access_token, id_token, expires_in } = authorized.data;
@@ -123,4 +144,5 @@ export async function signIn(credentials: Credentials): Promise<RcSession> {
   };
 }
 
+/** True once `expiresAt` has passed — the signal `RcClient` uses to sign in again. */
 export const isExpired = (session: RcSession): boolean => session.expiresAt <= new Date();

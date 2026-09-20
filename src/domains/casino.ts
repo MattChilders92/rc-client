@@ -1,6 +1,8 @@
 import type { RcSession } from '../auth/index.ts';
 import { casinoHeaders } from '../headers.ts';
 import { request } from '../http.ts';
+import { num, str } from '../coerce.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Club Royale standing from the casino system itself.
@@ -15,6 +17,7 @@ import { request } from '../http.ts';
 
 const URL_ = 'https://www.royalcaribbean.com/api/casino/v1/loyalty-data';
 
+/** Club Royale standing straight from the casino system — preferred over the guest account's loyalty block. */
 export interface CasinoLoyalty {
   /** Casino profile id — distinct from the Crown & Anchor number. */
   casinoLoyaltyId: string | null;
@@ -30,19 +33,16 @@ export interface CasinoLoyalty {
   raw: unknown;
 }
 
-const num = (v: unknown): number => {
-  const n = Number(v);
-  return Number.isFinite(n) ? n : 0;
-};
-
-const str = (v: unknown): string | null =>
-  v === null || v === undefined || v === '' ? null : String(v);
-
 /** Returns null when the account has no casino profile. */
-export async function fetchCasinoLoyalty(session: RcSession): Promise<CasinoLoyalty | null> {
+export async function fetchCasinoLoyalty(
+  session: RcSession,
+  config: Partial<RcConfig> = {},
+): Promise<CasinoLoyalty | null> {
+  const cfg = resolveConfig(config);
   const res = await request<any>(URL_, {
-    headers: casinoHeaders(session),
+    headers: casinoHeaders(session, {}, cfg),
     allowStatus: [404],
+    config: cfg,
   });
   if (res.status === 404) return null;
 
@@ -55,8 +55,8 @@ export async function fetchCasinoLoyalty(session: RcSession): Promise<CasinoLoya
     cruiseLoyaltyId: str(d.cruiseLoyaltyId),
     consumerId: str(d.consumerId),
     tier: str(d.tier),
-    individualPoints: num(d.individualPoints),
-    relationshipPoints: num(d.relationshipPoints),
+    individualPoints: num(d.individualPoints) ?? 0,
+    relationshipPoints: num(d.relationshipPoints) ?? 0,
     periodStart: str(d.evaluationPeriodStartDateForPoints),
     periodEnd: str(d.evaluationPeriodEndDateForPoints),
     multipleCasinoProfiles: d.multipleCasinoProfiles === true,
