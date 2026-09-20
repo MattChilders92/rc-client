@@ -55,7 +55,7 @@ JavaScript, and without which sign-in cannot complete.
 ## 2. What ships, and what must not
 
 `docs/endpoints.md` currently documents Royal's **private** gateway hostnames
-(`*.private.prd.ecom.rccl.io`), the mobile app's APK signing-certificate hash,
+(`<private casino gateway host>`), the mobile app's APK signing-certificate hash,
 and notes on Akamai Bot Manager. That is research, not consumer documentation,
 and publishing it on npm is a legal and reputational exposure with no upside
 for a user of the library.

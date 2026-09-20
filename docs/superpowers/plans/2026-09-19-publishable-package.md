@@ -51,7 +51,7 @@
 
 **Interfaces:** none. Docs only.
 
-**Background:** `docs/endpoints.md` ships in the tarball. Two things in it are research, not consumer documentation: a JSON snippet at about line 180 naming Royal's **private** casino gateway host (`rcg-casino-guesthub-api-rcl-a.private.prd.ecom.rccl.io`), and the whole `## The mobile app` section starting at about line 376 (APK signing-certificate hash, Akamai Bot Manager notes). Both leave the shipped file.
+**Background:** `docs/endpoints.md` ships in the tarball. Two things in it are research, not consumer documentation: a JSON snippet at about line 180 naming Royal's **private** casino gateway host (`<private casino gateway host>`), and the whole `## The mobile app` section starting at about line 376 (APK signing-certificate hash, Akamai Bot Manager notes). Both leave the shipped file.
 
 - [ ] **Step 1: Move the mobile-app section**
 
@@ -83,7 +83,7 @@ Then add one sentence after the block: `The same payload also names an internal 
 - [ ] **Step 3: Check nothing sensitive remains**
 
 Run: `cd C:\Users\colos\source\repos\rc-client && grep -n -i -E "private\.|\.rccl\.io|sha-?256|signing|akamai|cyberfend|botman" docs/endpoints.md`
-Expected: only lines that mention Akamai in passing as the reason not to scrape the *web* pages (there are two such sentences in the Room pricing and Offers sections; those are fine and stay). No `.rccl.io`, no `sha-256`, no `signing`, no `cyberfend`, no `botman`.
+Expected: only lines that mention Akamai in passing as the reason not to scrape the *web* pages (there are two such sentences in the Room pricing and Offers sections; those are fine and stay). No private gateway hostname, no `sha-256`, no `signing`, no `cyberfend`, no `botman`.
 
 Also check the README's pointer: `grep -n "mobile" README.md` — every reference to the mobile app in `README.md` is fixed in Task 9; do not edit the README here.
 

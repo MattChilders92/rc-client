@@ -7,10 +7,10 @@ the npm package. The library uses the web APIs only; see `../endpoints.md`.
 ## The mobile app (Royal Caribbean International, `com.rccl.royalcaribbean`)
 
 Reverse-engineered from v1.80.0 (build 2582) on 2026-09-07, statically (jadx +
-the Hermes RN bundle) and by running it in an emulator. The APK is signed
-`CN=Roberto Aleman Jr, O=Royal Caribbean Cruises Ltd.` (SHA-256
-`bc490382…92e9aa`) — Google-delivered via Aurora Store, so it is the genuine
-build. It is a **hybrid**: a native Android host (package prefixes
+the Hermes RN bundle) and by running it in an emulator. The APK's signing
+certificate names Royal Caribbean Cruises Ltd. as the organization —
+Google-delivered via Aurora Store, so it is the genuine build. It is a
+**hybrid**: a native Android host (package prefixes
 `com.rcl.excalibur` / `com.rccl.excalibur`, ~168 Retrofit routes) that also
 loads a React-Native bundle (Hermes) for the newer surfaces, casino included.
 
