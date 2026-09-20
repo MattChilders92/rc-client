@@ -1,4 +1,4 @@
-import { DEFAULT_CONFIG, type RcConfig } from '../../config.ts';
+import { resolveConfig, type RcConfig } from '../../config.ts';
 import { RcError, RcUnavailableError } from '../../errors.ts';
 
 /**
@@ -8,12 +8,13 @@ import { RcError, RcUnavailableError } from '../../errors.ts';
  * Uses a bare `fetch` rather than `request()`, which reads bodies as text. It
  * is given the same timeout, and its failures are the same typed errors.
  */
-export async function downloadPdf(url: string, config: RcConfig = DEFAULT_CONFIG): Promise<Uint8Array> {
+export async function downloadPdf(url: string, config: Partial<RcConfig> = {}): Promise<Uint8Array> {
+  const cfg = resolveConfig(config);
   let r: Response;
   try {
     r = await fetch(url, {
-      headers: { 'user-agent': config.userAgent, accept: 'application/pdf,*/*' },
-      signal: AbortSignal.timeout(config.timeoutMs),
+      headers: { 'user-agent': cfg.userAgent, accept: 'application/pdf,*/*' },
+      signal: AbortSignal.timeout(cfg.timeoutMs),
     });
   } catch (err) {
     throw new RcError(`Network failure fetching PDF: ${(err as Error).message}`, { url });

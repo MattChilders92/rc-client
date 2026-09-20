@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { resolveConfig, DEFAULT_CONFIG } from '../src/config.ts';
 import { RcClient } from '../src/client.ts';
 import { downloadPdf } from '../src/domains/certificates/pdf.ts';
+import { fetchRooms } from '../src/domains/rooms.ts';
 import { RcError } from '../src/errors.ts';
 
 const realFetch = globalThis.fetch;
@@ -34,6 +35,19 @@ test('the static search takes its own config, since it cannot see an instance', 
   };
   await RcClient.search({}, { userAgent: 'rc-test/2' });
   assert.equal(ua, 'rc-test/2');
+});
+
+test('a standalone function takes a Partial<RcConfig>, and it reaches the wire', async () => {
+  // Was a type error before I6: fetchRooms(query, { timeoutMs: 5000 }) demanded
+  // a full RcConfig. A partial config must both typecheck and actually be used.
+  let ua: string | null = null;
+  globalThis.fetch = (async (_url, init) => {
+    ua = new Headers(init?.headers).get('user-agent');
+    return new Response(JSON.stringify({ sailings: [] }), { status: 200 });
+  }) as typeof fetch;
+
+  await fetchRooms({ packageCode: 'X', sailDate: '2026-11-14' }, { userAgent: 'x' });
+  assert.equal(ua, 'x');
 });
 
 test('a PDF download that cannot connect is an RcError, not a bare TypeError', async () => {

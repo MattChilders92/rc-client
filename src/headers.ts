@@ -1,5 +1,5 @@
 import type { RcSession } from './auth/index.ts';
-import { DEFAULT_CONFIG, type RcConfig } from './config.ts';
+import { resolveConfig, type RcConfig } from './config.ts';
 
 /**
  * Royal presents the same access token three different ways depending on which
@@ -27,23 +27,25 @@ function base(config: RcConfig): Record<string, string> {
 }
 
 /** guestAccounts. Sends the token bare, under `access-token`. */
-export function guestHeaders(session: RcSession, config: RcConfig = DEFAULT_CONFIG): Record<string, string> {
+export function guestHeaders(session: RcSession, config: Partial<RcConfig> = {}): Record<string, string> {
+  const cfg = resolveConfig(config);
   return {
-    ...base(config),
+    ...base(cfg),
     accept: '*/*',
     'access-token': session.accessToken,
-    appkey: config.appKey,
+    appkey: cfg.appKey,
     'content-type': 'application/json',
   };
 }
 
 /** Commerce APIs — product catalog, bookings. Adds the account id. */
-export function commerceHeaders(session: RcSession, config: RcConfig = DEFAULT_CONFIG): Record<string, string> {
+export function commerceHeaders(session: RcSession, config: Partial<RcConfig> = {}): Record<string, string> {
+  const cfg = resolveConfig(config);
   return {
-    ...base(config),
+    ...base(cfg),
     'access-token': session.accessToken,
     'account-id': session.accountId,
-    appkey: config.appKey,
+    appkey: cfg.appKey,
     'content-type': 'application/json',
     'req-app-id': 'Royal.Web.PlanMyCruise',
     'x-requested-with': 'XMLHttpRequest',
@@ -59,10 +61,11 @@ export function commerceHeaders(session: RcSession, config: RcConfig = DEFAULT_C
 export function casinoHeaders(
   session: RcSession,
   opts: { loyaltyId?: string | null } = {},
-  config: RcConfig = DEFAULT_CONFIG,
+  config: Partial<RcConfig> = {},
 ): Record<string, string> {
+  const cfg = resolveConfig(config);
   return {
-    ...base(config),
+    ...base(cfg),
     authorization: `Bearer ${session.accessToken}`,
     'content-type': 'application/json',
     'x-account-id': session.accountId,
@@ -78,9 +81,9 @@ export function casinoHeaders(
 }
 
 /** Itinerary and search APIs, which take no credentials at all. */
-export function anonymousHeaders(config: RcConfig = DEFAULT_CONFIG): Record<string, string> {
+export function anonymousHeaders(config: Partial<RcConfig> = {}): Record<string, string> {
   return {
-    ...base(config),
+    ...base(resolveConfig(config)),
     accept: 'application/json, text/plain, */*',
   };
 }

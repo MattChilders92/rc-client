@@ -3,7 +3,7 @@ import { RcRouteGoneError } from '../errors.ts';
 import { casinoHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { num, str } from '../coerce.ts';
-import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Club Royale casino offers.
@@ -350,9 +350,10 @@ export interface ListOffersParams {
 export async function listOffers(
   session: RcSession,
   { loyaltyId, sortBy = 'offer.reserveByDate' }: ListOffersParams,
-  config: RcConfig = DEFAULT_CONFIG,
+  config: Partial<RcConfig> = {},
 ): Promise<OffersResult> {
-  const first = await page(session, loyaltyId, 1, sortBy, config);
+  const cfg = resolveConfig(config);
+  const first = await page(session, loyaltyId, 1, sortBy, cfg);
 
   const player = {
     firstName: str(first.data?.firstName),
@@ -375,7 +376,7 @@ export async function listOffers(
   const totalPages = Number(first.data?.totalPages) || 1;
 
   for (let n = 2; n <= totalPages; n++) {
-    const next = await page(session, loyaltyId, n, sortBy, config);
+    const next = await page(session, loyaltyId, n, sortBy, cfg);
     if (Array.isArray(next.data?.offers)) raw.push(...next.data.offers);
   }
 
@@ -413,8 +414,9 @@ export interface OfferDetailParams {
 export async function fetchOfferDetail(
   session: RcSession,
   { loyaltyId, offerCode, playerOfferId }: OfferDetailParams,
-  config: RcConfig = DEFAULT_CONFIG,
+  config: Partial<RcConfig> = {},
 ): Promise<RcOfferDetail | null> {
+  const cfg = resolveConfig(config);
   const query = new URLSearchParams({
     offerCode,
     playerOfferId,
@@ -428,12 +430,12 @@ export async function fetchOfferDetail(
   const res = await request<any>(`${DETAILS}?${query}`, {
     method: 'GET',
     headers: {
-      ...casinoHeaders(session, { loyaltyId }, config),
+      ...casinoHeaders(session, { loyaltyId }, cfg),
       'x-environment-marker': '',
       'x-environment-ship-code': '',
     },
     allowStatus: [404],
-    config,
+    config: cfg,
   });
 
   if (res.status === 404) {

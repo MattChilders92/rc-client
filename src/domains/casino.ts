@@ -2,7 +2,7 @@ import type { RcSession } from '../auth/index.ts';
 import { casinoHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { num, str } from '../coerce.ts';
-import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Club Royale standing from the casino system itself.
@@ -36,12 +36,13 @@ export interface CasinoLoyalty {
 /** Returns null when the account has no casino profile. */
 export async function fetchCasinoLoyalty(
   session: RcSession,
-  config: RcConfig = DEFAULT_CONFIG,
+  config: Partial<RcConfig> = {},
 ): Promise<CasinoLoyalty | null> {
+  const cfg = resolveConfig(config);
   const res = await request<any>(URL_, {
-    headers: casinoHeaders(session, {}, config),
+    headers: casinoHeaders(session, {}, cfg),
     allowStatus: [404],
-    config,
+    config: cfg,
   });
   if (res.status === 404) return null;
 

@@ -164,10 +164,14 @@ manage their own session rather than going through `RcClient`:
 import { signIn, guestHeaders, request } from 'rc-client';
 
 const session = await signIn({ username, password });
-const { data } = await request('https://aws-prd.api.rccl.com/en/royal/web/v3/guestAccounts', {
+const { data } = await request(`https://aws-prd.api.rccl.com/en/royal/web/v3/guestAccounts/${session.accountId}`, {
   headers: guestHeaders(session),
 });
 ```
+
+Every domain function's trailing `config` argument takes a `Partial<RcConfig>`,
+same as `RcClient` — `fetchRooms(query, { timeoutMs: 5000 })` works without
+supplying the other fields.
 
 The Instant Reward certificate tooling is a standalone module because it parses
 PDFs rather than calling an API — there is no `RcClient` method for it, and it

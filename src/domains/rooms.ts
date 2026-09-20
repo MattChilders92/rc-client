@@ -1,7 +1,7 @@
 import { anonymousHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { num as coerceNum, str } from '../coerce.ts';
-import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Cabin categories and fares for a sailing.
@@ -192,15 +192,16 @@ function collect(body: any, occupancy: { adults: number; children: number }): Rc
 /** Cabins bookable at one specific occupancy. */
 export async function fetchRooms(
   query: RoomQuery,
-  config: RcConfig = DEFAULT_CONFIG,
+  config: Partial<RcConfig> = {},
 ): Promise<RcRoom[]> {
+  const cfg = resolveConfig(config);
   const occupancy = { adults: query.adults ?? 2, children: query.children ?? 0 };
   const target = url(query);
   const res = await request<any>(target, {
-    headers: anonymousHeaders(config),
+    headers: anonymousHeaders(cfg),
     // A sailing that does not exist, or has nothing for this party size.
     allowStatus: [404],
-    config,
+    config: cfg,
   });
   if (res.status === 404) return [];
   return collect(res.data, occupancy);
@@ -228,12 +229,13 @@ export const COVERAGE_OCCUPANCIES: ReadonlyArray<{ adults: number; children: num
 export async function sweepOccupancy(
   query: Omit<RoomQuery, 'adults' | 'children'>,
   occupancies: ReadonlyArray<{ adults: number; children: number }> = COVERAGE_OCCUPANCIES,
-  config: RcConfig = DEFAULT_CONFIG,
+  config: Partial<RcConfig> = {},
 ): Promise<Map<string, RcRoom>> {
+  const cfg = resolveConfig(config);
   const found = new Map<string, RcRoom>();
 
   for (const occ of occupancies) {
-    const rooms = await fetchRooms({ ...query, ...occ }, config);
+    const rooms = await fetchRooms({ ...query, ...occ }, cfg);
     for (const room of rooms) {
       const key = roomKey(room);
       if (!found.has(key)) found.set(key, room);

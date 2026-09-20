@@ -1,7 +1,7 @@
 import {
   RcAuthError, RcError, RcRequestError, RcRouteGoneError, RcUnavailableError,
 } from './errors.ts';
-import { DEFAULT_CONFIG, type RcConfig } from './config.ts';
+import { resolveConfig, type RcConfig } from './config.ts';
 
 /**
  * The single place a request leaves this library.
@@ -35,7 +35,7 @@ export interface RequestOptions {
   /** Aborts the call, in addition to the per-attempt timeout. */
   signal?: AbortSignal;
   /** Defaults for timeout, retries and user agent. Explicit `timeoutMs`/`retries` win. */
-  config?: RcConfig;
+  config?: Partial<RcConfig>;
 }
 
 /** What `request()` returns for a status it did not throw on. */
@@ -73,7 +73,7 @@ export async function request<T = unknown>(
   url: string,
   opts: RequestOptions = {},
 ): Promise<RcResponse<T>> {
-  const cfg = opts.config ?? DEFAULT_CONFIG;
+  const cfg = resolveConfig(opts.config);
   const {
     method = 'GET', headers = {}, body,
     timeoutMs = cfg.timeoutMs, allowStatus = [], retries = cfg.retries, signal,

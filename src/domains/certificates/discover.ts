@@ -1,4 +1,4 @@
-import { DEFAULT_CONFIG, type RcConfig } from '../../config.ts';
+import { resolveConfig, type RcConfig } from '../../config.ts';
 
 /**
  * Instant Reward campaign discovery.
@@ -110,17 +110,25 @@ async function exists(url: string, timeoutMs: number, userAgent: string): Promis
  * Which candidate campaigns Royal has actually published. HEADs in small
  * parallel batches, the way the old platform did; a missing month is the
  * normal case, not an error.
+ *
+ * Each probe uses its own 4000ms default, not `config.timeoutMs` — a HEAD is
+ * cheap and this sweeps many of them per batch, so the general request
+ * timeout would be the wrong knob. Override it with `opts.timeoutMs`.
  */
 export async function discoverInstantCampaigns(
   opts: { monthsBack?: number; monthsAhead?: number; now?: Date; batch?: number; timeoutMs?: number } = {},
-  config: RcConfig = DEFAULT_CONFIG,
+  config: Partial<RcConfig> = {},
 ): Promise<CandidateCampaign[]> {
+  const cfg = resolveConfig(config);
+  // Deliberately its own 4000ms default, not cfg.timeoutMs: each probe is a
+  // cheap HEAD, not a full request, and this sweeps many of them per batch.
+  // Override it via opts.timeoutMs, not config.
   const { batch = 7, timeoutMs = 4000 } = opts;
   const candidates = candidateCampaigns(opts);
   const found: CandidateCampaign[] = [];
   for (let i = 0; i < candidates.length; i += batch) {
     const slice = candidates.slice(i, i + batch);
-    const results = await Promise.all(slice.map((c) => exists(c.url, timeoutMs, config.userAgent)));
+    const results = await Promise.all(slice.map((c) => exists(c.url, timeoutMs, cfg.userAgent)));
     results.forEach((ok, j) => { if (ok) found.push(slice[j]!); });
   }
   return found;

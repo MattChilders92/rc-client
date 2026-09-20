@@ -1,7 +1,7 @@
 import { request } from '../http.ts';
 import { str } from '../coerce.ts';
 import { RcRequestError } from '../errors.ts';
-import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Public cruise search — the sailings and itineraries behind royalcaribbean.com's
@@ -109,14 +109,15 @@ function headers(config: RcConfig): Record<string, string> {
 /** Public cruise search: no credentials, one GraphQL call, one page of results. */
 export async function searchCruises(
   params: SearchParams = {},
-  config: RcConfig = DEFAULT_CONFIG,
+  config: Partial<RcConfig> = {},
 ): Promise<SearchResult> {
+  const cfg = resolveConfig(config);
   const limit = params.limit ?? 25;
   const page = params.page ?? 1;
 
   const res = await request<any>(URL_, {
     method: 'POST',
-    headers: headers(config),
+    headers: headers(cfg),
     body: {
       operationName: 'cruiseSearch_Cruises',
       variables: {
@@ -126,7 +127,7 @@ export async function searchCruises(
       },
       query: QUERY,
     },
-    config,
+    config: cfg,
   });
 
   // GraphQL reports failures inside a 200, so errors have to be read out.
@@ -254,17 +255,18 @@ export function parseItineraryPorts(cruise: unknown): RcItineraryPorts | null {
 /** One page of the catalogue. `total` lets the caller page to the end. */
 export async function fetchItineraryPorts(
   opts: { count?: number; skip?: number } = {},
-  config: RcConfig = DEFAULT_CONFIG,
+  config: Partial<RcConfig> = {},
 ): Promise<{ itineraries: RcItineraryPorts[]; total: number }> {
+  const cfg = resolveConfig(config);
   const res = await request<any>(URL_, {
     method: 'POST',
-    headers: headers(config),
+    headers: headers(cfg),
     body: {
       operationName: 'cruiseSearch_Ports',
       variables: { filters: '{}', pagination: { count: opts.count ?? 100, skip: opts.skip ?? 0 } },
       query: PORTS_QUERY,
     },
-    config,
+    config: cfg,
   });
 
   // GraphQL reports failures inside a 200, so errors have to be read out.

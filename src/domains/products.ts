@@ -2,7 +2,7 @@ import type { RcSession } from '../auth/index.ts';
 import { commerceHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { num } from '../coerce.ts';
-import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Onboard products: shore excursions, drink packages, dining and internet.
@@ -86,14 +86,15 @@ export async function fetchCategory(
   session: RcSession,
   query: ProductQuery,
   category: ProductCategory,
-  config: RcConfig = DEFAULT_CONFIG,
+  config: Partial<RcConfig> = {},
 ): Promise<RcProduct[]> {
-  const headers = commerceHeaders(session, config);
+  const cfg = resolveConfig(config);
+  const headers = commerceHeaders(session, cfg);
   const body = { textSearch: null, sortKey: 'rRank-asc', filterFacets: null };
 
   const page = async (n: number) => {
     const res = await request<any>(pageUrl(query, category, n), {
-      method: 'POST', headers, body, config,
+      method: 'POST', headers, body, config: cfg,
     });
     const products: any[] = res.data?.products ?? res.data?.payload?.products ?? [];
     const total = Number(
@@ -124,15 +125,16 @@ export interface ProductsResult {
 export async function fetchProducts(
   session: RcSession,
   query: ProductQuery,
-  config: RcConfig = DEFAULT_CONFIG,
+  config: Partial<RcConfig> = {},
 ): Promise<ProductsResult> {
+  const cfg = resolveConfig(config);
   const categories = query.categories ?? PRODUCT_CATEGORIES;
   const products: RcProduct[] = [];
   const failed: ProductsResult['failed'] = [];
 
   for (const category of categories) {
     try {
-      products.push(...(await fetchCategory(session, query, category, config)));
+      products.push(...(await fetchCategory(session, query, category, cfg)));
     } catch (err) {
       // One category failing must not cost the others.
       failed.push({ category, reason: (err as Error).message });

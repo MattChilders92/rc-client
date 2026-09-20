@@ -1,6 +1,6 @@
 import { RcAuthError, RcShapeError } from '../errors.ts';
 import { request } from '../http.ts';
-import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * Sign-in, exactly as Royal's own web client does it.
@@ -62,7 +62,8 @@ function decodeJwt(token: string): Record<string, unknown> {
  * token, the account id decoded out of the id_token, and `expiresAt` backed
  * off by a minute so a token is never spent in its final seconds.
  */
-export async function signIn(credentials: Credentials, config: RcConfig = DEFAULT_CONFIG): Promise<RcSession> {
+export async function signIn(credentials: Credentials, config: Partial<RcConfig> = {}): Promise<RcSession> {
+  const cfg = resolveConfig(config);
   const { username, password } = credentials;
 
   // Step 1 — OpenAM session. Credentials travel as headers, and the body is
@@ -82,7 +83,7 @@ export async function signIn(credentials: Credentials, config: RcConfig = DEFAUL
     },
     // A rejected password is final; retrying it only risks a lockout.
     retries: 0,
-    config,
+    config: cfg,
   }).catch((err) => {
     if (err instanceof RcAuthError) throw err;
     throw err;
@@ -103,15 +104,15 @@ export async function signIn(credentials: Credentials, config: RcConfig = DEFAUL
     headers: {
       accept: '*/*',
       'accept-language': 'en-US,en;q=0.9',
-      appkey: config.appKey,
+      appkey: cfg.appKey,
       'cache-control': 'no-cache',
       'content-type': 'application/json',
       pragma: 'no-cache',
       referer: 'https://www.royalcaribbean.com/',
-      'user-agent': config.userAgent,
+      'user-agent': cfg.userAgent,
     },
     body: { client: 'login-component', tokenId },
-    config,
+    config: cfg,
   });
 
   const { access_token, id_token, expires_in } = authorized.data;

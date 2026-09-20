@@ -3,7 +3,7 @@ import { guestHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { RcShapeError } from '../errors.ts';
 import { num, str } from '../coerce.ts';
-import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
+import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
  * The guest account: contact details plus every loyalty programme in one call.
@@ -46,9 +46,10 @@ export interface RcAccount {
 const nn = (v: unknown): string | null => (v === 'NONE' ? null : str(v));
 
 /** The signed-in guest's account: contact details plus every loyalty programme, in one call. */
-export async function fetchAccount(session: RcSession, config: RcConfig = DEFAULT_CONFIG): Promise<RcAccount> {
+export async function fetchAccount(session: RcSession, config: Partial<RcConfig> = {}): Promise<RcAccount> {
+  const cfg = resolveConfig(config);
   const url = `${URL_}/${session.accountId}`;
-  const res = await request<any>(url, { headers: guestHeaders(session, config), config });
+  const res = await request<any>(url, { headers: guestHeaders(session, cfg), config: cfg });
 
   const p = res.data?.payload ?? res.data;
   if (!p || typeof p !== 'object') {

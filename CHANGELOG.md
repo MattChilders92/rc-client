@@ -7,7 +7,9 @@ First publishable release.
 - **Breaking:** the package ships compiled `dist/` with declarations. Consumers
   that resolved the raw `.ts` source through `exports` now get JavaScript.
 - `RcClient` takes an options object: app key, user agent, timeout and retries
-  (`RcConfig`). Standalone functions accept the same as an optional last argument.
+  (`RcConfig`). Standalone functions accept the same as an optional last
+  argument, and it is a `Partial<RcConfig>` — `fetchRooms(query, { timeoutMs })`
+  does not require supplying every field, matching what `RcClient` already took.
 - `RoomQuery.officeCode` and `ProductQuery.regionCode` are settable.
 - Every failure is an `Rc*Error`: GraphQL rejections are `RcRequestError`, a
   failed PDF download is `RcError` or `RcUnavailableError`.
