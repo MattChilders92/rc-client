@@ -369,6 +369,86 @@ single promotion Royal considers best for that sailing, or `null`; its
 `description` is usually empty, so `title` is the label). One pass serves a
 caller that wants both ports and prices, rather than two.
 
+## Rate limiting, and how to not get blocked
+
+Royal publishes no rate limit for any of these APIs, so everything below is
+empirical. It is separated by how well evidenced it is, because the difference
+matters when you are deciding how hard to push.
+
+### Reported by the operator, from running collectors against these APIs
+
+The person who has run these syncs longest reports **aggressive IP-based rate
+limiting, a circuit breaker, and IP bans for repeated hits**. Treat this as the
+governing constraint even though the paragraphs below cannot fully corroborate
+it — it is first-hand operational experience, and the cost of being wrong is an
+IP you cannot use.
+
+One first-hand note in a sibling collector records a sync **abandoned because
+its endpoint IP-blocked the collector** (its sailing-detail sweep). No status
+code, body, duration or recovery method was written down, so nothing more
+specific than "it happened" can be claimed.
+
+### Measured directly
+
+- **HTTP 413 at `count: 100`** on the catalogue selection of `cruiseSearch`
+  (the one carrying `stateroomClassPricing` and `bestPromotion`). `count: 50`
+  works. This is a payload ceiling rather than a rate limit, but it is the one
+  hard number anyone has actually hit. `fetchCatalogue` defaults to 50 for it.
+- A paced spike against `/graph` — roughly 38 requests, never closer together
+  than 1.5 s — drew **no 429, no 503, and no bot challenge**. So the
+  credential-free search is not on a hair trigger at that rate.
+- Sign-in is the one place a retry is known to be dangerous: a rejected
+  password can lock the account out. `signIn` therefore never retries a
+  rejected password, and no configuration can make it.
+
+### What sibling collectors settled on in production
+
+Self-imposed pacing, arrived at by tuning rather than by being told:
+
+| Collector | Pacing |
+| --- | --- |
+| Room-price sweep | 1.5 s between calls, about forty a minute |
+| Cruise-search page loop | 100 ms between pages |
+| Circuit breaker | stop the sweep after 3 rate-limit trips, pausing 60 s each |
+| Concurrency | 2 to 5 in flight per endpoint family, never unbounded |
+
+Those breakers are the *collectors'* own mitigation. Do not read them as a
+description of Royal's behaviour.
+
+### Akamai
+
+Royal's **mobile** gateway (`api.rccl.com`) is behind Akamai Bot Manager and
+expects an encrypted sensor blob a scripted client cannot produce. Do not build
+against it. The web JSON APIs this library uses are not gated that way — but
+the room-selection *web page* is, which is why room pricing reads the JSON
+itinerary API instead of scraping.
+
+If a route that worked starts returning challenges or HTML where JSON belongs,
+that is Bot Manager, not a bug in your code.
+
+### What this library does, and what it leaves to you
+
+`request()` retries `429`, `500`, `502`, `503` and `504`. It honours
+`Retry-After` when Royal sends one. A `403` is never retried, so an outright
+block surfaces immediately as `RcAuthError` instead of being hammered.
+
+**The library paces nothing between separate calls.** Paging loops — the offers
+list, `fetchCatalogue` — issue their requests back to back. On the evidence
+above that is fine for a handful of pages and unwise for a catalogue sweep, so
+if you are sweeping, sleep between calls yourself and treat `RcUnavailableError`
+as a signal to stop rather than to try harder. It carries `retryAfterMs` when
+Royal supplied one.
+
+A `200` carrying an implausibly empty result has been seen in production, and
+read naively it looks like a sell-out rather than a failure. Sanity-check a
+sudden empty against what you saw last time before writing it down.
+
+### Not known
+
+No numeric request quota, no burst size, no ban duration, and no recovery
+procedure. Nobody has tested whether changing IP clears a block. Do not infer
+any of these from the numbers above.
+
 ## The rest of the casino hub API
 
 The hub's bundles reference exactly fourteen casino routes. Beyond the four this

@@ -185,6 +185,33 @@ await rc.rooms({ packageCode, sailDate, adults: 2, children: 2 }); // one occupa
 await rc.allRooms({ packageCode, sailDate });                      // full coverage
 ```
 
+## Rate limits
+
+Royal publishes none, so treat what follows as empirical. The operator running
+these collectors longest reports **aggressive IP-based rate limiting, a circuit
+breaker, and IP bans for repeated hits** — that is the governing constraint,
+and the cost of testing it is an IP you can no longer use.
+
+This library retries `429` and 5xx with backoff, honours `Retry-After`, and
+never retries a `403`. It does **not** pace separate calls: paging loops issue
+their requests back to back. So for anything sweep-shaped:
+
+- Sleep between calls. Sibling collectors settled on **1.5 s** for price sweeps
+  and keep **2 to 5** requests in flight, never unbounded.
+- Treat `RcUnavailableError` as a reason to stop, not to try harder. It carries
+  `retryAfterMs` when Royal sent one. Those collectors stop a sweep entirely
+  after three trips.
+- `fetchCatalogue` pages at 50; Royal answers **413** at 100 for that selection.
+
+Two specific hazards. A rejected password risks an account lockout, so `signIn`
+never retries one, by design and not by configuration. And Royal's **mobile**
+gateway (`api.rccl.com`) sits behind Akamai Bot Manager — do not point a
+scripted client at it; the web APIs this library uses are not gated that way.
+
+[docs/endpoints.md](docs/endpoints.md) separates what was measured from what is
+reported, and lists what nobody has established — there is no known quota, ban
+duration or recovery procedure.
+
 ## Errors
 
 | Class | Meaning |
