@@ -14,6 +14,7 @@ import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
 
 const URL_ = 'https://aws-prd.api.rccl.com/en/royal/web/v3/guestAccounts';
 
+/** The guest account, flattened from `payload` — contact details plus every loyalty programme. */
 export interface RcAccount {
   accountId: string;
   /** Required in the casino offers request body. */
@@ -44,6 +45,7 @@ export interface RcAccount {
 // `str` applies (which also trims and rejects non-string/non-number input).
 const nn = (v: unknown): string | null => (v === 'NONE' ? null : str(v));
 
+/** The signed-in guest's account: contact details plus every loyalty programme, in one call. */
 export async function fetchAccount(session: RcSession, config: RcConfig = DEFAULT_CONFIG): Promise<RcAccount> {
   const url = `${URL_}/${session.accountId}`;
   const res = await request<any>(url, { headers: guestHeaders(session, config), config });

@@ -24,6 +24,7 @@ export const RC_APPKEY = RC_PUBLIC_APP_KEY;
 export const USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36';
 
+/** Everything a call can override; resolved once by `RcClient` and threaded through every request. */
 export interface RcConfig {
   /** Sent as `appkey` on guest, commerce and sign-in requests. */
   appKey: string;
@@ -35,6 +36,7 @@ export interface RcConfig {
   retries: number;
 }
 
+/** Today's values for every `RcConfig` field — what a caller who passes nothing gets. */
 export const DEFAULT_CONFIG: Readonly<RcConfig> = Object.freeze({
   appKey: RC_PUBLIC_APP_KEY,
   userAgent: USER_AGENT,

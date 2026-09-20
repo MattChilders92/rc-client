@@ -17,6 +17,7 @@ import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
 
 const URL_ = 'https://www.royalcaribbean.com/api/casino/v1/loyalty-data';
 
+/** Club Royale standing straight from the casino system — preferred over the guest account's loyalty block. */
 export interface CasinoLoyalty {
   /** Casino profile id — distinct from the Crown & Anchor number. */
   casinoLoyaltyId: string | null;

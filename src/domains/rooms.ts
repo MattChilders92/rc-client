@@ -20,8 +20,10 @@ const BASE: Record<Brand, string> = {
   CEL: 'https://www.celebritycruises.com/itinerary/api/v1',
 };
 
+/** Which site's inventory to query — Royal Caribbean or Celebrity. Each has its own base URL. */
 export type Brand = 'RC' | 'CEL';
 
+/** What to look up cabins for: sailing, party size, and locale. */
 export interface RoomQuery {
   /** Royal's sailing identifier, as used across the booking APIs. */
   packageCode: string;
@@ -41,6 +43,7 @@ export interface RoomQuery {
   officeCode?: string;
 }
 
+/** One bookable cabin category/subtype at one occupancy. */
 export interface RcRoom {
   categoryCode: string;
   subtypeCode: string | null;

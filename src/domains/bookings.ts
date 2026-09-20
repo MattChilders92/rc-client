@@ -26,6 +26,7 @@ import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
 
 const BASE = 'https://aws-prd.api.rccl.com';
 
+/** One reservation on the profile. Sailing fields are null unless `enriched` is true. */
 export interface RcBooking {
   /** Reservation number, as printed on the booking confirmation. */
   bookingId: string;
@@ -104,6 +105,7 @@ function applyEnrichment(booking: RcBooking, detail: any): RcBooking {
   };
 }
 
+/** Options for `listBookings`. */
 export interface ListBookingsOptions {
   /** `R` for Royal Caribbean, `C` for Celebrity. Defaults to `R`. */
   brand?: 'R' | 'C';

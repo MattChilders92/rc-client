@@ -13,8 +13,10 @@ import { DEFAULT_TIERS, splitOfferCode, tierPdfUrl, tierTradeInValue } from './d
 export interface TextCell { x: number; str: string; w?: number }
 /** One visual line of a page: cells left to right. */
 export interface TextLine { y: number; cells: TextCell[] }
+/** A page's worth of text lines, as extracted by the caller's PDF library. */
 export type PageLines = TextLine[];
 
+/** One tier PDF's identity and stated point threshold, as `parseCampaignPage` reads it off the campaign page. */
 export interface InstantTier {
   offerCode: string;
   campaignCode: string;
@@ -63,6 +65,7 @@ export function parseCampaignPage(
   }));
 }
 
+/** One row of a tier PDF's table: a sailing the tier's offer can be redeemed on. */
 export interface InstantSailing {
   offerCode: string;
   shipName: string;
@@ -83,6 +86,7 @@ export interface InstantSailing {
   onboardCredit: number | null;
 }
 
+/** What `parseTierPages` returns: every sailing row found, plus the surrounding prose. */
 export interface TierParse {
   sailings: InstantSailing[];
   /** Non-table lines from the first page, for the offer's terms. */
@@ -118,6 +122,12 @@ export function instantSailingKey(s: Pick<InstantSailing, 'shipName' | 'sailDate
   return `${s.shipName}|${s.sailDate ?? ''}|${s.stateroomType}|${s.offerType}`;
 }
 
+/**
+ * Normalise a tier PDF's free-text stateroom description to the same
+ * INTERIOR/OCEANVIEW/BALCONY/SUITE vocabulary `rooms.ts` uses, so a
+ * certificate's rooms can be compared against live room-pricing results.
+ * Unrecognised text falls back to INTERIOR rather than throwing.
+ */
 export function roomTypeOf(stateroom: string): string {
   const u = stateroom.toUpperCase();
   if (u.includes('INTERIOR') || u.includes('INSIDE')) return 'INTERIOR';

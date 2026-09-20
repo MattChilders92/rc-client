@@ -14,9 +14,12 @@ import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
 
 const BASE = 'https://aws-prd.api.rccl.com/en/royal/web/commerce-api/catalog/v2';
 
+/** Every category this endpoint serves; `fetchProducts` queries all of them unless told otherwise. */
 export const PRODUCT_CATEGORIES = ['beverage', 'shorex', 'internet', 'dining'] as const;
+/** One of `PRODUCT_CATEGORIES`. */
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
 
+/** One onboard product: an excursion, drink package, dining reservation or internet plan. */
 export interface RcProduct {
   code: string;
   category: ProductCategory;
@@ -30,6 +33,7 @@ export interface RcProduct {
   raw: unknown;
 }
 
+/** What sailing (and which categories) to fetch the catalogue for. */
 export interface ProductQuery {
   shipCode: string;
   /** Sailing date, `YYYY-MM-DD`. Converted to Royal's compact form internally. */
@@ -109,6 +113,7 @@ export async function fetchCategory(
   return all.map((p) => mapProduct(p, category)).filter((p) => p.code);
 }
 
+/** What `fetchProducts` returns: everything that loaded, plus which categories didn't. */
 export interface ProductsResult {
   products: RcProduct[];
   /** Categories that failed, so a partial result is never mistaken for a full one. */

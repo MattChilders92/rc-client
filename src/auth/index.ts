@@ -24,6 +24,7 @@ const AUTHENTICATE_URL = 'https://www.royalcaribbean.com/auth/json/authenticate'
 const AUTHORIZE_URL =
   'https://aws-prd.api.rccl.com/v1/oauth2-authorize/en/royal/web/v1/authorize';
 
+/** What `signIn` returns: the bearer token plus the ids every other API keys on. */
 export interface RcSession {
   accessToken: string;
   /** Account uuid, from the id_token `sub` claim. */
@@ -32,6 +33,7 @@ export interface RcSession {
   expiresAt: Date;
 }
 
+/** Royal's own username/password. There is no other supported login method. */
 export interface Credentials {
   username: string;
   password: string;
@@ -48,6 +50,11 @@ function decodeJwt(token: string): Record<string, unknown> {
   return JSON.parse(new TextDecoder().decode(bytes));
 }
 
+/**
+ * Runs the two-step flow documented above and returns a session: the access
+ * token, the account id decoded out of the id_token, and `expiresAt` backed
+ * off by a minute so a token is never spent in its final seconds.
+ */
 export async function signIn(credentials: Credentials, config: RcConfig = DEFAULT_CONFIG): Promise<RcSession> {
   const { username, password } = credentials;
 
@@ -126,4 +133,5 @@ export async function signIn(credentials: Credentials, config: RcConfig = DEFAUL
   };
 }
 
+/** True once `expiresAt` has passed — the signal `RcClient` uses to sign in again. */
 export const isExpired = (session: RcSession): boolean => session.expiresAt <= new Date();

@@ -24,6 +24,7 @@ export const INSTANT_SUFFIXES = {
   P: 'Unknown region',
   CHN: 'China',
 } as const;
+/** A key of `INSTANT_SUFFIXES` — the region letter a campaign code ends in. */
 export type InstantSuffix = keyof typeof INSTANT_SUFFIXES;
 
 /** Tier suffixes and the point thresholds the campaign page lists for them. */
@@ -39,14 +40,18 @@ export const DEFAULT_TIERS: ReadonlyArray<{ tier: string; points: number }> = [
 const TRADE_IN_BY_TIER: Record<string, number> = {
   '01': 3000, '02': 1500, '03': 1000, '04': 750, '05': 500, '06': 300, '07': 300, '08': 250,
 };
+/** Trade-in value for a tier, matched by prefix (`'02A'` still matches `'02'`). Null when unknown. */
 export function tierTradeInValue(tier: string): number | null {
   const key = Object.keys(TRADE_IN_BY_TIER).find((k) => tier.startsWith(k));
   return key ? TRADE_IN_BY_TIER[key]! : null;
 }
 
+/** Build the `YYMM` + suffix code Royal names a campaign PDF by, e.g. `2609A`. */
 export const campaignCode = (year: number, month1to12: number, suffix: InstantSuffix): string =>
   `${String(year).slice(2)}${String(month1to12).padStart(2, '0')}${suffix}`;
+/** URL of a campaign's overview PDF (links to one tier PDF per tier). */
 export const campaignPdfUrl = (code: string): string => `${INSTANT_PDF_BASE}/${code}.pdf`;
+/** URL of one tier's PDF — same path shape as a campaign PDF, keyed by the full offer code instead. */
 export const tierPdfUrl = (offerCode: string): string => `${INSTANT_PDF_BASE}/${offerCode}.pdf`;
 
 /** Split an offer code into its campaign and tier: `2609A04` → `2609A` + `04`. */
@@ -55,6 +60,7 @@ export function splitOfferCode(offerCode: string): { campaignCode: string; tier:
   return m ? { campaignCode: m[1]!, tier: m[2]! } : null;
 }
 
+/** A campaign code worth checking, with the URL to HEAD and the month it covers. */
 export interface CandidateCampaign {
   code: string;
   suffix: InstantSuffix;

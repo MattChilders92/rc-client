@@ -39,10 +39,12 @@ export const SORT_FIELDS = [
   'sailDate', 'createdAt', 'offer.offerCode', 'offer.offerType', 'offer.reserveByDate',
   'offer.startDate', 'offer.sailByDate', 'offer.tradeInValue', 'offer.campaign.campaignType',
 ] as const;
+/** One of `SORT_FIELDS` — the only values Royal's schema check will accept for `sortBy`. */
 export type OfferSortField = (typeof SORT_FIELDS)[number];
 
 const PAGE_LIMIT = 100;
 
+/** One line item on an offer, e.g. free play or onboard credit. */
 export interface RcPerk {
   /** Opaque internal code (`TBK6`), not the free-play amount. */
   perkCode: string;
@@ -99,6 +101,7 @@ export interface RcOfferDetail extends RcOffer {
   digitalRedemptionOnly: boolean;
 }
 
+/** One casino offer as `listOffers` returns it — `sailings` is always empty here; see `RcOfferDetail`. */
 export interface RcOffer {
   offerCode: string;
   /**
@@ -144,6 +147,7 @@ export interface RcOffer {
   raw: unknown;
 }
 
+/** What `listOffers` returns: every offer on the account, plus enough to tell a genuinely empty account from a moved route. */
 export interface OffersResult {
   offers: RcOffer[];
   /**
@@ -266,6 +270,7 @@ function mapOfferDetail(o: any): RcOfferDetail {
   };
 }
 
+/** Map one raw casino-API offer record into `RcOffer`. Exported for callers who page the raw API themselves. */
 export function mapOffer(o: any): RcOffer {
   const co = o?.campaignOffer ?? {};
   const perks = readPerks(co.perkCodes);
@@ -326,6 +331,7 @@ async function page(
   });
 }
 
+/** Parameters for `listOffers`. */
 export interface ListOffersParams {
   /** Crown & Anchor number, from `account.crownAndAnchorId`. */
   loyaltyId: string;
@@ -373,6 +379,7 @@ export async function listOffers(
   };
 }
 
+/** Parameters for `fetchOfferDetail`. */
 export interface OfferDetailParams {
   /** Crown & Anchor number, from `account.crownAndAnchorId`. */
   loyaltyId: string;

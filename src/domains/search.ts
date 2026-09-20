@@ -40,6 +40,7 @@ const QUERY = `query cruiseSearch_Cruises($filters: String, $qualifiers: String,
   }
 }`;
 
+/** One dated departure of an `RcCruise`. */
 export interface RcSailingSummary {
   sailingId: string;
   sailDate: string | null;
@@ -49,6 +50,7 @@ export interface RcSailingSummary {
   bookingLink: string | null;
 }
 
+/** One itinerary from the public search, with the individual dated sailings it runs. */
 export interface RcCruise {
   id: string;
   shipCode: string | null;
@@ -62,11 +64,13 @@ export interface RcCruise {
   sailings: RcSailingSummary[];
 }
 
+/** What `searchCruises` returns: one page of matching cruises plus the total across all pages. */
 export interface SearchResult {
   cruises: RcCruise[];
   total: number;
 }
 
+/** Parameters for `searchCruises`. Every field is optional; the defaults mirror an unfiltered site search. */
 export interface SearchParams {
   /** Royal's own filter string, e.g. `{"ship":["LE"]}`. Defaults to no filter. */
   filters?: string;
@@ -102,6 +106,7 @@ function headers(config: RcConfig): Record<string, string> {
   };
 }
 
+/** Public cruise search: no credentials, one GraphQL call, one page of results. */
 export async function searchCruises(
   params: SearchParams = {},
   config: RcConfig = DEFAULT_CONFIG,
@@ -192,11 +197,13 @@ const PORTS_QUERY = `query cruiseSearch_Ports($filters: String, $pagination: Cru
 /** Royal's sentinel for a day at sea; it is not a port. */
 const SEA_DAY = 'CRU';
 
+/** One day of an itinerary — an empty `ports` list means a day at sea. */
 export interface RcItineraryDay {
   day: number;
   ports: { code: string; name: string }[];
 }
 
+/** One itinerary's day-by-day ports, as `fetchItineraryPorts`/`parseItineraryPorts` return it. */
 export interface RcItineraryPorts {
   itineraryCode: string;
   itineraryName: string | null;
