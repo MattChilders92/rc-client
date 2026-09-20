@@ -361,3 +361,6 @@ export async function fetchItineraryPorts(
     total: Number(results.total) || cruises.length,
   };
 }
+
+/** Shared with domains/catalogue.ts, which pages the same endpoint with a wider selection. */
+export { headers as searchHeaders, url as searchUrl };

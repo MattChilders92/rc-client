@@ -42,6 +42,11 @@ export {
   type RcCruise, type RcSailingSummary, type SearchParams, type SearchResult,
   type RcItineraryPorts, type RcItineraryDay,
 } from './domains/search.ts';
+export {
+  fetchCatalogue, parseCatalogueCruise, classifyPromo,
+  type RcRoomClass, type RcPromoKind, type RcLeadPrice, type RcPromo,
+  type RcCatalogueSailing, type RcCatalogueCruise,
+} from './domains/catalogue.ts';
 
 /* ── Instant Reward certificates: public PDFs, no session ────────────────── */
 export {

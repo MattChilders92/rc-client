@@ -324,11 +324,14 @@ No per-booking detail endpoint was found: `/v1/bookings/{id}`,
 
 ```
 POST www.royalcaribbean.com/graph                                  [anonymous]
-     operationName: cruiseSearch_Cruises
+     operationName: cruiseSearch_Cruises | cruiseSearch_Ports | cruiseSearch_Catalogue
 ```
 
 GraphQL, no credentials. Requires the brand/country/currency/office headers the
-site sends, plus an `x-session-id` uuid (any valid one works).
+site sends, plus an `x-session-id` uuid (any valid one works). All three
+operation names hit the same `cruiseSearch(filters, pagination)` field — only
+the selection set differs, so `searchHeaders`/`SEARCH_URL` are shared rather
+than redeclared per query.
 
 GraphQL reports failures **inside a 200** in an `errors[]` array, so the status
 code alone never tells you it worked.
@@ -347,10 +350,24 @@ exposed as its own field. Verified live: search returned itinerary
 `RF4BH330` and 200s on `RF4BH328`. Measured on one recorded search, 33 of 50
 sailings had a package code differing from their parent cruise's master code.
 
+**This is not a Celebrity quirk.** It was found on Celebrity but happens on
+Royal too: in a recorded Royal catalogue page, 7 of 9 sailings ran under a
+package code differing from their parent's master code (master `OV04X056`,
+sailings `OV04X055`).
+
 The divergence is between a sailing and its **parent cruise**, not within the
 sailing itself — a sailing's own `itinerary.code` field has always matched
 its own package code in every recording seen so far. So: never price off
-`RcCruise.itineraryCode`; always use the matching `RcSailingSummary.packageCode`.
+`RcCruise.itineraryCode`; always use the matching `packageCode`, on either
+`RcSailingSummary` or `RcCatalogueSailing`.
+
+`cruiseSearch_Catalogue` (`fetchCatalogue`) is the widest of the three: on top
+of what `cruiseSearch_Ports` (`fetchItineraryPorts`) reads, each sailing also
+carries `stateroomClassPricing` (one lead price per room class — a class with
+no inventory arrives as `price: null`, not omitted) and `bestPromotion` (the
+single promotion Royal considers best for that sailing, or `null`; its
+`description` is usually empty, so `title` is the label). One pass serves a
+caller that wants both ports and prices, rather than two.
 
 ## The rest of the casino hub API
 

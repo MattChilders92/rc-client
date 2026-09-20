@@ -17,10 +17,13 @@ Celebrity Cruises support:
 - The host and the loyalty number must belong to the same brand. Crossing them
   used to surface as a 401 that read like an expired session; it now throws
   `RcRequestError` naming the brand instead.
-- `RcSailingSummary.packageCode` — the code room pricing actually wants,
-  parsed from the sailing id. A cruise's master `itineraryCode` and a dated
-  sailing's own package code can differ for Celebrity; pricing 404s on the
-  master code.
+- `fetchCatalogue` — the public cruise search in one wider pass: ports, every
+  dated sailing, a lead price per room class, taxes and fees, and the best
+  promotion. Brand-aware like the other search calls.
+- `packageCode` on `RcSailingSummary` and `RcCatalogueSailing` — the code room
+  pricing actually wants, parsed from the sailing id. A cruise's master
+  `itineraryCode` and a dated sailing's own package code often differ, on
+  **both** brands, and pricing 404s on the master code.
 - The guest account now also carries Captain's Club, Blue Chip (Celebrity's
   casino programme — points only, no id or tier) and Venetian Society
   (Silversea, present in the same payload; this library adds no Silversea
