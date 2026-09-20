@@ -61,6 +61,26 @@ nested per programme:
 
 An absent tier is the **string `"NONE"`**, not null.
 
+### Every brand's loyalty in one call
+
+The same payload also carries Celebrity's and Silversea's programmes — no
+separate account call is needed per brand:
+
+- `captainsClubId`, `captainsClubLoyaltyTier`, `captainsClubNextTier`,
+  `captainsClubLoyaltyIndividualPoints`, `...RelationshipPoints`,
+  `captainsClubRemainingPoints` — Celebrity's core loyalty programme, the id
+  the casino offers API keys on for Celebrity.
+- `celebrityBlueChipLoyaltyIndividualPoints`, `...RelationshipPoints` —
+  Celebrity's **casino** programme. Points only: Royal exposes no id and no
+  tier for it, unlike Club Royale and Captain's Club.
+- `venetianSocietyId`, `venetianSocietyLoyaltyTier`, `venetianSocietyNextTier`,
+  `venetianSocietyIndividualPoints`, `venetianSocietyRelationshipPoints`,
+  `venetianSocietyRemainingPoints` — Silversea's programme, present because it
+  rides the same payload. Note the missing `Loyalty` infix on the points keys
+  only (`venetianSocietyIndividualPoints`, not `...LoyaltyIndividualPoints`) —
+  the tier key keeps it. This library surfaces these fields but adds no
+  Silversea endpoint; `Brand` stays `'R' | 'C'`.
+
 ## Casino loyalty
 
 ```
@@ -187,6 +207,43 @@ Route chunks for signed-in pages are not served anonymously, so the bundle shows
 the shared calls (`/v1/loyalty-data`, `/v1/partners`, `/v1/guest-account/loyalty`)
 but not the offers one.
 
+### Celebrity
+
+The casino API (loyalty, offers, offer details) is brand-hosted: Royal's calls
+go to `www.royalcaribbean.com/api/casino/**`, Celebrity's to
+`www.celebritycruises.com/api/casino/**`, same paths and shapes on both.
+
+**The loyalty number must belong to the host's brand.** Verified live in both
+directions — a Crown & Anchor number against Celebrity's host, and a
+Captain's Club number against Royal's — each answers:
+
+```
+401 Unauthorized - invalid loyalty id
+```
+
+That reads exactly like an expired token unless the body is inspected: the
+status is the same 401 `request()` already maps to `RcAuthError` for a bad or
+stale session. This library matches the body text and rethrows as
+`RcRequestError` naming the brand instead, because re-authenticating does
+nothing for a mismatched pair.
+
+**The current `GET /api/casino/v2/offers/list` carries no agency id.** An
+agency id belonged to the retired `POST /v2/offers/merged` (see "This endpoint
+has now moved twice" above) — it is not part of the current request or
+response shape for either brand. Worth recording so it does not get
+reintroduced on the assumption that the old and current endpoints take the
+same parameters.
+
+Celebrity's casino loyalty programme is **Blue Chip** — see "Every brand's
+loyalty in one call" above for its points-only shape.
+
+**Verified and not, for Celebrity specifically:** the account used to verify
+this had a Captain's Club number but zero Blue Chip points, so
+`GET /v2/offers/list` against Celebrity's host returned a real, empty list
+(`outcome: 'ok'`, zero offers) — that response is captured as a fixture. A
+populated Celebrity offer payload — one with actual offers in it — has not
+been observed and is not verified against this library's mapping.
+
 ## Room pricing
 
 ```
@@ -275,6 +332,25 @@ site sends, plus an `x-session-id` uuid (any valid one works).
 
 GraphQL reports failures **inside a 200** in an `errors[]` array, so the status
 code alone never tells you it worked.
+
+### Celebrity, and the package-code trap
+
+Same query, same shape, against `celebritycruises.com/graph` with header
+`brand: C` instead of `R` — anonymous, like Royal's.
+
+**A cruise's master `itineraryCode` is not always what room pricing wants.**
+Each `cruise.masterSailing.itinerary.code` is the code the cruise is
+advertised under, but each dated sailing runs under its own package code,
+carried only in the sailing's `id` (`<packageCode>_<YYYY-MM-DD>`) and not
+exposed as its own field. Verified live: search returned itinerary
+`RF4BH330` with a sailing id of `RF4BH328_2026-11-16` — room pricing 404s on
+`RF4BH330` and 200s on `RF4BH328`. Measured on one recorded search, 33 of 50
+sailings had a package code differing from their parent cruise's master code.
+
+The divergence is between a sailing and its **parent cruise**, not within the
+sailing itself — a sailing's own `itinerary.code` field has always matched
+its own package code in every recording seen so far. So: never price off
+`RcCruise.itineraryCode`; always use the matching `RcSailingSummary.packageCode`.
 
 ## The rest of the casino hub API
 

@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.3.0 — 2026-09-20
+
+**Breaking:** `Brand` is now `'R' | 'C'` — was `'RC' | 'CEL'` — and moved from
+`domains/rooms.ts` to its own `src/brand.ts`. It is still exported from the
+package root, same as before.
+
+Celebrity Cruises support:
+
+- Brand selects a **host**, not a path: `www.royalcaribbean.com` or
+  `www.celebritycruises.com`. Cruise search, itinerary ports, room pricing,
+  casino loyalty and casino offers all take a `brand` and follow it.
+- `RcClient` takes a `brand` option (default `'R'`); `offers()` and
+  `offerDetail()` resolve that brand's own loyalty number from the account
+  automatically — Crown & Anchor for Royal, Captain's Club for Celebrity.
+- The host and the loyalty number must belong to the same brand. Crossing them
+  used to surface as a 401 that read like an expired session; it now throws
+  `RcRequestError` naming the brand instead.
+- `RcSailingSummary.packageCode` — the code room pricing actually wants,
+  parsed from the sailing id. A cruise's master `itineraryCode` and a dated
+  sailing's own package code can differ for Celebrity; pricing 404s on the
+  master code.
+- The guest account now also carries Captain's Club, Blue Chip (Celebrity's
+  casino programme — points only, no id or tier) and Venetian Society
+  (Silversea, present in the same payload; this library adds no Silversea
+  endpoint).
+
+Sign-in, the guest account and product pricing needed no brand-specific code
+at all — verified working unchanged for a Celebrity ship. Celebrity's
+signed-in casino paths were verified against an account with Captain's Club
+but zero Blue Chip points: the empty-offers path is proven and recorded as a
+fixture, but a populated Celebrity offer payload is not verified.
+
 ## 0.2.0 — 2026-09-19
 
 First publishable release. Pre-1.0: these are private, undocumented upstream

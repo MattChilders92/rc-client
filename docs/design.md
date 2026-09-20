@@ -69,6 +69,34 @@ return `null` for an absent or unparseable value rather than the `0` a bare
 `Number(v)` would produce, because a cabin with no stated price is not a
 cabin that costs nothing.
 
+## Brand is a host decision
+
+Royal Caribbean and Celebrity Cruises are the same company running the same
+web stack twice, on two consumer sites. Their cruise search, itinerary,
+room-pricing and casino APIs are each served from the brand's own host —
+`www.royalcaribbean.com` or `www.celebritycruises.com` — with identical paths
+and shapes. So `brand.ts` models brand as a **host** lookup (`brandHost()`),
+not a path segment or a query parameter: it is the one axis every
+brand-specific call actually varies on, and every call site composes its URL
+from it the same way, rather than each domain inventing its own
+Royal-or-Celebrity branch.
+
+Sign-in, the guest account and the product catalogue take no brand at all,
+deliberately. All three are reached through Royal's host regardless of which
+brand a caller cares about, and were verified live to work unchanged for a
+Celebrity account and a Celebrity ship — there is no second sign-in flow, no
+per-brand account endpoint, and no per-brand product catalogue to model.
+Giving them a `brand` parameter would invite a caller to pass one expecting
+it to do something, when the correct behaviour is to ignore it.
+
+The one place brand and identity intersect is the loyalty number: Crown &
+Anchor and Captain's Club are different numbers on the same account, and each
+only means something to its own brand's host. Crossing them is indistinguishable
+from an expired session by status code alone (both are 401), which is why the
+guard in `offers.ts` reads the body rather than trusting the status — the
+same "don't trust the status" principle as the 404 handling above, applied to
+a different code.
+
 ## Configuration, not constants
 
 `RcConfig` exists because the values callers most need to change — the app
@@ -88,8 +116,15 @@ drifting back to an ad hoc throw.
 ## Verified and not
 
 - `offers` is verified against a live payload of 13 real offers, including
-  free-play perks, trade-in values and a repeated offer code. See
+  free-play perks, trade-in values and a repeated offer code, for Royal. See
   [README.md](../README.md).
-- There is no Celebrity agency id anywhere in this code. Only room pricing
-  (`RoomQuery.brand`) has a `Brand` switch between Royal and Celebrity; every
-  other endpoint — offers, products, bookings, search — is Royal-only.
+- Search, itinerary ports, room pricing, casino loyalty and casino offers all
+  take a `brand` and are verified against Celebrity's host. Celebrity's
+  signed-in casino paths were verified against an account with Captain's Club
+  but zero Blue Chip points, so the empty-offers path is proven but a
+  populated Celebrity offer payload is not — see
+  [README.md](../README.md#brands).
+- There is no Celebrity (or Silversea) agency id anywhere in this code.
+  Sign-in, the guest account and product pricing stay Royal-hosted and
+  brand-free by design — see "Brand is a host decision" above — and were
+  verified to return correct, brand-agnostic results for a Celebrity account.
