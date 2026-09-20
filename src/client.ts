@@ -152,19 +152,25 @@ export class RcClient {
     return [...(await sweepOccupancy(query, occupancies, this.#config)).values()];
   }
 
-  /** Public cruise search. Static because it needs no session. */
-  static search(params?: SearchParams): Promise<SearchResult> {
-    return searchCruises(params);
+  /**
+   * Public cruise search. Static because it needs no session — which also means
+   * it cannot see an instance's options, so pass `config` here to override the
+   * user agent, timeout or retries.
+   */
+  static search(params?: SearchParams, config?: Partial<RcConfig>): Promise<SearchResult> {
+    return searchCruises(params, resolveConfig(config));
   }
 
   /**
    * The itineraries in Royal's public catalogue with their day-by-day ports.
-   * Static, like `search`: the same credential-free GraphQL.
+   * Static, like `search`: the same credential-free GraphQL, and the same
+   * optional `config`.
    */
   static itineraryPorts(
     opts?: { count?: number; skip?: number },
+    config?: Partial<RcConfig>,
   ): Promise<{ itineraries: RcItineraryPorts[]; total: number }> {
-    return fetchItineraryPorts(opts);
+    return fetchItineraryPorts(opts, resolveConfig(config));
   }
 }
 

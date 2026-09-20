@@ -2,14 +2,22 @@ import { DEFAULT_CONFIG, type RcConfig } from '../../config.ts';
 import { RcError, RcUnavailableError } from '../../errors.ts';
 
 /**
- * Instant Reward PDF download.
+ * The raw bytes of a campaign or tier PDF. Parsing is the caller's; this
+ * library carries no PDF dependency.
  *
- * Fetches the raw bytes of a campaign or tier PDF. Parsing is the caller's;
- * this library carries no PDF dependency.
+ * Uses a bare `fetch` rather than `request()`, which reads bodies as text. It
+ * is given the same timeout, and its failures are the same typed errors.
  */
-
 export async function downloadPdf(url: string, config: RcConfig = DEFAULT_CONFIG): Promise<Uint8Array> {
-  const r = await fetch(url, { headers: { 'user-agent': config.userAgent, accept: 'application/pdf,*/*' } });
+  let r: Response;
+  try {
+    r = await fetch(url, {
+      headers: { 'user-agent': config.userAgent, accept: 'application/pdf,*/*' },
+      signal: AbortSignal.timeout(config.timeoutMs),
+    });
+  } catch (err) {
+    throw new RcError(`Network failure fetching PDF: ${(err as Error).message}`, { url });
+  }
   if (!r.ok) {
     if (r.status === 429 || r.status === 503) {
       // Numeric Retry-After only; this CDN hasn't been observed sending the

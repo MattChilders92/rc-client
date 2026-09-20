@@ -44,5 +44,13 @@ export const DEFAULT_CONFIG: Readonly<RcConfig> = Object.freeze({
 
 /** Fill in whatever the caller did not supply. */
 export function resolveConfig(partial: Partial<RcConfig> = {}): RcConfig {
-  return { ...DEFAULT_CONFIG, ...partial };
+  // Field by field, not a spread: `{ appKey: process.env.RC_APP_KEY }` with the
+  // variable unset is an explicit `undefined`, which a spread would copy over
+  // the default and send to Royal as the header value "undefined".
+  return {
+    appKey: partial.appKey ?? DEFAULT_CONFIG.appKey,
+    userAgent: partial.userAgent ?? DEFAULT_CONFIG.userAgent,
+    timeoutMs: partial.timeoutMs ?? DEFAULT_CONFIG.timeoutMs,
+    retries: partial.retries ?? DEFAULT_CONFIG.retries,
+  };
 }
