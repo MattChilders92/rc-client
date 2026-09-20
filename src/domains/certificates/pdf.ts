@@ -30,5 +30,12 @@ export async function downloadPdf(url: string, config: RcConfig = DEFAULT_CONFIG
     }
     throw new RcError(`HTTP ${r.status} fetching PDF`, { status: r.status, url });
   }
-  return new Uint8Array(await r.arrayBuffer());
+  try {
+    return new Uint8Array(await r.arrayBuffer());
+  } catch (err) {
+    // A connection reset mid-body reaches here even though the connect (and
+    // the status check above) already succeeded — it must not escape as a
+    // bare TypeError just because it happened after `r.ok`.
+    throw new RcError(`Network failure reading PDF: ${(err as Error).message}`, { url });
+  }
 }

@@ -81,6 +81,24 @@ export async function request<T = unknown>(
 
   let lastError: unknown;
 
+  /**
+   * Decide whether a network-level failure (a failed connect, or a body that
+   * stopped arriving mid-read) gets another attempt. Both burn the same
+   * budget and use the same backoff — a reset mid-body is not meaningfully
+   * different from one that never connected. An already-aborted `signal`
+   * stops immediately rather than sleeping first: honouring the caller's
+   * cancellation matters more than spending the rest of the retry budget on
+   * a call that is already dead.
+   */
+  async function retryOrThrow(attempt: number, err: unknown): Promise<void> {
+    if (attempt < retries) {
+      if (signal?.aborted) throw new RcError('Request aborted', { url });
+      await sleep(300 * 2 ** attempt);
+      return;
+    }
+    throw new RcError(`Network failure: ${(err as Error).message}`, { url });
+  }
+
   for (let attempt = 0; attempt <= retries; attempt++) {
     const timeout = AbortSignal.timeout(timeoutMs);
     const composed = signal ? AbortSignal.any([signal, timeout]) : timeout;
@@ -97,14 +115,22 @@ export async function request<T = unknown>(
       });
     } catch (err) {
       lastError = err;
-      if (attempt < retries) {
-        await sleep(300 * 2 ** attempt);
-        continue;
-      }
-      throw new RcError(`Network failure: ${(err as Error).message}`, { url });
+      await retryOrThrow(attempt, err);
+      continue;
     }
 
-    const text = await res.text();
+    let text: string;
+    try {
+      text = await res.text();
+    } catch (err) {
+      // A connection reset mid-body (e.g. undici's bare `TypeError:
+      // terminated`) reaches here — it must not escape untyped just because
+      // the connect itself succeeded.
+      lastError = err;
+      await retryOrThrow(attempt, err);
+      continue;
+    }
+
     let data: unknown = text;
     if (text) {
       try { data = JSON.parse(text); } catch { /* keep the raw text */ }
@@ -115,6 +141,7 @@ export async function request<T = unknown>(
     }
 
     if (RETRYABLE.has(res.status) && attempt < retries) {
+      if (signal?.aborted) throw new RcError('Request aborted', { url });
       const wait = retryAfterMs(res.headers) ?? 500 * 2 ** attempt;
       await sleep(wait);
       continue;

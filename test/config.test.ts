@@ -46,6 +46,18 @@ test('a PDF download that cannot connect is an RcError, not a bare TypeError', a
   });
 });
 
+test('a PDF download whose body fails to read is an RcError, not a bare TypeError', async () => {
+  globalThis.fetch = async () => new Response(new ReadableStream({
+    start(controller) { queueMicrotask(() => controller.error(new TypeError('terminated'))); },
+  }), { status: 200 });
+  await assert.rejects(downloadPdf('https://example.com/x.pdf'), (e: unknown) => {
+    assert.ok(e instanceof RcError);
+    assert.match((e as Error).message, /terminated/);
+    assert.equal((e as RcError).url, 'https://example.com/x.pdf');
+    return true;
+  });
+});
+
 test('a PDF download is given the configured timeout', async () => {
   let signal: AbortSignal | null | undefined;
   globalThis.fetch = async (_url, init) => { signal = init?.signal; return new Response(new Uint8Array([1, 2, 3]), { status: 200 }); };

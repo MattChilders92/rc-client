@@ -46,8 +46,15 @@ function decodeJwt(token: string): Record<string, unknown> {
   const normalised = part.replace(/-/g, '+').replace(/_/g, '/');
   // atob + TextDecoder are available on every target runtime; Buffer would tie
   // this library to Node, and atob alone mangles any non-ASCII claim.
-  const bytes = Uint8Array.from(atob(normalised), (c) => c.charCodeAt(0));
-  return JSON.parse(new TextDecoder().decode(bytes));
+  try {
+    const bytes = Uint8Array.from(atob(normalised), (c) => c.charCodeAt(0));
+    return JSON.parse(new TextDecoder().decode(bytes));
+  } catch {
+    // atob throws a DOMException on a base64-invalid segment; JSON.parse
+    // throws SyntaxError on base64-valid non-JSON. Neither is an Rc*Error on
+    // its own, so both are folded into one here.
+    throw new RcShapeError('id_token payload was not decodable JSON', { url: AUTHORIZE_URL });
+  }
 }
 
 /**
