@@ -2,7 +2,11 @@ import { request } from '../http.ts';
 import { str } from '../coerce.ts';
 import { RcRequestError, RcShapeError } from '../errors.ts';
 import { resolveConfig, type RcConfig } from '../config.ts';
-import { parseItineraryPorts, searchHeaders, SEARCH_URL, type RcItineraryPorts } from './search.ts';
+import {
+  parseItineraryPorts, searchHeaders, searchUrl, packageCodeFromSailingId,
+  type RcItineraryPorts,
+} from './search.ts';
+import { type Brand } from '../brand.ts';
 
 /**
  * The whole public catalogue: every itinerary, its ports, each dated sailing, a
@@ -52,6 +56,21 @@ export interface RcCatalogueSailing {
   sailingId: string;
   sailDate: string;
   itineraryCode: string | null;
+  /**
+   * The code room pricing wants, taken from the sailing id rather than from a
+   * code field, so it cannot be confused with the cruise's master code.
+   *
+   * Use this, not `RcCatalogueCruise.ports.itineraryCode`. A Celebrity cruise
+   * advertises one master itinerary code while its individual dates run under
+   * their own package codes — measured on one recorded search, 33 of 50
+   * sailings differed from their parent — and pricing 404s on the master
+   * code. This field and the sibling `itineraryCode` above have always agreed
+   * in recorded data; the divergence is against the parent, not within the
+   * sailing.
+   *
+   * Null when the id is absent or not in `<code>_<date>` form.
+   */
+  packageCode: string | null;
   bookingLink: string | null;
   /** As Royal reports it; null when absent. */
   taxesAndFees: number | null;
@@ -114,10 +133,12 @@ export function parseCatalogueCruise(cruise: unknown): RcCatalogueCruise | null 
     const label = str(s.bestPromotion?.title) ?? str(s.bestPromotion?.description);
     if (label) promos.push({ code: str(s.bestPromotion.code), label, kind: classifyPromo(label), endsOn: null });
 
+    const sailingId = String(s.id ?? '');
     sailings.push({
-      sailingId: String(s.id ?? ''),
+      sailingId,
       sailDate,
       itineraryCode: str(s.itinerary?.code),
+      packageCode: packageCodeFromSailingId(sailingId),
       bookingLink: str(s.bookingLink),
       taxesAndFees: num(s.taxesAndFees?.value),
       taxesIncluded: typeof s.taxesAndFeesIncluded === 'boolean' ? s.taxesAndFeesIncluded : null,
@@ -131,18 +152,31 @@ export function parseCatalogueCruise(cruise: unknown): RcCatalogueCruise | null 
   return { ports, shipName: str(it.ship?.name), destination: dest, sailings };
 }
 
+// Royal's gateway answers HTTP 413 at `count: 100` for this heavier
+// selection (every dated sailing plus lead prices and promos, not just the
+// itinerary the other two searches ask for). 50 works. Do not raise this
+// back to 100 without confirming the gateway's limit has changed.
+const DEFAULT_COUNT = 50;
+
 /** One page of the catalogue. `total` lets the caller page to the end. */
 export async function fetchCatalogue(
-  opts: { count?: number; skip?: number } = {},
+  opts: {
+    count?: number;
+    skip?: number;
+    /** Selects both the host this call goes to and the `brand` header it sends. Defaults to `'R'`. */
+    brand?: Brand;
+  } = {},
   config: Partial<RcConfig> = {},
 ): Promise<{ cruises: RcCatalogueCruise[]; total: number }> {
   const cfg = resolveConfig(config);
-  const res = await request<any>(SEARCH_URL, {
+  const brand = opts.brand ?? 'R';
+  const target = searchUrl(brand);
+  const res = await request<any>(target, {
     method: 'POST',
-    headers: searchHeaders(cfg),
+    headers: searchHeaders(cfg, brand),
     body: {
       operationName: 'cruiseSearch_Catalogue',
-      variables: { filters: '{}', pagination: { count: opts.count ?? 100, skip: opts.skip ?? 0 } },
+      variables: { filters: '{}', pagination: { count: opts.count ?? DEFAULT_COUNT, skip: opts.skip ?? 0 } },
       query: CATALOGUE_QUERY,
     },
     config: cfg,
@@ -151,12 +185,12 @@ export async function fetchCatalogue(
   // Same guards as the other two searches: a challenge page or a GraphQL error
   // inside a 200 must be a failure, never "the catalogue is empty".
   if (typeof res.data !== 'object' || res.data === null) {
-    throw new RcShapeError('Cruise search returned a non-JSON body', { status: res.status, url: SEARCH_URL, body: res.data });
+    throw new RcShapeError('Cruise search returned a non-JSON body', { status: res.status, url: target, body: res.data });
   }
   if (Array.isArray(res.data?.errors) && res.data.errors.length) {
     throw new RcRequestError(
       `Cruise search (catalogue) rejected by GraphQL: ${res.data.errors[0]?.message ?? 'unknown GraphQL error'}`,
-      { status: res.status, url: SEARCH_URL, body: res.data.errors },
+      { status: res.status, url: target, body: res.data.errors },
     );
   }
   const results = res.data?.data?.cruiseSearch?.results ?? {};

@@ -363,4 +363,4 @@ export async function fetchItineraryPorts(
 }
 
 /** Shared with domains/catalogue.ts, which pages the same endpoint with a wider selection. */
-export { headers as searchHeaders, url as searchUrl };
+export { headers as searchHeaders, url as searchUrl, packageCodeFromSailingId };

@@ -4,6 +4,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { searchCruises, fetchItineraryPorts } from '../src/domains/search.ts';
+import { fetchCatalogue } from '../src/domains/catalogue.ts';
 import { fetchRooms } from '../src/domains/rooms.ts';
 import { fetchCasinoLoyalty } from '../src/domains/casino.ts';
 import { listOffers, fetchOfferDetail } from '../src/domains/offers.ts';
@@ -205,6 +206,52 @@ test('RcClient with brand C and no Captain\'s Club number returns none/null with
   const detail = await rc.offerDetail('CODE', 'POID');
   assert.equal(called, false);
   assert.equal(detail, null);
+});
+
+test('the catalogue follows the same brand', async () => {
+  const seen = capture(EMPTY_SEARCH);
+  await fetchCatalogue({ brand: 'C' });
+  assert.match(seen[0]!.url, /celebritycruises\.com\/graph/);
+  assert.equal(seen[0]!.headers.get('brand'), 'C');
+});
+
+test('the catalogue defaults to Royal, so an existing caller is unaffected', async () => {
+  const seen = capture(EMPTY_SEARCH);
+  await fetchCatalogue();
+  assert.match(seen[0]!.url, /royalcaribbean\.com/);
+  assert.equal(seen[0]!.headers.get('brand'), 'R');
+});
+
+test('a catalogue sailing carries a parsed package code, and a malformed id yields null', async () => {
+  capture({
+    data: { cruiseSearch: { results: { total: 1, cruises: [{
+      masterSailing: { itinerary: { code: 'RF4BH330', ship: { code: 'RF' } } },
+      sailings: [
+        { id: 'RF4BH328_2026-11-16', sailDate: '2026-11-16', itinerary: { code: 'RF4BH330' }, stateroomClassPricing: [] },
+        { id: 'no-underscore', sailDate: '2026-12-01', stateroomClassPricing: [] },
+      ],
+    }] } } },
+  });
+  const { cruises } = await fetchCatalogue({ brand: 'C' });
+  assert.equal(cruises[0]!.sailings[0]!.packageCode, 'RF4BH328');
+  assert.equal(cruises[0]!.sailings[1]!.packageCode, null);
+});
+
+test('the recorded catalogue fixture proves the package/itinerary trap is real for the catalogue too', async () => {
+  // Royal data: the OV04X056 master itinerary runs sailings that book under
+  // package code OV04X055 — the same divergence celebrity.test.ts proves for
+  // searchCruises, replayed here against fetchCatalogue's own parsing path.
+  const fixture = load('catalogue-page');
+  capture({ data: { cruiseSearch: { results: fixture } } });
+  const { cruises } = await fetchCatalogue();
+
+  const all = cruises.flatMap((c) => c.sailings.map((s) => ({ masterCode: c.ports.itineraryCode, sailing: s })));
+  const anyMismatch = all.find(({ masterCode, sailing }) => sailing.packageCode !== null && sailing.packageCode !== masterCode);
+  assert.ok(anyMismatch, 'fixture must contain a sailing whose package code differs from its master itinerary code');
+
+  // The specific pair the fixture is known to carry.
+  const known = all.find(({ masterCode, sailing }) => masterCode === 'OV04X056' && sailing.packageCode === 'OV04X055');
+  assert.ok(known, 'expected the recorded OV04X056/OV04X055 divergence to survive fetchCatalogue\'s own parser');
 });
 
 test('a Celebrity client asks its own brand for casino loyalty', async () => {
