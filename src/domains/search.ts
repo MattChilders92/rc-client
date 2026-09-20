@@ -1,6 +1,6 @@
 import { request } from '../http.ts';
 import { str } from '../coerce.ts';
-import { RcRequestError } from '../errors.ts';
+import { RcRequestError, RcShapeError } from '../errors.ts';
 import { resolveConfig, type RcConfig } from '../config.ts';
 
 /**
@@ -129,6 +129,17 @@ export async function searchCruises(
     },
     config: cfg,
   });
+
+  // Royal's edge occasionally answers this POST with an HTML challenge page
+  // rather than the GraphQL envelope, still as a 200. Read as text, that
+  // parses to no errors and no results, which would otherwise come out as a
+  // silent "no cruises found" — the exact failure mode this library exists
+  // to prevent.
+  if (typeof res.data !== 'object' || res.data === null) {
+    throw new RcShapeError('Cruise search returned a non-JSON body', {
+      status: res.status, url: URL_, body: res.data,
+    });
+  }
 
   // GraphQL reports failures inside a 200, so errors have to be read out.
   if (Array.isArray(res.data?.errors) && res.data.errors.length) {
@@ -268,6 +279,14 @@ export async function fetchItineraryPorts(
     },
     config: cfg,
   });
+
+  // Same non-JSON guard as searchCruises: a challenge page read as text would
+  // otherwise map to zero itineraries rather than a failure.
+  if (typeof res.data !== 'object' || res.data === null) {
+    throw new RcShapeError('Cruise search returned a non-JSON body', {
+      status: res.status, url: URL_, body: res.data,
+    });
+  }
 
   // GraphQL reports failures inside a 200, so errors have to be read out.
   if (Array.isArray(res.data?.errors) && res.data.errors.length) {

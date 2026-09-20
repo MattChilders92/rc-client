@@ -2,7 +2,7 @@ import { test, afterEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { searchCruises, fetchItineraryPorts } from '../src/domains/search.ts';
 import { downloadPdf } from '../src/domains/certificates/pdf.ts';
-import { RcError, RcRequestError, RcUnavailableError } from '../src/errors.ts';
+import { RcError, RcRequestError, RcShapeError, RcUnavailableError } from '../src/errors.ts';
 
 const realFetch = globalThis.fetch;
 afterEach(() => { globalThis.fetch = realFetch; });
@@ -24,6 +24,25 @@ test('a GraphQL error inside a 200 is an RcRequestError carrying the error list'
 test('fetchItineraryPorts follows the same contract', async () => {
   globalThis.fetch = async () => jsonResponse({ errors: [{ message: 'boom' }] });
   await assert.rejects(fetchItineraryPorts(), RcRequestError);
+});
+
+test('a 200 carrying an HTML challenge page throws instead of reporting zero results', async () => {
+  globalThis.fetch = async () => new Response('<html>please enable JavaScript</html>', {
+    status: 200,
+    headers: { 'content-type': 'text/html' },
+  });
+  await assert.rejects(searchCruises(), (e: unknown) => {
+    assert.ok(e instanceof RcShapeError, `expected RcShapeError, got ${(e as Error).constructor?.name}`);
+    return true;
+  });
+});
+
+test('fetchItineraryPorts also throws on a non-JSON 200, rather than an empty page', async () => {
+  globalThis.fetch = async () => new Response('<html>please enable JavaScript</html>', {
+    status: 200,
+    headers: { 'content-type': 'text/html' },
+  });
+  await assert.rejects(fetchItineraryPorts(), RcShapeError);
 });
 
 test('downloadPdf turns a 404 into an RcError with status and url', async () => {
