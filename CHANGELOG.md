@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- fetchCatalogue / parseCatalogueCruise / classifyPromo: the public cruise search with lead prices per room class and promotions.
+
 ## 0.2.0 — 2026-09-19
 
 First publishable release. Pre-1.0: these are private, undocumented upstream
