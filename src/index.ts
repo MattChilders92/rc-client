@@ -41,7 +41,7 @@ export {
   parseCampaignPage, parseTierPages, normalizeSailDate, tierTradeInValue, instantSailingKey,
   type InstantSuffix, type CandidateCampaign, type InstantTier, type InstantSailing, type TierParse,
   type TextCell, type TextLine, type PageLines,
-} from './domains/certificates.ts';
+} from './domains/certificates/index.ts';
 export {
   searchCruises, fetchItineraryPorts, parseItineraryPorts,
   type RcCruise, type RcSailingSummary, type SearchParams, type SearchResult,
