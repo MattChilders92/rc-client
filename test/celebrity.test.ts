@@ -6,6 +6,9 @@ import { fileURLToPath } from 'node:url';
 import { searchCruises, fetchItineraryPorts } from '../src/domains/search.ts';
 import { fetchRooms } from '../src/domains/rooms.ts';
 import { fetchCasinoLoyalty } from '../src/domains/casino.ts';
+import { listOffers, fetchOfferDetail } from '../src/domains/offers.ts';
+import { RcClient } from '../src/client.ts';
+import { RcAuthError, RcRequestError } from '../src/errors.ts';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const load = (name: string) =>
@@ -114,4 +117,92 @@ test('the recorded Celebrity search fixture proves the package/itinerary trap is
   assert.ok(mismatch, 'fixture must contain a sailing whose package code differs from its cruise itinerary code');
   assert.equal(mismatch!.cruiseItineraryCode, 'RF4BH330');
   assert.equal(mismatch!.sailing.packageCode, 'RF4BH328');
+});
+
+test('casino offers: listOffers hits the Celebrity host for brand C', async () => {
+  const fixture = load('celebrity-offers-empty');
+  const seen = capture(fixture.body);
+  await listOffers(session, { loyaltyId: 'CC123', brand: 'C' });
+  assert.match(seen[0]!.url, /celebritycruises\.com\/api\/casino\/v2\/offers\/list/);
+});
+
+test('casino offers: fetchOfferDetail hits the Celebrity host for brand C', async () => {
+  const seen = capture({ offers: [] });
+  await fetchOfferDetail(session, { loyaltyId: 'CC123', offerCode: 'X', playerOfferId: 'Y', brand: 'C' });
+  assert.match(seen[0]!.url, /celebritycruises\.com\/api\/casino\/v2\/offers\/details/);
+});
+
+test('casino offers: offers default to the Royal host when no brand is given', async () => {
+  const seen = capture({ offers: [], totalOffers: 0, totalPages: 0 });
+  await listOffers(session, { loyaltyId: 'CA123' });
+  assert.match(seen[0]!.url, /royalcaribbean\.com\/api\/casino\/v2\/offers\/list/);
+});
+
+test('the recorded empty Celebrity offers envelope is outcome "ok" with zero offers, not "none"', async () => {
+  // A 200 with an empty list is a real answer, unlike a 404 which means
+  // "Royal answered 404 about this player" and maps to outcome: 'none'.
+  const fixture = load('celebrity-offers-empty');
+  capture(fixture.body);
+  const result = await listOffers(session, { loyaltyId: 'CC123', brand: 'C' });
+  assert.equal(result.outcome, 'ok');
+  assert.equal(result.offers.length, 0);
+  assert.equal(result.totalOffers, 0);
+});
+
+test('a 401 naming the loyalty id becomes RcRequestError naming the brand, not RcAuthError', async () => {
+  capture({ message: 'Unauthorized - invalid loyalty id' }, 401);
+  await assert.rejects(
+    () => listOffers(session, { loyaltyId: 'CA123', brand: 'C' }),
+    (err: unknown) => {
+      assert.ok(err instanceof RcRequestError, `expected RcRequestError, got ${(err as Error)?.constructor?.name}`);
+      assert.match((err as Error).message, /loyalty/i);
+      assert.match((err as Error).message, /Celebrity|C\b/);
+      return true;
+    },
+  );
+});
+
+test('a 401 that does not mention the loyalty id still becomes RcAuthError', async () => {
+  capture({ message: 'Unauthorized' }, 401);
+  await assert.rejects(
+    () => listOffers(session, { loyaltyId: 'CA123', brand: 'R' }),
+    (err: unknown) => {
+      assert.ok(err instanceof RcAuthError, `expected RcAuthError, got ${(err as Error)?.constructor?.name}`);
+      return true;
+    },
+  );
+});
+
+test('the same loyalty-id guard applies to fetchOfferDetail', async () => {
+  capture({ message: 'Unauthorized - invalid loyalty id' }, 401);
+  await assert.rejects(
+    () => fetchOfferDetail(session, { loyaltyId: 'CA123', offerCode: 'X', playerOfferId: 'Y', brand: 'C' }),
+    RcRequestError,
+  );
+});
+
+test('RcClient with brand C and no Captain\'s Club number returns none/null without a request', async () => {
+  const rc = new RcClient({ session }, { brand: 'C' });
+
+  // Prime the cached account with no Captain's Club id.
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ payload: { loyaltyInformation: {} } }), {
+      status: 200, headers: { 'content-type': 'application/json' },
+    });
+  await rc.account();
+
+  let called = false;
+  globalThis.fetch = async () => {
+    called = true;
+    throw new Error('fetch should not be called when there is no loyalty number for the brand');
+  };
+
+  const offers = await rc.offers();
+  assert.equal(called, false);
+  assert.equal(offers.outcome, 'none');
+  assert.equal(offers.offers.length, 0);
+
+  const detail = await rc.offerDetail('CODE', 'POID');
+  assert.equal(called, false);
+  assert.equal(detail, null);
 });

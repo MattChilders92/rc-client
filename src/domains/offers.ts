@@ -1,9 +1,10 @@
 import type { RcSession } from '../auth/index.ts';
-import { RcRouteGoneError } from '../errors.ts';
+import { RcAuthError, RcRequestError, RcRouteGoneError } from '../errors.ts';
 import { casinoHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { num, str } from '../coerce.ts';
 import { resolveConfig, type RcConfig } from '../config.ts';
+import { brandHost, BRAND_NAMES, type Brand } from '../brand.ts';
 
 /**
  * Club Royale casino offers.
@@ -22,17 +23,57 @@ import { resolveConfig, type RcConfig } from '../config.ts';
  * as "this player has no offers". See `outcome` for how this one refuses to
  * make that mistake again.
  *
+ * The host is brand-derived: Royal and Celebrity each serve this API from
+ * their own consumer site, and a loyalty number only works against its own
+ * brand's host — see `loyaltyIdMentioned` below for how a crossed pair is
+ * told apart from a genuinely expired session.
+ *
  * @see docs/endpoints.md
  */
 
-const BASE = 'https://www.royalcaribbean.com/api/casino';
-const LIST = `${BASE}/v2/offers/list`;
+const base = (brand: Brand): string => `https://${brandHost(brand)}/api/casino`;
+const listUrl = (brand: Brand): string => `${base(brand)}/v2/offers/list`;
 /**
  * The same envelope as `list`, for one grant, with `sailings` populated and the
  * offer-level detail fields present. Note the plural: `/details`. `/detail` is
  * unrouted, and that single letter hid this endpoint for a full day of probing.
  */
-const DETAILS = `${BASE}/v2/offers/details`;
+const detailsUrl = (brand: Brand): string => `${base(brand)}/v2/offers/details`;
+
+/**
+ * Whether a 401's body complains about the loyalty id specifically, rather
+ * than the token. Verified live: Celebrity's host answers a Crown & Anchor
+ * number (and Royal's host a Captain's Club number) with 401
+ * `Unauthorized - invalid loyalty id`. Matched as a case-insensitive
+ * substring, not the whole sentence, because the body may already be
+ * JSON-parsed by `request()` or arrive as raw text, and Royal could reword
+ * it. A 401 that does *not* mention the loyalty id is left alone — that is a
+ * genuinely expired token, and must still surface as `RcAuthError`.
+ */
+function bodyMentionsLoyaltyId(body: unknown): boolean {
+  const text = typeof body === 'string' ? body : JSON.stringify(body ?? {});
+  return /loyalty id/i.test(text);
+}
+
+/**
+ * Runs one casino-offers request, turning a mismatched-brand 401 into a
+ * named `RcRequestError` instead of letting it read as an expired session.
+ */
+async function withLoyaltyGuard<T>(promise: Promise<T>, brand: Brand): Promise<T> {
+  try {
+    return await promise;
+  } catch (err) {
+    if (err instanceof RcAuthError && bodyMentionsLoyaltyId(err.body)) {
+      throw new RcRequestError(
+        `This loyalty number does not belong to ${BRAND_NAMES[brand]}'s casino programme ` +
+        `(brand '${brand}'). Royal answered 401 complaining about the loyalty id, not the ` +
+        'session — re-authenticating will not fix this; pass the loyalty number for this brand instead.',
+        { status: err.status, url: err.url, body: err.body },
+      );
+    }
+    throw err;
+  }
+}
 
 /** Rejected input is answered with a schema error listing these, which is how we know them. */
 export const SORT_FIELDS = [
@@ -313,7 +354,7 @@ export const isRouterNotFound = (data: unknown): boolean =>
   !!data && typeof data === 'object' && (data as any).code === 'NOT_FOUND';
 
 async function page(
-  session: RcSession, loyaltyId: string, n: number, sortBy: OfferSortField, config: RcConfig,
+  session: RcSession, loyaltyId: string, n: number, sortBy: OfferSortField, config: RcConfig, brand: Brand,
 ) {
   const query = new URLSearchParams({
     page: String(n),
@@ -322,38 +363,43 @@ async function page(
     sortDirection: 'asc',
   });
 
-  return request<any>(`${LIST}?${query}`, {
-    method: 'GET',
-    headers: {
-      ...casinoHeaders(session, { loyaltyId }, config),
-      // The casino hub sends these on every call; empty is what it sends for a
-      // guest who is not currently aboard.
-      'x-environment-marker': '',
-      'x-environment-ship-code': '',
-    },
-    // Read rather than throw, so the body can be inspected: a 404 here is
-    // either "no offers" or "the route moved", and only the body separates
-    // them. Classified in listOffers.
-    allowStatus: [404],
-    config,
-  });
+  return withLoyaltyGuard(
+    request<any>(`${listUrl(brand)}?${query}`, {
+      method: 'GET',
+      headers: {
+        ...casinoHeaders(session, { loyaltyId }, config),
+        // The casino hub sends these on every call; empty is what it sends for a
+        // guest who is not currently aboard.
+        'x-environment-marker': '',
+        'x-environment-ship-code': '',
+      },
+      // Read rather than throw, so the body can be inspected: a 404 here is
+      // either "no offers" or "the route moved", and only the body separates
+      // them. Classified in listOffers.
+      allowStatus: [404],
+      config,
+    }),
+    brand,
+  );
 }
 
 /** Whose offers to list. The API keys on the loyalty number, not the account id. */
 export interface ListOffersParams {
-  /** Crown & Anchor number, from `account.crownAndAnchorId`. */
+  /** Crown & Anchor number for Royal, Captain's Club number for Celebrity. */
   loyaltyId: string;
   sortBy?: OfferSortField;
+  /** Which brand's host to call. Defaults to `'R'`. */
+  brand?: Brand;
 }
 
 /** Every offer on the account, following pagination. */
 export async function listOffers(
   session: RcSession,
-  { loyaltyId, sortBy = 'offer.reserveByDate' }: ListOffersParams,
+  { loyaltyId, sortBy = 'offer.reserveByDate', brand = 'R' }: ListOffersParams,
   config: Partial<RcConfig> = {},
 ): Promise<OffersResult> {
   const cfg = resolveConfig(config);
-  const first = await page(session, loyaltyId, 1, sortBy, cfg);
+  const first = await page(session, loyaltyId, 1, sortBy, cfg, brand);
 
   const player = {
     firstName: str(first.data?.firstName),
@@ -366,7 +412,7 @@ export async function listOffers(
       throw new RcRouteGoneError(
         'The casino offers route no longer exists. It has moved twice already; ' +
         'find the current path before treating this as an empty account.',
-        { url: LIST, status: 404 },
+        { url: listUrl(brand), status: 404 },
       );
     }
     return { offers: [], outcome: 'none', totalOffers: 0, player };
@@ -376,7 +422,7 @@ export async function listOffers(
   const totalPages = Number(first.data?.totalPages) || 1;
 
   for (let n = 2; n <= totalPages; n++) {
-    const next = await page(session, loyaltyId, n, sortBy, cfg);
+    const next = await page(session, loyaltyId, n, sortBy, cfg, brand);
     if (Array.isArray(next.data?.offers)) raw.push(...next.data.offers);
   }
 
@@ -393,11 +439,13 @@ export async function listOffers(
  * granted several times, and each grant has its own eligible sailings.
  */
 export interface OfferDetailParams {
-  /** Crown & Anchor number, from `account.crownAndAnchorId`. */
+  /** Crown & Anchor number for Royal, Captain's Club number for Celebrity. */
   loyaltyId: string;
   offerCode: string;
   /** The grant to describe. Sailings can differ between grants of one code. */
   playerOfferId: string;
+  /** Which brand's host to call. Defaults to `'R'`. */
+  brand?: Brand;
 }
 
 /**
@@ -413,7 +461,7 @@ export interface OfferDetailParams {
  */
 export async function fetchOfferDetail(
   session: RcSession,
-  { loyaltyId, offerCode, playerOfferId }: OfferDetailParams,
+  { loyaltyId, offerCode, playerOfferId, brand = 'R' }: OfferDetailParams,
   config: Partial<RcConfig> = {},
 ): Promise<RcOfferDetail | null> {
   const cfg = resolveConfig(config);
@@ -427,23 +475,26 @@ export async function fetchOfferDetail(
     digitalRedemption: 'true',
   });
 
-  const res = await request<any>(`${DETAILS}?${query}`, {
-    method: 'GET',
-    headers: {
-      ...casinoHeaders(session, { loyaltyId }, cfg),
-      'x-environment-marker': '',
-      'x-environment-ship-code': '',
-    },
-    allowStatus: [404],
-    config: cfg,
-  });
+  const res = await withLoyaltyGuard(
+    request<any>(`${detailsUrl(brand)}?${query}`, {
+      method: 'GET',
+      headers: {
+        ...casinoHeaders(session, { loyaltyId }, cfg),
+        'x-environment-marker': '',
+        'x-environment-ship-code': '',
+      },
+      allowStatus: [404],
+      config: cfg,
+    }),
+    brand,
+  );
 
   if (res.status === 404) {
     if (isRouterNotFound(res.data)) {
       throw new RcRouteGoneError(
         'The casino offer-details route no longer exists. Find the current path ' +
         'before treating this as a grant with no sailings.',
-        { url: DETAILS, status: 404 },
+        { url: detailsUrl(brand), status: 404 },
       );
     }
     return null;
