@@ -20,6 +20,14 @@ Celebrity Cruises support:
 - `fetchCatalogue` — the public cruise search in one wider pass: ports, every
   dated sailing, a lead price per room class, taxes and fees, and the best
   promotion. Brand-aware like the other search calls.
+- Celebrity sells six room classes, not Royal's four: `CONCIERGE` and `AQUA`
+  join `RcRoomClass`. Any class the mapper did not recognise used to be
+  dropped silently, losing two priced classes on every Celebrity sailing.
+- Every string-union type now ships its runtime list, so a caller can iterate
+  or validate without retyping the members: `ROOM_CLASSES`,
+  `ROOM_CLASS_NAMES`, `ROOM_CLASS_BRAND` (which classes are Celebrity-only)
+  and `PROMO_KINDS`, alongside the existing `BRANDS`, `BRAND_NAMES`,
+  `SORT_FIELDS`, `PRODUCT_CATEGORIES` and `COVERAGE_OCCUPANCIES`.
 - `packageCode` on `RcSailingSummary` and `RcCatalogueSailing` — the code room
   pricing actually wants, parsed from the sailing id. A cruise's master
   `itineraryCode` and a dated sailing's own package code often differ, on

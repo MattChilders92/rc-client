@@ -43,7 +43,7 @@ export {
   type RcItineraryPorts, type RcItineraryDay,
 } from './domains/search.ts';
 export {
-  fetchCatalogue, parseCatalogueCruise, classifyPromo,
+  fetchCatalogue, ROOM_CLASSES, ROOM_CLASS_NAMES, ROOM_CLASS_BRAND, PROMO_KINDS, parseCatalogueCruise, classifyPromo,
   type RcRoomClass, type RcPromoKind, type RcLeadPrice, type RcPromo,
   type RcCatalogueSailing, type RcCatalogueCruise,
 } from './domains/catalogue.ts';

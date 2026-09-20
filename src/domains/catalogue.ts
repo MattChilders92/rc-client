@@ -52,8 +52,35 @@ const CATALOGUE_QUERY = `query cruiseSearch_Catalogue($filters: String, $paginat
 export type RcRoomClass =
   | 'INTERIOR' | 'OCEANVIEW' | 'BALCONY' | 'SUITE' | 'CONCIERGE' | 'AQUA';
 
+/**
+ * Every room class, cheapest first, for a caller building a filter or a column
+ * order. The last two are Celebrity-only; a Royal sailing never carries them.
+ */
+export const ROOM_CLASSES: readonly RcRoomClass[] =
+  ['INTERIOR', 'OCEANVIEW', 'BALCONY', 'CONCIERGE', 'AQUA', 'SUITE'];
+
+/** Display names, for a caller building a label. */
+export const ROOM_CLASS_NAMES: Record<RcRoomClass, string> = {
+  INTERIOR: 'Interior',
+  OCEANVIEW: 'Ocean View',
+  BALCONY: 'Balcony',
+  SUITE: 'Suite',
+  CONCIERGE: 'Concierge Class',
+  AQUA: 'AquaClass',
+};
+
+/** The brand each room class belongs to, or `null` when both sell it. */
+export const ROOM_CLASS_BRAND: Record<RcRoomClass, Brand | null> = {
+  INTERIOR: null, OCEANVIEW: null, BALCONY: null, SUITE: null,
+  CONCIERGE: 'C', AQUA: 'C',
+};
+
 /** What a promotion advertises, as far as its label reveals. */
 export type RcPromoKind = 'kids_free' | 'pct_off_2nd' | 'obc' | 'dollars_off' | 'other';
+
+/** Every promotion kind `classifyPromo` can return. `other` is its fallback. */
+export const PROMO_KINDS: readonly RcPromoKind[] =
+  ['kids_free', 'pct_off_2nd', 'obc', 'dollars_off', 'other'];
 
 /** A "from" price: per person, for two guests, the cheapest cabin of its class. Not a quote. */
 export interface RcLeadPrice { roomClass: RcRoomClass; perPerson: number; currency: string | null }
