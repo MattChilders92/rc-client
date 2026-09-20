@@ -105,9 +105,8 @@ different ways, and a mismatch returns `422` or a bare `404`, never `401`:
 | casino | `authorization: Bearer` + `x-account-id` | `/api/casino/**` |
 | anonymous | none | itinerary, cruise search |
 
-`src/headers.ts` is the only place this is encoded. Research on the phone
-app's separate gateway lives in the repo under `docs/research/` and is not
-part of this package.
+`src/headers.ts` is the only place this is encoded. Research notes on the
+phone app's separate gateway are kept in the repository, not in this package.
 
 ## Ambiguous 404s
 
@@ -134,6 +133,10 @@ with `{"error":true,"code":"NOT_FOUND",…}`, and nothing else does.
 A single room-pricing request only returns cabins that sleep the party you ask
 for, so it always omits categories. `allRooms()` sweeps several occupancies and
 merges, keeping the first (lowest-occupancy) price for each cabin.
+
+A price or count Royal did not send comes back as `null`, never `0` —
+`RcRoom.allIn`/`perPerson`/`taxes`/`roomsLeft` and the equivalent offer fields
+are typed `number | null` for exactly that reason.
 
 ```ts
 await rc.rooms({ packageCode, sailDate, adults: 2, children: 2 }); // one occupancy

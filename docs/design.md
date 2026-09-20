@@ -61,6 +61,14 @@ A function returns a bare array when the call cannot partially fail
 outcome or a partial-failure count (`OffersResult.outcome`,
 `ProductsResult.failed`, `SearchResult.total`).
 
+A `null` in any `number | null` field means Royal sent no value for it — it
+is never `0`. `RcRoom.allIn`/`perPerson`/`taxes`/`roomsLeft` and an offer's
+`totalNights`/`roomCount`/`allowedNumberOfPerks`/`tradeInValue` are all
+typed this way for exactly that reason: the coercion helpers in `coerce.ts`
+return `null` for an absent or unparseable value rather than the `0` a bare
+`Number(v)` would produce, because a cabin with no stated price is not a
+cabin that costs nothing.
+
 ## Configuration, not constants
 
 `RcConfig` exists because the values callers most need to change — the app

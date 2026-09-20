@@ -52,12 +52,15 @@ export interface RcRoom {
   type: string | null;
   guarantee: boolean;
   maxOccupancy: number | null;
+  /** `null` means Royal sent no count here; it is never `0`, which would read as "sold out". */
   roomsLeft: number | null;
-  /** What the cabin actually costs, discounts applied and taxes included. */
+  /** What the cabin actually costs, discounts applied and taxes included. `null` means Royal sent no price; it is never `0`. */
   allIn: number | null;
+  /** `null` means Royal sent no price; it is never `0`. */
   perPerson: number | null;
   /** List fare before discounts. Never what anyone pays. */
   grossFare: number | null;
+  /** `null` means Royal sent no value; it is never `0`. */
   taxes: number | null;
   /** The occupancy this price was quoted for. */
   occupancy: { adults: number; children: number };
@@ -136,7 +139,7 @@ function mapRoom(
     type: TYPE_BY_GROUP[String(group?.code ?? '')] ?? str(group?.name),
     guarantee: sub?.isGuarantee === true,
     maxOccupancy: readMaxOccupancy(sub?.features),
-    roomsLeft: sub?.roomsLeft === undefined ? null : Number(sub.roomsLeft),
+    roomsLeft: coerceNum(sub?.roomsLeft),
     allIn: num(pricing.total),
     perPerson: num(pricing.amount),
     // This endpoint quotes the fare already discounted and gives no list price.

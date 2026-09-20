@@ -76,6 +76,34 @@ test('a room with a null cabin total maps to allIn: null, not 0', async () => {
   assert.equal(priced.allIn, 3620.99);
 });
 
+test('roomsLeft: a null value maps to null, not 0, and a non-numeric one maps to null, not NaN', async () => {
+  stubJson({
+    sailings: [
+      {
+        rooms: [
+          {
+            code: 'INTERIOR',
+            categoryCode: 'ZI',
+            subtypes: [
+              { code: 'ZI', categoryCode: 'ZI', isGuarantee: true, roomsLeft: null, pricing: {} },
+              { code: 'V4', categoryCode: 'V4', isGuarantee: false, roomsLeft: 'few', pricing: {} },
+              { code: 'V5', categoryCode: 'V5', isGuarantee: false, roomsLeft: 3, pricing: {} },
+            ],
+          },
+        ],
+      },
+    ],
+  });
+
+  const rooms = await fetchRooms({ packageCode: 'X', sailDate: '2026-11-14' });
+  // `roomsLeft: null` reads as "sold out" if coerced to 0 -- it must stay null.
+  assert.equal(rooms.find((r) => r.categoryCode === 'ZI')!.roomsLeft, null);
+  // A non-numeric string must not become NaN.
+  assert.equal(rooms.find((r) => r.categoryCode === 'V4')!.roomsLeft, null);
+  // A real count still maps through.
+  assert.equal(rooms.find((r) => r.categoryCode === 'V5')!.roomsLeft, 3);
+});
+
 test('an offer sailing with a null totalNights maps to null, not 0', async () => {
   stubJson({
     firstName: null,

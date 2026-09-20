@@ -61,6 +61,7 @@ export interface RcOfferSailing {
   shipName: string | null;
   departurePort: { code: string | null; name: string | null } | null;
   sailDate: string | null;
+  /** `null` means Royal sent no value here; it is never `0`. */
   totalNights: number | null;
   itineraryCode: string | null;
   itineraryName: string | null;
@@ -91,7 +92,9 @@ export interface RcOfferDetail extends RcOffer {
   startDate: string | null;
   sailByDate: string | null;
   bookingFeeAmount: number | null;
+  /** `null` means Royal sent no value here; it is never `0`. */
   roomCount: number | null;
+  /** `null` means Royal sent no value here; it is never `0`. */
   allowedNumberOfPerks: number | null;
   /** How `sailings` should be read against `exclusionList`, as Royal reports it. */
   sailingInclusionMode: string | null;
@@ -129,6 +132,7 @@ export interface RcOffer {
   description: string | null;
   /** Parsed out of the perk names; Royal does not return it as a field. */
   freePlay: number | null;
+  /** `null` means Royal sent no value here; it is never `0`. */
   tradeInValue: number | null;
   bookBy: string | null;
   perks: RcPerk[];

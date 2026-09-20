@@ -17,7 +17,7 @@ First publishable release.
 - A `null` or empty price or count from Royal now maps to `null` rather than
   `0`. The old helpers used a bare `Number(v)`, and `Number(null)` is `0`, so
   a cabin with no price was reported as costing nothing. Affects `RcRoom.allIn`,
-  `perPerson`, `taxes`, and an offer's `totalNights`, `roomCount`,
+  `perPerson`, `taxes`, `roomsLeft`, and an offer's `totalNights`, `roomCount`,
   `allowedNumberOfPerks`, `tradeInValue`. All were already typed `number | null`.
 - `RcClient.search()` and `RcClient.itineraryPorts()` take an optional
   `config`, because a static cannot see an instance's options.
