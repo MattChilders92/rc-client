@@ -39,8 +39,18 @@ const CATALOGUE_QUERY = `query cruiseSearch_Catalogue($filters: String, $paginat
   }
 }`;
 
-/** The four room classes every price in the catalogue is filed under. */
-export type RcRoomClass = 'INTERIOR' | 'OCEANVIEW' | 'BALCONY' | 'SUITE';
+/**
+ * The room classes a catalogue price is filed under.
+ *
+ * Royal sells four; Celebrity sells the same four plus Concierge Class and
+ * AquaClass, which its search returns as their own priced entries. They are
+ * kept as distinct values rather than folded into `BALCONY`, because they are
+ * separately priced products a caller may want to tell apart — and because an
+ * earlier version silently dropped every class it did not recognise, losing
+ * two of Celebrity's six on every sailing.
+ */
+export type RcRoomClass =
+  | 'INTERIOR' | 'OCEANVIEW' | 'BALCONY' | 'SUITE' | 'CONCIERGE' | 'AQUA';
 
 /** What a promotion advertises, as far as its label reveals. */
 export type RcPromoKind = 'kids_free' | 'pct_off_2nd' | 'obc' | 'dollars_off' | 'other';
@@ -89,11 +99,15 @@ export interface RcCatalogueCruise {
   sailings: RcCatalogueSailing[];
 }
 
+// Royal's search says OUTSIDE and DELUXE where the rest of its own APIs say
+// OCEANVIEW and SUITE. Celebrity adds CONCIERGE and AQUA.
 const ROOM_CLASS: Record<string, RcRoomClass> = {
   INTERIOR: 'INTERIOR', INSIDE: 'INTERIOR',
   OUTSIDE: 'OCEANVIEW', OCEANVIEW: 'OCEANVIEW', OCEAN_VIEW: 'OCEANVIEW',
   BALCONY: 'BALCONY',
   DELUXE: 'SUITE', SUITE: 'SUITE',
+  CONCIERGE: 'CONCIERGE',
+  AQUA: 'AQUA', AQUACLASS: 'AQUA', AQUA_CLASS: 'AQUA',
 };
 const num = (v: unknown): number | null => (typeof v === 'number' && Number.isFinite(v) ? v : null);
 

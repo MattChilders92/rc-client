@@ -263,3 +263,29 @@ test('a Celebrity client asks its own brand for casino loyalty', async () => {
   await rc.casinoLoyalty();
   assert.match(seen[0]!.url, /celebritycruises\.com\/api\/casino\/v1\/loyalty-data/);
 });
+
+test('Celebrity\'s Concierge and AquaClass prices are kept, not silently dropped', async () => {
+  // Royal sells four room classes; Celebrity's search returns six. An earlier
+  // mapper skipped any id it did not recognise, losing two per sailing.
+  capture({
+    data: { cruiseSearch: { results: { total: 1, cruises: [{
+      masterSailing: { itinerary: { code: 'RF4BH330', ship: { code: 'RF' }, days: [] } },
+      sailings: [{
+        id: 'RF4BH328_2026-11-16',
+        sailDate: '2026-11-16',
+        itinerary: { code: 'RF4BH328' },
+        stateroomClassPricing: [
+          { stateroomClass: { id: 'INTERIOR' }, price: { value: 100, currency: { code: 'USD' } } },
+          { stateroomClass: { id: 'OUTSIDE' }, price: { value: 200, currency: { code: 'USD' } } },
+          { stateroomClass: { id: 'BALCONY' }, price: { value: 300, currency: { code: 'USD' } } },
+          { stateroomClass: { id: 'CONCIERGE' }, price: { value: 400, currency: { code: 'USD' } } },
+          { stateroomClass: { id: 'AQUA' }, price: { value: 500, currency: { code: 'USD' } } },
+          { stateroomClass: { id: 'DELUXE' }, price: { value: 600, currency: { code: 'USD' } } },
+        ],
+      }],
+    }] } } },
+  });
+  const { cruises } = await fetchCatalogue({ brand: 'C' });
+  const classes = cruises[0]!.sailings[0]!.prices.map((p) => p.roomClass);
+  assert.deepEqual(classes, ['INTERIOR', 'OCEANVIEW', 'BALCONY', 'CONCIERGE', 'AQUA', 'SUITE']);
+});
