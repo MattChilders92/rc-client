@@ -163,6 +163,11 @@ export interface OffersResult {
 // Rounds to the nearest integer rather than truncating toward zero, unlike
 // the shared `int` — these fields are already whole numbers from Royal, so
 // this only matters for float noise, but the rounding is preserved exactly.
+// What is *not* preserved: the local helper this replaced used bare
+// `Number(v)`, which coerces a `null` or `''` input to `0`. Going through the
+// shared `num` instead yields `null` for both. That's intended, not a
+// regression — `totalNights`/`roomCount`/`allowedNumberOfPerks`/`tradeInValue`
+// are all `number | null`, and a field Royal left absent is not a zero.
 const int = (v: unknown): number | null => {
   const n = num(v);
   return n === null ? null : Math.round(n);

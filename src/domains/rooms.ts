@@ -52,7 +52,11 @@ export interface RcRoom {
 }
 
 // Rounds to cents — unlike the shared `num` — because these are money fields
-// and Royal's pricing carries float noise past two decimal places.
+// and Royal's pricing carries float noise past two decimal places. A null or
+// empty input still yields null here too, same as the shared `num`: the
+// local helper this replaced used bare `Number(v)`, which coerces `null`/`''`
+// to `0`, but `allIn`/`perPerson`/`taxes` are `number | null` and a missing
+// price is not the same thing as a cabin that costs nothing.
 const num = (v: unknown): number | null => {
   const n = coerceNum(v);
   return n === null ? null : Math.round(n * 100) / 100;

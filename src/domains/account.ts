@@ -38,9 +38,9 @@ export interface RcAccount {
   raw: unknown;
 }
 
-// Royal writes an absent tier as the string "NONE" rather than omitting it;
-// unlike the shared `str`, this does not trim (call sites never see the kind
-// of stray whitespace that would matter).
+// Royal writes an absent tier as the literal string "NONE" rather than
+// omitting the field, so that value is mapped to null before the shared
+// `str` applies (which also trims and rejects non-string/non-number input).
 const nn = (v: unknown): string | null => (v === 'NONE' ? null : str(v));
 
 export async function fetchAccount(session: RcSession): Promise<RcAccount> {
