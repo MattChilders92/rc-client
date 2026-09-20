@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.4.0 — 2026-09-20
+
+**Behaviour change:** a `429` with no `Retry-After` now waits at least ten
+seconds with jitter before retrying, where it previously waited 500 ms and then
+one second. These APIs are reported to rate-limit by IP and to ban repeat
+offenders, so answering a "slow down" with two more requests inside a second is
+how a client earns a block. `Retry-After` still wins when Royal sends one, a
+5xx still backs off briefly, and a `403` is still never retried. Set
+`retries: 0` if you would rather handle throttling entirely yourself.
+
+Documented what is known about rate limits, separating the operator's
+first-hand report of IP bans from what was actually measured and from sibling
+collectors' self-imposed pacing — and listing what nobody has established: no
+quota, no ban duration, no recovery procedure. See the README and
+`docs/endpoints.md`.
+
 ## 0.3.0 — 2026-09-20
 
 **Breaking:** `Brand` is now `'R' | 'C'` — was `'RC' | 'CEL'` — and moved from

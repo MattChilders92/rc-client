@@ -48,7 +48,33 @@ export interface RcResponse<T> {
   headers: Headers;
 }
 
+/**
+ * Statuses worth another attempt. A 5xx is a server hiccup; retrying is
+ * ordinary. A 429 is different — see `waitFor` below — and a 403 is never
+ * here, so an outright block surfaces at once instead of being hammered.
+ */
 const RETRYABLE = new Set([429, 500, 502, 503, 504]);
+
+/** A rate-limited retry waits at least this long, even if Royal says sooner. */
+const MIN_THROTTLE_WAIT_MS = 10_000;
+
+/**
+ * How long to wait before retrying a retryable status.
+ *
+ * `Retry-After` wins when Royal sends one. Otherwise a 5xx backs off briefly,
+ * but a 429 waits a floor of ten seconds with jitter: these APIs are reported
+ * to rate-limit by IP and to ban repeat offenders, so answering a "slow down"
+ * with two more requests inside a second is how a client earns a block. When
+ * the floor is longer than the budget a caller wants to spend, they are better
+ * served by the `RcUnavailableError` and can decide for themselves.
+ */
+function waitFor(status: number, headers: Headers, attempt: number): number {
+  const stated = retryAfterMs(headers);
+  if (stated !== null) return stated;
+  if (status !== 429) return 500 * 2 ** attempt;
+  // Jittered, so several clients throttled at once do not return in lockstep.
+  return MIN_THROTTLE_WAIT_MS * 2 ** attempt * (1 + Math.random() * 0.25);
+}
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -142,8 +168,7 @@ export async function request<T = unknown>(
 
     if (RETRYABLE.has(res.status) && attempt < retries) {
       if (signal?.aborted) throw new RcError('Request aborted', { url });
-      const wait = retryAfterMs(res.headers) ?? 500 * 2 ** attempt;
-      await sleep(wait);
+      await sleep(waitFor(res.status, res.headers, attempt));
       continue;
     }
 
