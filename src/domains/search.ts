@@ -18,6 +18,26 @@ import { brandHost, type Brand } from '../brand.ts';
 
 const url = (brand: Brand): string => `https://${brandHost(brand)}/graph`;
 
+/** Matches the `YYYY-MM-DD` suffix a sailing id's package code is joined to. */
+const SAILING_DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * A sailing id has the form `<packageCode>_<YYYY-MM-DD>`. Splits on the
+ * *last* underscore only — a package code that itself contained an
+ * underscore would otherwise be truncated — and accepts the prefix only when
+ * what follows it is actually a date. Anything else is `null`; this never
+ * guesses and never falls back to the itinerary code.
+ */
+function packageCodeFromSailingId(id: string): string | null {
+  if (!id) return null;
+  const at = id.lastIndexOf('_');
+  if (at < 0) return null;
+  const prefix = id.slice(0, at);
+  const suffix = id.slice(at + 1);
+  if (!prefix || !SAILING_DATE_RE.test(suffix)) return null;
+  return prefix;
+}
+
 const QUERY = `query cruiseSearch_Cruises($filters: String, $qualifiers: String, $sort: CruiseSearchSort, $pagination: CruiseSearchPagination) {
   cruiseSearch(filters: $filters, qualifiers: $qualifiers, sort: $sort, pagination: $pagination) {
     results {
@@ -48,6 +68,13 @@ export interface RcSailingSummary {
   startDate: string | null;
   endDate: string | null;
   itineraryCode: string | null;
+  /**
+   * The code room pricing wants, parsed from the sailing id. Usually the same
+   * as `itineraryCode`, but not always: Celebrity returns a master itinerary
+   * code that can differ from the bookable package code, and pricing 404s on
+   * the wrong one. Null when the id is absent or not in `<code>_<date>` form.
+   */
+  packageCode: string | null;
   bookingLink: string | null;
 }
 
@@ -172,14 +199,18 @@ export async function searchCruises(
         departurePort: str(it.departurePort?.name),
         destination: str(it.destination?.name),
         link: str(c?.productViewLink),
-        sailings: (c?.sailings ?? []).map((s: any) => ({
-          sailingId: String(s?.id ?? ''),
-          sailDate: str(s?.sailDate),
-          startDate: str(s?.startDate),
-          endDate: str(s?.endDate),
-          itineraryCode: str(s?.itinerary?.code),
-          bookingLink: str(s?.bookingLink),
-        })),
+        sailings: (c?.sailings ?? []).map((s: any) => {
+          const sailingId = String(s?.id ?? '');
+          return {
+            sailingId,
+            sailDate: str(s?.sailDate),
+            startDate: str(s?.startDate),
+            endDate: str(s?.endDate),
+            itineraryCode: str(s?.itinerary?.code),
+            packageCode: packageCodeFromSailingId(sailingId),
+            bookingLink: str(s?.bookingLink),
+          };
+        }),
       };
     }),
   };
