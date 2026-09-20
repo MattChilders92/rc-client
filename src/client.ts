@@ -100,9 +100,13 @@ export class RcClient {
     return this.#account;
   }
 
-  /** Club Royale loyalty tier and points, or `null` when the account has no casino profile. */
+  /**
+   * Casino loyalty tier and points for this client's brand — Club Royale for
+   * Royal Caribbean, Blue Chip for Celebrity — or `null` when the account has
+   * no casino profile with that brand.
+   */
   async casinoLoyalty(): Promise<CasinoLoyalty | null> {
-    return fetchCasinoLoyalty(await this.session(), this.#config);
+    return fetchCasinoLoyalty(await this.session(), { ...this.#config, brand: this.#brand });
   }
 
   /**

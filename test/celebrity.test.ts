@@ -206,3 +206,13 @@ test('RcClient with brand C and no Captain\'s Club number returns none/null with
   assert.equal(called, false);
   assert.equal(detail, null);
 });
+
+test('a Celebrity client asks its own brand for casino loyalty', async () => {
+  const seen = capture({ data: {} });
+  const rc = new RcClient(
+    { session: { accessToken: 'tok', accountId: 'acct', expiresAt: new Date(Date.now() + 60_000) } },
+    { brand: 'C' },
+  );
+  await rc.casinoLoyalty();
+  assert.match(seen[0]!.url, /celebritycruises\.com\/api\/casino\/v1\/loyalty-data/);
+});
