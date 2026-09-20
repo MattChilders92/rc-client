@@ -102,7 +102,9 @@ test(
           "const c = new RcClient({ username: 'u', password: 'p' }, { retries: 0 });",
           "const e: RcError = new RcError('x', { url: 'u' });",
           'const o: RcOffer | null = null;',
-          'console.log(typeof c.offers, e.url, o, RC_PUBLIC_APP_KEY.length);',
+          // One pre-joined string: console.log colours a bare null or number when the
+          // parent terminal has colour on, and the assertion below must not depend on that.
+          "console.log([typeof c.offers, e.url, String(o), RC_PUBLIC_APP_KEY.length].join(' '));",
         ].join('\n'),
       );
       run(npm, ['install', '--no-audit', '--no-fund', '--silent', path.join(tmp, filename)], consumer);
