@@ -147,7 +147,11 @@ export interface RcOffer {
   raw: unknown;
 }
 
-/** What `listOffers` returns: every offer on the account, plus enough to tell a genuinely empty account from a moved route. */
+/**
+ * What `listOffers` returns: every offer on the account, and whether an empty
+ * list means Royal answered "none". A route that has moved never produces one
+ * of these — it throws `RcRouteGoneError` instead.
+ */
 export interface OffersResult {
   offers: RcOffer[];
   /**
@@ -331,7 +335,7 @@ async function page(
   });
 }
 
-/** Parameters for `listOffers`. */
+/** Whose offers to list. The API keys on the loyalty number, not the account id. */
 export interface ListOffersParams {
   /** Crown & Anchor number, from `account.crownAndAnchorId`. */
   loyaltyId: string;
@@ -379,7 +383,10 @@ export async function listOffers(
   };
 }
 
-/** Parameters for `fetchOfferDetail`. */
+/**
+ * Identifies one grant. An offer code alone is not enough: the same code can be
+ * granted several times, and each grant has its own eligible sailings.
+ */
 export interface OfferDetailParams {
   /** Crown & Anchor number, from `account.crownAndAnchorId`. */
   loyaltyId: string;

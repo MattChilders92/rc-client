@@ -105,7 +105,10 @@ function applyEnrichment(booking: RcBooking, detail: any): RcBooking {
   };
 }
 
-/** Options for `listBookings`. */
+/**
+ * Which brand's reservations to list, and whether to pay for the second call
+ * that fills in ship, date and cabin.
+ */
 export interface ListBookingsOptions {
   /** `R` for Royal Caribbean, `C` for Celebrity. Defaults to `R`. */
   brand?: 'R' | 'C';

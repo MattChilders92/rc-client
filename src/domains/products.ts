@@ -16,7 +16,7 @@ const BASE = 'https://aws-prd.api.rccl.com/en/royal/web/commerce-api/catalog/v2'
 
 /** Every category this endpoint serves; `fetchProducts` queries all of them unless told otherwise. */
 export const PRODUCT_CATEGORIES = ['beverage', 'shorex', 'internet', 'dining'] as const;
-/** One of `PRODUCT_CATEGORIES`. */
+/** A catalogue Royal sells onboard products under; each is fetched separately. */
 export type ProductCategory = (typeof PRODUCT_CATEGORIES)[number];
 
 /** One onboard product: an excursion, drink package, dining reservation or internet plan. */

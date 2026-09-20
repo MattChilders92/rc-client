@@ -36,25 +36,16 @@ function isDocumented(name: string, source: string): boolean {
   const decl = new RegExp(`^export\\s+(?:async\\s+)?(?:function|const|let|class|interface|type|enum)\\s+${name}\\b`, 'm');
   const at = source.search(decl);
   if (at < 0) return false;
-  // The text immediately before the declaration, ignoring blank lines, must end a JSDoc block.
-  const before = source.slice(0, at).replace(/\s+$/, '');
-  if (!before.endsWith('*/')) return false;
-  // Find the JSDoc block that actually touches the declaration — the *last* of
-  // possibly several `/** ... */` blocks in `before` — rather than a single
-  // greedy match from the first `/**` in the file, which would also swallow an
-  // unrelated block sitting further up (e.g. a module doc two blocks earlier).
-  const blocks = [...before.matchAll(/\/\*\*[\s\S]*?\*\//g)];
-  const last = blocks.at(-1);
-  if (!last) return false;
-  // A JSDoc that is the very first thing in the file is the module's header
-  // comment, not this declaration's. When nothing but that header (no imports,
-  // no other code) separates it from the declaration it still passes the
-  // whitespace-only test above, but it isn't really documenting this specific
-  // export — e.g. errors.ts opens with a doc about the error taxonomy in
-  // general, directly above `RcError`, which needs its own explanation of what
-  // `status`/`url`/`body` mean. Require *something* — even one prior doc block
-  // — before the one immediately touching the declaration.
-  return before.slice(0, last.index).trim() !== '';
+  // A JSDoc documents a declaration only when it ends on the line directly
+  // above it. A blank line in between is what separates a file's header
+  // comment from the first export beneath it — and a header describes the
+  // module, not that symbol. An earlier version asked only that *something*
+  // precede the block, which an `import` line satisfied, so a header sitting
+  // after the imports silently passed for the export under it.
+  const before = source.slice(0, at);
+  if (!/\*\/[ \t]*\r?\n[ \t]*$/.test(before)) return false;
+  const open = before.lastIndexOf('/*');
+  return open >= 0 && before.startsWith('/**', open) && !before.startsWith('/**/', open);
 }
 
 test('every public export has a JSDoc on its declaration', () => {

@@ -11,15 +11,28 @@ import { DEFAULT_CONFIG, type RcConfig } from './config.ts';
  * client replace the near-duplicate Node and Deno copies that exist today.
  */
 
+/**
+ * Options for one `request()`. Everything is optional; the defaults come from
+ * `config`, and an explicit `timeoutMs` or `retries` here always wins over it.
+ */
 export interface RequestOptions {
+  /** Defaults to `GET`. */
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
+  /** Merged over a default `user-agent`. Build these with the header helpers. */
   headers?: Record<string, string>;
   /** Serialised as JSON unless it is already a string. */
   body?: unknown;
+  /** Per attempt, not for the whole call including retries. */
   timeoutMs?: number;
-  /** Statuses to return rather than throw, so callers can interpret them. */
+  /**
+   * Statuses to return rather than throw, so callers can interpret them. A 404
+   * throws `RcRouteGoneError` unless it is listed here — the deliberate opt-in
+   * for endpoints where 404 means "this account has none".
+   */
   allowStatus?: number[];
+  /** Extra attempts after the first, for network failures and 429/5xx. `0` disables. */
   retries?: number;
+  /** Aborts the call, in addition to the per-attempt timeout. */
   signal?: AbortSignal;
   /** Defaults for timeout, retries and user agent. Explicit `timeoutMs`/`retries` win. */
   config?: RcConfig;

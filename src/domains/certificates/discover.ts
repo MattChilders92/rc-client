@@ -11,6 +11,10 @@ import { DEFAULT_CONFIG, type RcConfig } from '../../config.ts';
  *   tier      {base}/{YY}{MM}{suffix}{tier}.pdf   e.g. 2609A04.pdf, 2609AVIP1.pdf
  */
 
+/**
+ * Where Royal publishes every campaign and tier PDF. A public CDN path: no
+ * session, no app key. All the URL builders below hang off it.
+ */
 export const INSTANT_PDF_BASE =
   'https://www.royalcaribbean.com/content/dam/royal/resources/pdf/casino/offers';
 
