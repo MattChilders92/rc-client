@@ -67,12 +67,20 @@ export interface RcSailingSummary {
   sailDate: string | null;
   startDate: string | null;
   endDate: string | null;
+  /** This dated sailing's own itinerary code, which matches `packageCode`. */
   itineraryCode: string | null;
   /**
-   * The code room pricing wants, parsed from the sailing id. Usually the same
-   * as `itineraryCode`, but not always: Celebrity returns a master itinerary
-   * code that can differ from the bookable package code, and pricing 404s on
-   * the wrong one. Null when the id is absent or not in `<code>_<date>` form.
+   * The code room pricing wants, taken from the sailing id rather than from a
+   * code field, so it cannot be confused with the cruise's master code.
+   *
+   * Use this, not `RcCruise.itineraryCode`. A Celebrity cruise advertises one
+   * master itinerary code while its individual dates run under their own
+   * package codes — measured on one recorded search, 33 of 50 sailings
+   * differed from their parent — and pricing 404s on the master code. This
+   * field and the sibling `itineraryCode` below have always agreed in recorded
+   * data; the divergence is against the parent, not within the sailing.
+   *
+   * Null when the id is absent or not in `<code>_<date>` form.
    */
   packageCode: string | null;
   bookingLink: string | null;
@@ -83,6 +91,11 @@ export interface RcCruise {
   id: string;
   shipCode: string | null;
   shipName: string | null;
+  /**
+   * The master itinerary code this cruise is advertised under. **Not** a
+   * pricing code: individual dates can run under different package codes, so
+   * price with the sailing's own `packageCode` instead.
+   */
   itineraryCode: string | null;
   itineraryName: string | null;
   nights: number | null;
