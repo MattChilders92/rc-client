@@ -6,6 +6,16 @@ and their sailings, room pricing, onboard products, bookings, and cruise search.
 Zero runtime dependencies. Uses only `fetch` and standard web APIs, so the same
 source runs unchanged on Node, Deno (Supabase Edge Functions), Bun and workers.
 
+## Install
+
+```bash
+npm install rc-client
+```
+
+Needs Node 20.3+, or any runtime with `fetch` and `AbortSignal.any` — the same
+web APIs the library itself is built on. The package ships compiled JavaScript
+with type declarations; there is no build step for consumers.
+
 ```ts
 import { RcClient } from 'rc-client';
 
@@ -22,6 +32,46 @@ const { cruises } = await RcClient.search({ limit: 25 });
 
 The client signs in on demand, reuses the token until it expires, and picks the
 right auth headers per API. Callers never touch tokens.
+
+`rc-client` takes a Royal Caribbean username and password at runtime, holds
+them in memory only, and sends them only to Royal's own sign-in endpoint
+(`https://www.royalcaribbean.com/auth/json/authenticate`, followed by Royal's
+own OAuth2 token exchange). It never logs or persists them — there is no
+logging in the library at all, and nothing is written to disk.
+
+## Configuration
+
+```ts
+const rc = new RcClient(
+  { username, password },
+  { timeoutMs: 15_000, retries: 0, userAgent: 'my-app/1.0' },
+);
+```
+
+The second argument is a `Partial<RcConfig>`; anything left out falls back to
+the default. That includes an explicit `undefined` —
+`{ appKey: process.env.RC_APP_KEY }` is safe to pass even when the variable is
+unset, because each field is resolved individually rather than merged with a
+spread.
+
+| Field | Default | |
+| --- | --- | --- |
+| `appKey` | `RC_PUBLIC_APP_KEY` | Sent as `appkey` on guest, commerce and sign-in requests. |
+| `userAgent` | a current desktop Chrome UA | Sent on every request; Royal's edge rejects obviously non-browser ones. |
+| `timeoutMs` | `45_000` | Per-attempt timeout. |
+| `retries` | `2` | Extra attempts after the first, for network failures and 429/5xx. |
+
+`RC_PUBLIC_APP_KEY` is Royal's own **public** web app key — the value their own
+site sends from public JavaScript on every request, and required for sign-in.
+It is a client identifier, not a secret: it grants nothing on its own and is
+visible to anyone who opens the site's network tab. Override it via
+`RcConfig.appKey` if Royal rotates it before this library does. `RC_APPKEY` is
+a deprecated alias for the same constant, kept so existing imports keep
+working.
+
+`RoomQuery.officeCode` (Royal's booking-office code, e.g. `MIA`) and
+`ProductQuery.regionCode` (the catalogue region, e.g. `ALCAN`) are also
+settable per call, for callers outside the US site's defaults.
 
 ## Why this exists
 
@@ -54,14 +104,10 @@ different ways, and a mismatch returns `422` or a bare `404`, never `401`:
 | commerce | `access-token` + `appkey` + `account-id` | catalog, bookings |
 | casino | `authorization: Bearer` + `x-account-id` | `/api/casino/**` |
 | anonymous | none | itinerary, cruise search |
-| mobile | `Authorization: bearer` + `Access-Token` + `appKey` + `Account-Id` | the phone app’s `api.rccl.com/en/royal/mobile/*` gateway |
 
-`src/headers.ts` is the only place this is encoded. The **mobile** style is the
-phone app’s and is documented, not implemented — the app uses a native login
-(`mobile/v3/guestAccounts/authentication/login`, not the web OAuth2 grant), an
-env-info config service for the appkey/base-URL, and Akamai Bot Manager sensor
-data; its value is on-board data (folio, muster, virtual queue, digital key),
-not offers. See `docs/endpoints.md` → *The mobile app*.
+`src/headers.ts` is the only place this is encoded. Research on the phone
+app's separate gateway lives in the repo under `docs/research/` and is not
+part of this package.
 
 ## Ambiguous 404s
 
@@ -106,6 +152,37 @@ await rc.allRooms({ packageCode, sailDate });                      // full cover
 
 Retries are automatic for 429/500/502/503/504 with backoff and `Retry-After`.
 
+## Standalone functions
+
+Every domain function and header builder is also exported, for callers who
+manage their own session rather than going through `RcClient`:
+
+```ts
+import { signIn, guestHeaders, request } from 'rc-client';
+
+const session = await signIn({ username, password });
+const { data } = await request('https://aws-prd.api.rccl.com/en/royal/web/v3/guestAccounts', {
+  headers: guestHeaders(session),
+});
+```
+
+The Instant Reward certificate tooling is a standalone module because it parses
+PDFs rather than calling an API — there is no `RcClient` method for it, and it
+needs no session at all:
+
+```ts
+import { discoverInstantCampaigns, downloadPdf, parseTierPages, type PageLines } from 'rc-client';
+
+const campaigns = await discoverInstantCampaigns();
+const bytes = await downloadPdf(campaigns[0]!.url);
+
+// parseTierPages works on text positions, not PDF bytes directly: the caller
+// extracts them with its own PDF library (this package carries no PDF
+// dependency) and hands over one PageLines[] per tier PDF.
+const pages: PageLines[] = /* extracted by the caller's PDF library */ [];
+const { sailings } = parseTierPages(pages);
+```
+
 ## Development
 
 ```bash
@@ -120,17 +197,24 @@ loyalty numbers and tokens are scrubbed on the way in, since fixtures are
 committed. Tests replay them, so a change in Royal's response shape fails a test
 with the real payload instead of reaching production.
 
-## Status
+## Verified live
 
-Verified live: auth, account, casino loyalty, cruise search, bookings, room
-pricing (31 categories via occupancy sweep), products, offer details with
-sailings, and the public Instant Reward certificate PDFs (discovery, download
-and position-based parsing).
+Auth, account, casino loyalty, cruise search, bookings, room pricing (31
+categories via occupancy sweep), products, and the public Instant Reward
+certificate PDFs (discovery, download and position-based parsing).
 
-`offers` is verified against a live payload of 13 real offers, including
-free-play perks, trade-in values and a repeated offer code.
+`offers` — a live payload of 13 real offers, including free-play perks,
+trade-in values and a repeated offer code. `RcOffer.sailings` is always empty
+from the list; `offerDetail(code, playerOfferId)` returns the grant with its
+sailings — ship, port, date, nights, itinerary and eligible room categories —
+verified at 490 sailings on one offer.
 
-`RcOffer.sailings` is always empty from the list; `rc.offerDetail(code,
-playerOfferId)` returns the grant with its sailings — ship, port, date, nights,
-itinerary and eligible room categories — verified live at 490 sailings on one
-offer. See [docs/endpoints.md](docs/endpoints.md).
+See [docs/endpoints.md](docs/endpoints.md) for every endpoint and its quirks,
+and [CHANGELOG.md](CHANGELOG.md) for what changed release to release.
+
+## Caveats
+
+These are undocumented private APIs, reverse-engineered from Royal's own web
+client — not a published contract, and they change without notice. The casino
+offers endpoint alone has already moved twice. This project is unaffiliated
+with Royal Caribbean; use it against your own account.
