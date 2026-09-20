@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { REDACT_KEYS } from '../src/redaction.ts';
+import { REDACT_KEYS } from '../scripts/redaction.ts';
 
 const DIR = path.resolve(path.dirname(fileURLToPath(import.meta.url)), 'fixtures');
 const files = fs.readdirSync(DIR).filter((f) => f.endsWith('.json') && !f.endsWith('.local.json'));

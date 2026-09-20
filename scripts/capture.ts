@@ -13,7 +13,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { signIn } from '../src/auth/index.ts';
 import { casinoHeaders, commerceHeaders, guestHeaders } from '../src/headers.ts';
-import { REDACT_KEYS } from '../src/redaction.ts';
+import { REDACT_KEYS } from './redaction.ts';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'test', 'fixtures');
