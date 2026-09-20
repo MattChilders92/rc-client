@@ -2,6 +2,7 @@ import { request } from '../http.ts';
 import { str } from '../coerce.ts';
 import { RcRequestError, RcShapeError } from '../errors.ts';
 import { resolveConfig, type RcConfig } from '../config.ts';
+import { brandHost, type Brand } from '../brand.ts';
 
 /**
  * Public cruise search — the sailings and itineraries behind royalcaribbean.com's
@@ -15,7 +16,7 @@ import { resolveConfig, type RcConfig } from '../config.ts';
  * identifies a sailing.
  */
 
-const URL_ = 'https://www.royalcaribbean.com/graph';
+const url = (brand: Brand): string => `https://${brandHost(brand)}/graph`;
 
 const QUERY = `query cruiseSearch_Cruises($filters: String, $qualifiers: String, $sort: CruiseSearchSort, $pagination: CruiseSearchPagination) {
   cruiseSearch(filters: $filters, qualifiers: $qualifiers, sort: $sort, pagination: $pagination) {
@@ -80,16 +81,18 @@ export interface SearchParams {
   limit?: number;
   /** 1-based. Defaults to 1. */
   page?: number;
+  /** Selects both the host this call goes to and the `brand` header it sends. Defaults to `'R'`. */
+  brand?: Brand;
 }
 
-function headers(config: RcConfig): Record<string, string> {
+function headers(config: RcConfig, brand: Brand): Record<string, string> {
   return {
     accept: '*/*',
     'accept-language': 'en-US,en;q=0.9',
     adrum: 'isAjax:true',
     'apollographql-client-name': 'cruise-search-widget',
     'app-name': 'graph',
-    brand: 'R',
+    brand,
     'cache-control': 'no-cache',
     'content-type': 'application/json',
     country: 'USA',
@@ -114,10 +117,12 @@ export async function searchCruises(
   const cfg = resolveConfig(config);
   const limit = params.limit ?? 25;
   const page = params.page ?? 1;
+  const brand = params.brand ?? 'R';
+  const target = url(brand);
 
-  const res = await request<any>(URL_, {
+  const res = await request<any>(target, {
     method: 'POST',
-    headers: headers(cfg),
+    headers: headers(cfg, brand),
     body: {
       operationName: 'cruiseSearch_Cruises',
       variables: {
@@ -137,7 +142,7 @@ export async function searchCruises(
   // to prevent.
   if (typeof res.data !== 'object' || res.data === null) {
     throw new RcShapeError('Cruise search returned a non-JSON body', {
-      status: res.status, url: URL_, body: res.data,
+      status: res.status, url: target, body: res.data,
     });
   }
 
@@ -146,7 +151,7 @@ export async function searchCruises(
     const first = res.data.errors[0];
     throw new RcRequestError(
       `Cruise search rejected by GraphQL: ${first?.message ?? 'unknown GraphQL error'}`,
-      { status: res.status, url: URL_, body: res.data.errors },
+      { status: res.status, url: target, body: res.data.errors },
     );
   }
 
@@ -265,13 +270,20 @@ export function parseItineraryPorts(cruise: unknown): RcItineraryPorts | null {
 
 /** One page of the catalogue. `total` lets the caller page to the end. */
 export async function fetchItineraryPorts(
-  opts: { count?: number; skip?: number } = {},
+  opts: {
+    count?: number;
+    skip?: number;
+    /** Selects both the host this call goes to and the `brand` header it sends. Defaults to `'R'`. */
+    brand?: Brand;
+  } = {},
   config: Partial<RcConfig> = {},
 ): Promise<{ itineraries: RcItineraryPorts[]; total: number }> {
   const cfg = resolveConfig(config);
-  const res = await request<any>(URL_, {
+  const brand = opts.brand ?? 'R';
+  const target = url(brand);
+  const res = await request<any>(target, {
     method: 'POST',
-    headers: headers(cfg),
+    headers: headers(cfg, brand),
     body: {
       operationName: 'cruiseSearch_Ports',
       variables: { filters: '{}', pagination: { count: opts.count ?? 100, skip: opts.skip ?? 0 } },
@@ -284,7 +296,7 @@ export async function fetchItineraryPorts(
   // otherwise map to zero itineraries rather than a failure.
   if (typeof res.data !== 'object' || res.data === null) {
     throw new RcShapeError('Cruise search returned a non-JSON body', {
-      status: res.status, url: URL_, body: res.data,
+      status: res.status, url: target, body: res.data,
     });
   }
 
@@ -293,7 +305,7 @@ export async function fetchItineraryPorts(
     const first = res.data.errors[0];
     throw new RcRequestError(
       `Cruise search (ports) rejected by GraphQL: ${first?.message ?? 'unknown GraphQL error'}`,
-      { status: res.status, url: URL_, body: res.data.errors },
+      { status: res.status, url: target, body: res.data.errors },
     );
   }
   const results = res.data?.data?.cruiseSearch?.results ?? {};

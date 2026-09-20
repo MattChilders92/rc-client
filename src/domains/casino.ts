@@ -3,6 +3,7 @@ import { casinoHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { num, str } from '../coerce.ts';
 import { resolveConfig, type RcConfig } from '../config.ts';
+import { brandHost, type Brand } from '../brand.ts';
 
 /**
  * Club Royale standing from the casino system itself.
@@ -15,7 +16,7 @@ import { resolveConfig, type RcConfig } from '../config.ts';
  * the response body, which makes it the easiest Royal API to debug.
  */
 
-const URL_ = 'https://www.royalcaribbean.com/api/casino/v1/loyalty-data';
+const url = (brand: Brand): string => `https://${brandHost(brand)}/api/casino/v1/loyalty-data`;
 
 /** Club Royale standing straight from the casino system — preferred over the guest account's loyalty block. */
 export interface CasinoLoyalty {
@@ -33,13 +34,23 @@ export interface CasinoLoyalty {
   raw: unknown;
 }
 
-/** Returns null when the account has no casino profile. */
+/**
+ * Returns null when the account has no casino profile.
+ *
+ * `options.brand` selects the casino host; it defaults to `'R'`. It lives on
+ * the options object rather than as its own parameter because an existing
+ * caller (`RcClient#casinoLoyalty`) already passes a full `RcConfig`
+ * positionally in this spot — inserting `brand` ahead of it would silently
+ * turn that config object into the `brand` argument instead.
+ */
 export async function fetchCasinoLoyalty(
   session: RcSession,
-  config: Partial<RcConfig> = {},
+  options: Partial<RcConfig> & { brand?: Brand } = {},
 ): Promise<CasinoLoyalty | null> {
+  const { brand = 'R', ...config } = options;
   const cfg = resolveConfig(config);
-  const res = await request<any>(URL_, {
+  const target = url(brand);
+  const res = await request<any>(target, {
     headers: casinoHeaders(session, {}, cfg),
     allowStatus: [404],
     config: cfg,
