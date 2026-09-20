@@ -23,6 +23,7 @@ const rc = new RcClient({ username, password });
 
 console.log('\n— auth —');
 const verified = await rc.verify();
+// Prints the account uuid to stdout — don't paste this script's output publicly.
 line('signIn', verified.ok ? `ok, account ${verified.accountId}` : `FAILED: ${verified.reason}`);
 if (!verified.ok) process.exit(1);
 
@@ -32,6 +33,7 @@ line('vdsId', session.vdsId ? 'present' : 'absent');
 
 console.log('\n— account —');
 const account = await rc.account();
+// Prints the account's real name to stdout — don't paste this script's output publicly.
 line('name', `${account.firstName ?? '?'} ${account.lastName ?? ''}`.trim());
 line('crown & anchor', `${account.crownAndAnchorTier ?? 'none'} (${account.crownAndAnchorPoints} pts)`);
 line('club royale', `${account.clubRoyaleTier ?? 'none'} (${account.clubRoyalePoints} pts)`);

@@ -3,9 +3,10 @@ import { resolveConfig, type RcConfig } from './config.ts';
 
 /**
  * Royal presents the same access token three different ways depending on which
- * API you are calling. This is not documented anywhere, is not guessable, and
- * getting it wrong returns 422 or a bare 404 rather than 401 — so it is encoded
- * here once and nowhere else.
+ * API you are calling, plus a fourth style — anonymous — for the two APIs that
+ * take no credentials at all. This is not documented anywhere, is not
+ * guessable, and getting it wrong returns 422 or a bare 404 rather than 401 —
+ * so it is encoded here once and nowhere else.
  *
  *   guest        `access-token` + appkey            → guestAccounts
  *   commerce     `access-token` + appkey + account-id → catalog, bookings

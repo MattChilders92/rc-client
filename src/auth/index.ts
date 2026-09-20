@@ -26,10 +26,13 @@ const AUTHORIZE_URL =
 
 /** What `signIn` returns: the bearer token plus the ids every other API keys on. */
 export interface RcSession {
+  /** The bearer token itself, presented differently by each API — see `headers.ts`. */
   accessToken: string;
   /** Account uuid, from the id_token `sub` claim. */
   accountId: string;
+  /** From the id_token `vdsid` claim, when Royal sent one. Not present on every account. */
   vdsId?: string;
+  /** When the token stops being valid, already backed off a minute so it is never spent in its final seconds. */
   expiresAt: Date;
 }
 

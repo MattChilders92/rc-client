@@ -1,11 +1,15 @@
 # Changelog
 
-## 1.0.0 — 2026-09-19
+## 0.2.0 — 2026-09-19
 
-First publishable release.
+First publishable release. Pre-1.0: these are private, undocumented upstream
+APIs that move without notice, so the version starts under 1.0 and will be
+promoted once the surface has proven stable — it will never be demoted.
 
-- **Breaking:** the package ships compiled `dist/` with declarations. Consumers
-  that resolved the raw `.ts` source through `exports` now get JavaScript.
+- The package now ships compiled `dist/` with declarations. There is no prior
+  npm release to call this breaking against, but it does change what a
+  `file:` or git dependency that previously resolved the raw `.ts` source
+  through `exports` now receives: compiled JavaScript instead.
 - `RcClient` takes an options object: app key, user agent, timeout and retries
   (`RcConfig`). Standalone functions accept the same as an optional last
   argument, and it is a `Partial<RcConfig>` — `fetchRooms(query, { timeoutMs })`

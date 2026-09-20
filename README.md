@@ -96,7 +96,8 @@ symptom it produces.
 ## The three auth styles
 
 The single most expensive thing to get wrong. The same token is presented three
-different ways, and a mismatch returns `422` or a bare `404`, never `401`:
+different ways, plus a fourth row — anonymous — for the two APIs that take no
+credentials at all, and a mismatch returns `422` or a bare `404`, never `401`:
 
 | Style | Headers | APIs |
 | --- | --- | --- |
@@ -147,8 +148,9 @@ await rc.allRooms({ packageCode, sailDate });                      // full cover
 
 | Class | Meaning |
 | --- | --- |
+| `RcError` | Base class every other error extends. Also thrown directly for a network failure (including a connection reset mid-body), an unclassified HTTP status, and a failed PDF download. |
 | `RcAuthError` | Credentials rejected. `permanent` marks the unretryable ones. |
-| `RcRequestError` | 422 — nearly always the wrong auth header for that API. |
+| `RcRequestError` | 422 — nearly always the wrong auth header for that API. Also thrown for a GraphQL rejection carried inside a 200 (cruise search). |
 | `RcRouteGoneError` | 404 where data was expected. The endpoint probably moved. |
 | `RcUnavailableError` | 429/503, retryable, carries `retryAfterMs`. |
 | `RcShapeError` | Parsed, but missing what the caller needs. |
@@ -191,6 +193,10 @@ const { sailings } = parseTierPages(pages);
 ```
 
 ## Development
+
+The Node 20.3 floor above is for *consumers*, who run the compiled `dist/`.
+These commands run the `.ts` sources directly (native TypeScript stripping),
+which needs Node 23.6+.
 
 ```bash
 npm run typecheck

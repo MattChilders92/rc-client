@@ -101,6 +101,7 @@ async function grab(name: string, url: string, init: RequestInit): Promise<void>
 }
 
 const session = await signIn({ username, password });
+// Prints the account uuid to stdout — don't paste this script's output publicly.
 console.log(`signed in as ${session.accountId}\n`);
 
 const account = await fetch(
