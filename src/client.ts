@@ -4,8 +4,9 @@ import { fetchCasinoLoyalty, type CasinoLoyalty } from './domains/casino.ts';
 import { fetchOfferDetail, listOffers, type OffersResult, type RcOfferDetail } from './domains/offers.ts';
 import {
   COVERAGE_OCCUPANCIES, fetchRooms, sweepOccupancy,
-  type Brand, type RcRoom, type RoomQuery,
+  type RcRoom, type RoomQuery,
 } from './domains/rooms.ts';
+import type { Brand } from './brand.ts';
 import {
   fetchProducts, type ProductQuery, type ProductsResult,
 } from './domains/products.ts';

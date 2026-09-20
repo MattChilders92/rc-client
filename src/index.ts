@@ -17,6 +17,9 @@ export {
   RcError, RcAuthError, RcRequestError, RcRouteGoneError, RcUnavailableError, RcShapeError,
 } from './errors.ts';
 
+/* ── Brand ───────────────────────────────────────────────────────────────── */
+export { brandHost, BRANDS, BRAND_NAMES, type Brand } from './brand.ts';
+
 /* ── Domain functions and types ──────────────────────────────────────────── */
 export { fetchAccount, type RcAccount } from './domains/account.ts';
 export { fetchCasinoLoyalty, type CasinoLoyalty } from './domains/casino.ts';
@@ -27,7 +30,7 @@ export {
 } from './domains/offers.ts';
 export {
   fetchRooms, sweepOccupancy, roomKey, COVERAGE_OCCUPANCIES,
-  type RcRoom, type RoomQuery, type Brand,
+  type RcRoom, type RoomQuery,
 } from './domains/rooms.ts';
 export {
   fetchProducts, fetchCategory, PRODUCT_CATEGORIES,
