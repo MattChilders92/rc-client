@@ -21,7 +21,7 @@ export {
 export { brandHost, BRANDS, BRAND_NAMES, type Brand } from './brand.ts';
 
 /* ── Domain functions and types ──────────────────────────────────────────── */
-export { fetchAccount, type RcAccount } from './domains/account.ts';
+export { fetchAccount, loyaltyIdFor, type RcAccount } from './domains/account.ts';
 export { fetchCasinoLoyalty, type CasinoLoyalty } from './domains/casino.ts';
 export {
   listOffers, fetchOfferDetail, freePlayFrom, mapOffer, SORT_FIELDS,
