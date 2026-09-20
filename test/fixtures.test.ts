@@ -248,3 +248,43 @@ test('bookings come from the plain endpoint, which the enriched one can miss', a
   assert.equal(booking.shipCode, null);
   assert.equal(booking.sailDate, null);
 });
+
+test('RcClient options reach the request: a custom user agent is sent', async () => {
+  let seen: string | null = null;
+  globalThis.fetch = (async (_url, init) => {
+    seen = new Headers(init?.headers).get('user-agent');
+    return new Response(JSON.stringify({ tokenId: 'x' }), { status: 200 });
+  }) as typeof fetch;
+
+  const { signIn } = await import('../src/auth/index.ts');
+  const { resolveConfig } = await import('../src/config.ts');
+  // Sign-in's second step will fail against this stub (no access_token in the
+  // body); that is fine — the assertion is about what the *first* request
+  // carried, not whether sign-in completes.
+  await signIn({ username: 'u', password: 'p' }, resolveConfig({ userAgent: 'rc-test/1' })).catch(() => {});
+  assert.equal(seen, 'rc-test/1');
+});
+
+test('resolveConfig fills every field and never mutates the defaults', async () => {
+  const { resolveConfig, DEFAULT_CONFIG } = await import('../src/config.ts');
+  const c = resolveConfig({ retries: 0 });
+  assert.equal(c.retries, 0);
+  assert.equal(c.appKey, DEFAULT_CONFIG.appKey);
+  assert.equal(DEFAULT_CONFIG.retries, 2);
+  assert.throws(() => { (DEFAULT_CONFIG as { retries: number }).retries = 9; });
+});
+
+test('an explicit retries on request() beats a config default', async () => {
+  let calls = 0;
+  globalThis.fetch = (async () => {
+    calls++;
+    return new Response('', { status: 500 });
+  }) as typeof fetch;
+
+  const { request } = await import('../src/http.ts');
+  const { resolveConfig } = await import('../src/config.ts');
+  await assert.rejects(() =>
+    request('https://example.com/x', { retries: 0, config: resolveConfig({ retries: 5 }) }),
+  );
+  assert.equal(calls, 1, 'explicit retries: 0 must win over config.retries, or a rejected sign-in could be retried into a lockout');
+});

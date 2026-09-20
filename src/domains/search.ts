@@ -1,6 +1,7 @@
-import { request, USER_AGENT } from '../http.ts';
+import { request } from '../http.ts';
 import { str } from '../coerce.ts';
 import { RcRequestError } from '../errors.ts';
+import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
 
 /**
  * Public cruise search — the sailings and itineraries behind royalcaribbean.com's
@@ -69,12 +70,15 @@ export interface SearchResult {
 export interface SearchParams {
   /** Royal's own filter string, e.g. `{"ship":["LE"]}`. Defaults to no filter. */
   filters?: string;
+  /** Defaults to `RECOMMENDED`. */
   sortBy?: 'RECOMMENDED' | 'PRICE' | 'DATE';
+  /** Results per page. Defaults to 25. */
   limit?: number;
+  /** 1-based. Defaults to 1. */
   page?: number;
 }
 
-function headers(): Record<string, string> {
+function headers(config: RcConfig): Record<string, string> {
   return {
     accept: '*/*',
     'accept-language': 'en-US,en;q=0.9',
@@ -91,20 +95,23 @@ function headers(): Record<string, string> {
     office: 'MIA',
     pragma: 'no-cache',
     'request-timeout': '20',
-    'user-agent': USER_AGENT,
+    'user-agent': config.userAgent,
     referer: 'https://www.royalcaribbean.com/',
     // The site sends a session uuid; any valid one is accepted.
     'x-session-id': crypto.randomUUID(),
   };
 }
 
-export async function searchCruises(params: SearchParams = {}): Promise<SearchResult> {
+export async function searchCruises(
+  params: SearchParams = {},
+  config: RcConfig = DEFAULT_CONFIG,
+): Promise<SearchResult> {
   const limit = params.limit ?? 25;
   const page = params.page ?? 1;
 
   const res = await request<any>(URL_, {
     method: 'POST',
-    headers: headers(),
+    headers: headers(config),
     body: {
       operationName: 'cruiseSearch_Cruises',
       variables: {
@@ -114,6 +121,7 @@ export async function searchCruises(params: SearchParams = {}): Promise<SearchRe
       },
       query: QUERY,
     },
+    config,
   });
 
   // GraphQL reports failures inside a 200, so errors have to be read out.
@@ -239,15 +247,17 @@ export function parseItineraryPorts(cruise: unknown): RcItineraryPorts | null {
 /** One page of the catalogue. `total` lets the caller page to the end. */
 export async function fetchItineraryPorts(
   opts: { count?: number; skip?: number } = {},
+  config: RcConfig = DEFAULT_CONFIG,
 ): Promise<{ itineraries: RcItineraryPorts[]; total: number }> {
   const res = await request<any>(URL_, {
     method: 'POST',
-    headers: headers(),
+    headers: headers(config),
     body: {
       operationName: 'cruiseSearch_Ports',
       variables: { filters: '{}', pagination: { count: opts.count ?? 100, skip: opts.skip ?? 0 } },
       query: PORTS_QUERY,
     },
+    config,
   });
 
   // GraphQL reports failures inside a 200, so errors have to be read out.

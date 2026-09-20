@@ -2,6 +2,7 @@ import type { RcSession } from '../auth/index.ts';
 import { commerceHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { num } from '../coerce.ts';
+import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
 
 /**
  * Onboard products: shore excursions, drink packages, dining and internet.
@@ -36,6 +37,8 @@ export interface ProductQuery {
   endDate: string;
   categories?: readonly ProductCategory[];
   currency?: string;
+  /** Catalogue region; `ALCAN` is what the US site sends. */
+  regionCode?: string;
 }
 
 const PAGE_SIZE = 25;
@@ -55,7 +58,7 @@ function pageUrl(q: ProductQuery, category: ProductCategory, page: number): stri
   u.searchParams.set('currentPage', String(page));
   u.searchParams.set('pageSize', String(PAGE_SIZE));
   u.searchParams.set('currencyIso', q.currency ?? 'USD');
-  u.searchParams.set('regionCode', 'ALCAN');
+  u.searchParams.set('regionCode', q.regionCode ?? 'ALCAN');
   return u.toString();
 }
 
@@ -79,13 +82,14 @@ export async function fetchCategory(
   session: RcSession,
   query: ProductQuery,
   category: ProductCategory,
+  config: RcConfig = DEFAULT_CONFIG,
 ): Promise<RcProduct[]> {
-  const headers = commerceHeaders(session);
+  const headers = commerceHeaders(session, config);
   const body = { textSearch: null, sortKey: 'rRank-asc', filterFacets: null };
 
   const page = async (n: number) => {
     const res = await request<any>(pageUrl(query, category, n), {
-      method: 'POST', headers, body,
+      method: 'POST', headers, body, config,
     });
     const products: any[] = res.data?.products ?? res.data?.payload?.products ?? [];
     const total = Number(
@@ -115,6 +119,7 @@ export interface ProductsResult {
 export async function fetchProducts(
   session: RcSession,
   query: ProductQuery,
+  config: RcConfig = DEFAULT_CONFIG,
 ): Promise<ProductsResult> {
   const categories = query.categories ?? PRODUCT_CATEGORIES;
   const products: RcProduct[] = [];
@@ -122,7 +127,7 @@ export async function fetchProducts(
 
   for (const category of categories) {
     try {
-      products.push(...(await fetchCategory(session, query, category)));
+      products.push(...(await fetchCategory(session, query, category, config)));
     } catch (err) {
       // One category failing must not cost the others.
       failed.push({ category, reason: (err as Error).message });

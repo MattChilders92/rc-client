@@ -1,5 +1,5 @@
 import type { RcSession } from './auth/index.ts';
-import { RC_APPKEY, USER_AGENT } from './http.ts';
+import { DEFAULT_CONFIG, type RcConfig } from './config.ts';
 
 /**
  * Royal presents the same access token three different ways depending on which
@@ -15,33 +15,35 @@ import { RC_APPKEY, USER_AGENT } from './http.ts';
  * @see docs/endpoints.md
  */
 
-const BASE = {
-  accept: 'application/json',
-  'accept-language': 'en-US,en;q=0.9',
-  'cache-control': 'no-cache',
-  pragma: 'no-cache',
-  'user-agent': USER_AGENT,
-  referer: 'https://www.royalcaribbean.com/',
-};
+function base(config: RcConfig): Record<string, string> {
+  return {
+    accept: 'application/json',
+    'accept-language': 'en-US,en;q=0.9',
+    'cache-control': 'no-cache',
+    pragma: 'no-cache',
+    'user-agent': config.userAgent,
+    referer: 'https://www.royalcaribbean.com/',
+  };
+}
 
 /** guestAccounts. Sends the token bare, under `access-token`. */
-export function guestHeaders(session: RcSession): Record<string, string> {
+export function guestHeaders(session: RcSession, config: RcConfig = DEFAULT_CONFIG): Record<string, string> {
   return {
-    ...BASE,
+    ...base(config),
     accept: '*/*',
     'access-token': session.accessToken,
-    appkey: RC_APPKEY,
+    appkey: config.appKey,
     'content-type': 'application/json',
   };
 }
 
 /** Commerce APIs — product catalog, bookings. Adds the account id. */
-export function commerceHeaders(session: RcSession): Record<string, string> {
+export function commerceHeaders(session: RcSession, config: RcConfig = DEFAULT_CONFIG): Record<string, string> {
   return {
-    ...BASE,
+    ...base(config),
     'access-token': session.accessToken,
     'account-id': session.accountId,
-    appkey: RC_APPKEY,
+    appkey: config.appKey,
     'content-type': 'application/json',
     'req-app-id': 'Royal.Web.PlanMyCruise',
     'x-requested-with': 'XMLHttpRequest',
@@ -57,9 +59,10 @@ export function commerceHeaders(session: RcSession): Record<string, string> {
 export function casinoHeaders(
   session: RcSession,
   opts: { loyaltyId?: string | null } = {},
+  config: RcConfig = DEFAULT_CONFIG,
 ): Record<string, string> {
   return {
-    ...BASE,
+    ...base(config),
     authorization: `Bearer ${session.accessToken}`,
     'content-type': 'application/json',
     'x-account-id': session.accountId,
@@ -75,9 +78,9 @@ export function casinoHeaders(
 }
 
 /** Itinerary and search APIs, which take no credentials at all. */
-export function anonymousHeaders(): Record<string, string> {
+export function anonymousHeaders(config: RcConfig = DEFAULT_CONFIG): Record<string, string> {
   return {
-    ...BASE,
+    ...base(config),
     accept: 'application/json, text/plain, */*',
   };
 }

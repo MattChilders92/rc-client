@@ -1,6 +1,7 @@
 import {
   RcAuthError, RcError, RcRequestError, RcRouteGoneError, RcUnavailableError,
 } from './errors.ts';
+import { DEFAULT_CONFIG, type RcConfig } from './config.ts';
 
 /**
  * The single place a request leaves this library.
@@ -9,12 +10,6 @@ import {
  * Node, Deno (Supabase Edge Functions), Bun and workers — which is what lets one
  * client replace the near-duplicate Node and Deno copies that exist today.
  */
-
-export const USER_AGENT =
-  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36';
-
-/** Royal's public web app key, sent by their own site. */
-export const RC_APPKEY = 'hyNNqIPHHzaLzVpcICPdAdbFV8yvTsAm';
 
 export interface RequestOptions {
   method?: 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -26,11 +21,17 @@ export interface RequestOptions {
   allowStatus?: number[];
   retries?: number;
   signal?: AbortSignal;
+  /** Defaults for timeout, retries and user agent. Explicit `timeoutMs`/`retries` win. */
+  config?: RcConfig;
 }
 
+/** What `request()` returns for a status it did not throw on. */
 export interface RcResponse<T> {
+  /** The HTTP status, which may be one the caller allowed via `allowStatus`. */
   status: number;
+  /** The body, JSON-parsed when it parsed, else the raw text. */
   data: T;
+  /** Response headers, for `retry-after` and the like. */
   headers: Headers;
 }
 
@@ -59,9 +60,10 @@ export async function request<T = unknown>(
   url: string,
   opts: RequestOptions = {},
 ): Promise<RcResponse<T>> {
+  const cfg = opts.config ?? DEFAULT_CONFIG;
   const {
     method = 'GET', headers = {}, body,
-    timeoutMs = 45_000, allowStatus = [], retries = 2, signal,
+    timeoutMs = cfg.timeoutMs, allowStatus = [], retries = cfg.retries, signal,
   } = opts;
 
   let lastError: unknown;
@@ -74,7 +76,7 @@ export async function request<T = unknown>(
     try {
       res = await fetch(url, {
         method,
-        headers: { 'user-agent': USER_AGENT, ...headers },
+        headers: { 'user-agent': cfg.userAgent, ...headers },
         body: body === undefined ? undefined
           : typeof body === 'string' ? body : JSON.stringify(body),
         redirect: 'follow',

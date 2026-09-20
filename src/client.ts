@@ -10,8 +10,12 @@ import {
   fetchProducts, type ProductQuery, type ProductsResult,
 } from './domains/products.ts';
 import { listBookings, type ListBookingsOptions, type RcBooking } from './domains/bookings.ts';
-import { searchCruises, type SearchParams, type SearchResult } from './domains/search.ts';
+import {
+  fetchItineraryPorts, searchCruises,
+  type RcItineraryPorts, type SearchParams, type SearchResult,
+} from './domains/search.ts';
 import { RcAuthError } from './errors.ts';
+import { resolveConfig, type RcConfig } from './config.ts';
 
 /**
  * One entry point for Royal Caribbean's APIs.
@@ -21,7 +25,7 @@ import { RcAuthError } from './errors.ts';
  * the token presented differently and getting it wrong fails obscurely.
  *
  * ```ts
- * const rc = new RcClient({ username, password });
+ * const rc = new RcClient({ username, password }, { timeoutMs: 15_000 });
  * const account = await rc.account();
  * const { offers } = await rc.offers();          // loyalty id resolved for you
  * const rooms = await rc.allRooms({ packageCode, sailDate });
@@ -35,8 +39,10 @@ export class RcClient {
   #account: RcAccount | null = null;
   /** Concurrent callers share one sign-in rather than racing several. */
   #pending: Promise<RcSession> | null = null;
+  readonly #config: RcConfig;
 
-  constructor(init: Credentials | { session: RcSession }) {
+  constructor(init: Credentials | { session: RcSession }, options: Partial<RcConfig> = {}) {
+    this.#config = resolveConfig(options);
     if ('session' in init) {
       this.#credentials = null;
       this.#session = init.session;
@@ -56,7 +62,7 @@ export class RcClient {
       });
     }
 
-    this.#pending = signIn(this.#credentials)
+    this.#pending = signIn(this.#credentials, this.#config)
       .then((s) => {
         this.#session = s;
         // Identity may have changed; force the cached account to reload.
@@ -82,12 +88,13 @@ export class RcClient {
   /** The guest account. Cached for the life of the session. */
   async account(force = false): Promise<RcAccount> {
     if (this.#account && !force) return this.#account;
-    this.#account = await fetchAccount(await this.session());
+    this.#account = await fetchAccount(await this.session(), this.#config);
     return this.#account;
   }
 
+  /** Club Royale loyalty tier and points, or `null` when the account has no casino profile. */
   async casinoLoyalty(): Promise<CasinoLoyalty | null> {
-    return fetchCasinoLoyalty(await this.session());
+    return fetchCasinoLoyalty(await this.session(), this.#config);
   }
 
   /**
@@ -103,7 +110,7 @@ export class RcClient {
     const id = loyaltyId ?? (await this.account()).crownAndAnchorId;
     const player = { firstName: null, lastName: null, loyaltyId: null };
     if (!id) return { offers: [], outcome: 'none', totalOffers: 0, player };
-    return listOffers(await this.session(), { loyaltyId: id });
+    return listOffers(await this.session(), { loyaltyId: id }, this.#config);
   }
 
   /**
@@ -114,20 +121,22 @@ export class RcClient {
   async offerDetail(offerCode: string, playerOfferId: string, loyaltyId?: string): Promise<RcOfferDetail | null> {
     const id = loyaltyId ?? (await this.account()).crownAndAnchorId;
     if (!id) return null;
-    return fetchOfferDetail(await this.session(), { loyaltyId: id, offerCode, playerOfferId });
+    return fetchOfferDetail(await this.session(), { loyaltyId: id, offerCode, playerOfferId }, this.#config);
   }
 
+  /** Current and past reservations on the account. */
   async bookings(opts?: ListBookingsOptions): Promise<RcBooking[]> {
-    return listBookings(await this.session(), opts);
+    return listBookings(await this.session(), opts, this.#config);
   }
 
+  /** Onboard product catalogue and prices for a ship and date window. */
   async products(query: ProductQuery): Promise<ProductsResult> {
-    return fetchProducts(await this.session(), query);
+    return fetchProducts(await this.session(), query, this.#config);
   }
 
   /** Cabins at one occupancy. Needs no credentials, but is here for symmetry. */
   async rooms(query: RoomQuery): Promise<RcRoom[]> {
-    return fetchRooms(query);
+    return fetchRooms(query, this.#config);
   }
 
   /**
@@ -140,12 +149,22 @@ export class RcClient {
     query: Omit<RoomQuery, 'adults' | 'children'>,
     occupancies = COVERAGE_OCCUPANCIES,
   ): Promise<RcRoom[]> {
-    return [...(await sweepOccupancy(query, occupancies)).values()];
+    return [...(await sweepOccupancy(query, occupancies, this.#config)).values()];
   }
 
   /** Public cruise search. Static because it needs no session. */
   static search(params?: SearchParams): Promise<SearchResult> {
     return searchCruises(params);
+  }
+
+  /**
+   * The itineraries in Royal's public catalogue with their day-by-day ports.
+   * Static, like `search`: the same credential-free GraphQL.
+   */
+  static itineraryPorts(
+    opts?: { count?: number; skip?: number },
+  ): Promise<{ itineraries: RcItineraryPorts[]; total: number }> {
+    return fetchItineraryPorts(opts);
   }
 }
 

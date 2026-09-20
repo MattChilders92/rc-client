@@ -1,4 +1,4 @@
-import { USER_AGENT } from '../../http.ts';
+import { DEFAULT_CONFIG, type RcConfig } from '../../config.ts';
 
 /**
  * Instant Reward campaign discovery.
@@ -83,11 +83,11 @@ export function candidateCampaigns(
   return out;
 }
 
-async function exists(url: string, timeoutMs: number): Promise<boolean> {
+async function exists(url: string, timeoutMs: number, userAgent: string): Promise<boolean> {
   const ctl = new AbortController();
   const t = setTimeout(() => ctl.abort(), timeoutMs);
   try {
-    const r = await fetch(url, { method: 'HEAD', headers: { 'user-agent': USER_AGENT }, signal: ctl.signal });
+    const r = await fetch(url, { method: 'HEAD', headers: { 'user-agent': userAgent }, signal: ctl.signal });
     return r.ok;
   } catch {
     return false;
@@ -103,13 +103,14 @@ async function exists(url: string, timeoutMs: number): Promise<boolean> {
  */
 export async function discoverInstantCampaigns(
   opts: { monthsBack?: number; monthsAhead?: number; now?: Date; batch?: number; timeoutMs?: number } = {},
+  config: RcConfig = DEFAULT_CONFIG,
 ): Promise<CandidateCampaign[]> {
   const { batch = 7, timeoutMs = 4000 } = opts;
   const candidates = candidateCampaigns(opts);
   const found: CandidateCampaign[] = [];
   for (let i = 0; i < candidates.length; i += batch) {
     const slice = candidates.slice(i, i + batch);
-    const results = await Promise.all(slice.map((c) => exists(c.url, timeoutMs)));
+    const results = await Promise.all(slice.map((c) => exists(c.url, timeoutMs, config.userAgent)));
     results.forEach((ok, j) => { if (ok) found.push(slice[j]!); });
   }
   return found;

@@ -15,7 +15,10 @@ export {
   RcError, RcAuthError, RcRequestError, RcRouteGoneError, RcUnavailableError, RcShapeError,
 } from './errors.ts';
 
-export { RC_APPKEY, USER_AGENT, request, type RcResponse, type RequestOptions } from './http.ts';
+export { request, type RcResponse, type RequestOptions } from './http.ts';
+export {
+  RC_PUBLIC_APP_KEY, RC_APPKEY, USER_AGENT, DEFAULT_CONFIG, resolveConfig, type RcConfig,
+} from './config.ts';
 
 export { anonymousHeaders, casinoHeaders, commerceHeaders, guestHeaders } from './headers.ts';
 

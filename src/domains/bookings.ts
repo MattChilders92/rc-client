@@ -2,6 +2,7 @@ import type { RcSession } from '../auth/index.ts';
 import { commerceHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { str } from '../coerce.ts';
+import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
 
 /**
  * The guest's own reservations.
@@ -104,6 +105,7 @@ function applyEnrichment(booking: RcBooking, detail: any): RcBooking {
 }
 
 export interface ListBookingsOptions {
+  /** `R` for Royal Caribbean, `C` for Celebrity. Defaults to `R`. */
   brand?: 'R' | 'C';
   /**
    * Skip the enrichment call. The links alone say which reservations exist, and
@@ -121,10 +123,11 @@ export interface ListBookingsOptions {
 export async function listBookings(
   session: RcSession,
   opts: ListBookingsOptions = {},
+  config: RcConfig = DEFAULT_CONFIG,
 ): Promise<RcBooking[]> {
   const brand = opts.brand ?? 'R';
   const headers = {
-    ...commerceHeaders(session),
+    ...commerceHeaders(session, config),
     // The bookings service expects the customer-journey app identity.
     'req-app-id': 'Royal.Web.CustomerJourney',
     'req-app-vers': '1.0.7',
@@ -133,7 +136,7 @@ export async function listBookings(
 
   const links = await request<any>(
     `${BASE}/v1/profileBookings/${encodeURIComponent(session.accountId)}?brand=${brand}`,
-    { headers, allowStatus: [404] },
+    { headers, allowStatus: [404], config },
   );
   if (links.status === 404) return [];
 
@@ -151,7 +154,7 @@ export async function listBookings(
     const enriched = await request<any>(
       `${BASE}/v1/profileBookings/enriched/${encodeURIComponent(session.accountId)}` +
       `?brand=${brand}&includeCheckin=true`,
-      { headers, allowStatus: [404] },
+      { headers, allowStatus: [404], config },
     );
     const details: any[] = enriched.data?.payload?.profileBookings ?? [];
     const byId = new Map(

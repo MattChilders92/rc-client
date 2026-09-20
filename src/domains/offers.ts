@@ -3,6 +3,7 @@ import { RcRouteGoneError } from '../errors.ts';
 import { casinoHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { num, str } from '../coerce.ts';
+import { DEFAULT_CONFIG, type RcConfig } from '../config.ts';
 
 /**
  * Club Royale casino offers.
@@ -298,7 +299,9 @@ export function mapOffer(o: any): RcOffer {
 export const isRouterNotFound = (data: unknown): boolean =>
   !!data && typeof data === 'object' && (data as any).code === 'NOT_FOUND';
 
-async function page(session: RcSession, loyaltyId: string, n: number, sortBy: OfferSortField) {
+async function page(
+  session: RcSession, loyaltyId: string, n: number, sortBy: OfferSortField, config: RcConfig,
+) {
   const query = new URLSearchParams({
     page: String(n),
     limit: String(PAGE_LIMIT),
@@ -309,7 +312,7 @@ async function page(session: RcSession, loyaltyId: string, n: number, sortBy: Of
   return request<any>(`${LIST}?${query}`, {
     method: 'GET',
     headers: {
-      ...casinoHeaders(session, { loyaltyId }),
+      ...casinoHeaders(session, { loyaltyId }, config),
       // The casino hub sends these on every call; empty is what it sends for a
       // guest who is not currently aboard.
       'x-environment-marker': '',
@@ -319,6 +322,7 @@ async function page(session: RcSession, loyaltyId: string, n: number, sortBy: Of
     // either "no offers" or "the route moved", and only the body separates
     // them. Classified in listOffers.
     allowStatus: [404],
+    config,
   });
 }
 
@@ -332,8 +336,9 @@ export interface ListOffersParams {
 export async function listOffers(
   session: RcSession,
   { loyaltyId, sortBy = 'offer.reserveByDate' }: ListOffersParams,
+  config: RcConfig = DEFAULT_CONFIG,
 ): Promise<OffersResult> {
-  const first = await page(session, loyaltyId, 1, sortBy);
+  const first = await page(session, loyaltyId, 1, sortBy, config);
 
   const player = {
     firstName: str(first.data?.firstName),
@@ -356,7 +361,7 @@ export async function listOffers(
   const totalPages = Number(first.data?.totalPages) || 1;
 
   for (let n = 2; n <= totalPages; n++) {
-    const next = await page(session, loyaltyId, n, sortBy);
+    const next = await page(session, loyaltyId, n, sortBy, config);
     if (Array.isArray(next.data?.offers)) raw.push(...next.data.offers);
   }
 
@@ -390,6 +395,7 @@ export interface OfferDetailParams {
 export async function fetchOfferDetail(
   session: RcSession,
   { loyaltyId, offerCode, playerOfferId }: OfferDetailParams,
+  config: RcConfig = DEFAULT_CONFIG,
 ): Promise<RcOfferDetail | null> {
   const query = new URLSearchParams({
     offerCode,
@@ -404,11 +410,12 @@ export async function fetchOfferDetail(
   const res = await request<any>(`${DETAILS}?${query}`, {
     method: 'GET',
     headers: {
-      ...casinoHeaders(session, { loyaltyId }),
+      ...casinoHeaders(session, { loyaltyId }, config),
       'x-environment-marker': '',
       'x-environment-ship-code': '',
     },
     allowStatus: [404],
+    config,
   });
 
   if (res.status === 404) {

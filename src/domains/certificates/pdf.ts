@@ -1,4 +1,4 @@
-import { USER_AGENT } from '../../http.ts';
+import { DEFAULT_CONFIG, type RcConfig } from '../../config.ts';
 import { RcError, RcUnavailableError } from '../../errors.ts';
 
 /**
@@ -8,8 +8,8 @@ import { RcError, RcUnavailableError } from '../../errors.ts';
  * this library carries no PDF dependency.
  */
 
-export async function downloadPdf(url: string): Promise<Uint8Array> {
-  const r = await fetch(url, { headers: { 'user-agent': USER_AGENT, accept: 'application/pdf,*/*' } });
+export async function downloadPdf(url: string, config: RcConfig = DEFAULT_CONFIG): Promise<Uint8Array> {
+  const r = await fetch(url, { headers: { 'user-agent': config.userAgent, accept: 'application/pdf,*/*' } });
   if (!r.ok) {
     if (r.status === 429 || r.status === 503) {
       // Numeric Retry-After only; this CDN hasn't been observed sending the
