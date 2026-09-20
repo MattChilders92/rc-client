@@ -13,6 +13,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { signIn } from '../src/auth/index.ts';
 import { casinoHeaders, commerceHeaders, guestHeaders } from '../src/headers.ts';
+import { REDACT_KEYS } from '../src/redaction.ts';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const OUT = path.join(ROOT, 'test', 'fixtures');
@@ -23,17 +24,6 @@ if (!username || !password) {
   console.error('Set RC_USERNAME and RC_PASSWORD.');
   process.exit(1);
 }
-
-/** Keys whose values are replaced wholesale. */
-const REDACT_KEYS = new Set([
-  'firstname', 'lastname', 'middlename', 'email', 'emailaddress',
-  'phone', 'mobilenumber', 'address', 'addressline1', 'addressline2',
-  'postalcode', 'zipcode', 'birthdate', 'dateofbirth',
-  'accountid', 'consumerid', 'vdsid', 'vdsids',
-  'crownandanchorid', 'casinoloyaltyid', 'cruiseloyaltyid', 'loyaltyid',
-  'captainsclubid', 'reservationid', 'bookingid', 'passengerid',
-  'access_token', 'id_token', 'accesstoken', 'tokenid', 'playerofferid',
-]);
 
 /**
  * Ids that must stay *distinct* after redaction.
