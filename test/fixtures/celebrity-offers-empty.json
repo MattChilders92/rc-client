@@ -1,0 +1,13 @@
+{
+  "_status": 200,
+  "body": {
+    "firstName": "REDACTED",
+    "lastName": "REDACTED",
+    "email": null,
+    "loyaltyId": "REDACTED",
+    "offers": [],
+    "totalOffers": 0,
+    "totalPages": 0,
+    "pageNumber": 1
+  }
+}
