@@ -1,5 +1,6 @@
 import { request, USER_AGENT } from '../http.ts';
 import { str } from '../coerce.ts';
+import { RcRequestError } from '../errors.ts';
 
 /**
  * Public cruise search — the sailings and itineraries behind royalcaribbean.com's
@@ -118,7 +119,10 @@ export async function searchCruises(params: SearchParams = {}): Promise<SearchRe
   // GraphQL reports failures inside a 200, so errors have to be read out.
   if (Array.isArray(res.data?.errors) && res.data.errors.length) {
     const first = res.data.errors[0];
-    throw new Error(`Cruise search failed: ${first?.message ?? 'unknown GraphQL error'}`);
+    throw new RcRequestError(
+      `Cruise search rejected by GraphQL: ${first?.message ?? 'unknown GraphQL error'}`,
+      { status: res.status, url: URL_, body: res.data.errors },
+    );
   }
 
   const results = res.data?.data?.cruiseSearch?.results ?? {};
@@ -249,7 +253,10 @@ export async function fetchItineraryPorts(
   // GraphQL reports failures inside a 200, so errors have to be read out.
   if (Array.isArray(res.data?.errors) && res.data.errors.length) {
     const first = res.data.errors[0];
-    throw new Error(`cruiseSearch ports failed: ${first?.message ?? 'unknown GraphQL error'}`);
+    throw new RcRequestError(
+      `Cruise search (ports) rejected by GraphQL: ${first?.message ?? 'unknown GraphQL error'}`,
+      { status: res.status, url: URL_, body: res.data.errors },
+    );
   }
   const results = res.data?.data?.cruiseSearch?.results ?? {};
   const cruises: any[] = Array.isArray(results.cruises) ? results.cruises : [];
