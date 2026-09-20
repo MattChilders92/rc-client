@@ -3,6 +3,7 @@ import { commerceHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { str } from '../coerce.ts';
 import { resolveConfig, type RcConfig } from '../config.ts';
+import type { Brand } from '../brand.ts';
 
 /**
  * The guest's own reservations.
@@ -111,7 +112,7 @@ function applyEnrichment(booking: RcBooking, detail: any): RcBooking {
  */
 export interface ListBookingsOptions {
   /** `R` for Royal Caribbean, `C` for Celebrity. Defaults to `R`. */
-  brand?: 'R' | 'C';
+  brand?: Brand;
   /**
    * Skip the enrichment call. The links alone say which reservations exist, and
    * enrichment is an extra round trip that frequently returns nothing.

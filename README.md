@@ -52,7 +52,8 @@ The second argument is a `Partial<RcConfig>`; anything left out falls back to
 the default. That includes an explicit `undefined` —
 `{ appKey: process.env.RC_APP_KEY }` is safe to pass even when the variable is
 unset, because each field is resolved individually rather than merged with a
-spread.
+spread. `brand` lives on this same options object — see [Brands](#brands) —
+because it is not itself part of `RcConfig`.
 
 | Field | Default | |
 | --- | --- | --- |
@@ -72,6 +73,46 @@ working.
 `RoomQuery.officeCode` (Royal's booking-office code, e.g. `MIA`) and
 `ProductQuery.regionCode` (the catalogue region, e.g. `ALCAN`) are also
 settable per call, for callers outside the US site's defaults.
+
+## Brands
+
+Royal Caribbean and Celebrity Cruises are both handled, selected once:
+
+```ts
+const rc = new RcClient({ username, password }, { brand: 'C' });
+```
+
+`brand` defaults to `'R'`. Brand is a **host** decision, not a path one: it
+picks between `www.royalcaribbean.com` and `www.celebritycruises.com` for the
+APIs that differ per brand, while a handful of others are shared and reached
+through Royal's host regardless of `brand`.
+
+| Brand-aware | Shared, unaffected by `brand` |
+| --- | --- |
+| Cruise search, itinerary ports | Sign-in |
+| Room pricing | The guest account (one call returns every brand's loyalty) |
+| Casino loyalty, casino offers | Product pricing |
+| Bookings | Instant Reward certificates (Royal's Club Royale PDFs only) |
+
+**The host and the loyalty number must belong to the same brand.** A Crown &
+Anchor number against Celebrity's host, or a Captain's Club number against
+Royal's, both come back `401 Unauthorized - invalid loyalty id`. `RcClient`
+resolves the right number for its own brand automatically; calling
+`listOffers`/`fetchOfferDetail` directly with a mismatched pair now throws
+`RcRequestError` naming the brand, instead of the 401 that reads like an
+expired session:
+
+```ts
+const rc = new RcClient({ username, password }, { brand: 'C' });
+const { offers } = await rc.offers(); // uses this account's Captain's Club number
+```
+
+Celebrity's signed-in paths were verified against an account with a Captain's
+Club number but **zero Blue Chip points** — Blue Chip is Celebrity's casino
+programme, and it exposes points only, no id or tier. That proves the
+empty-offers path (`outcome: 'ok'`, zero offers) and it is recorded as a
+fixture, but a **populated** Celebrity offer payload has not been verified
+against this library. Treat that shape as unconfirmed until it is.
 
 ## Why this exists
 

@@ -1,11 +1,12 @@
 import { isExpired, signIn, type Credentials, type RcSession } from './auth/index.ts';
-import { fetchAccount, type RcAccount } from './domains/account.ts';
+import { fetchAccount, loyaltyIdFor, type RcAccount } from './domains/account.ts';
 import { fetchCasinoLoyalty, type CasinoLoyalty } from './domains/casino.ts';
 import { fetchOfferDetail, listOffers, type OffersResult, type RcOfferDetail } from './domains/offers.ts';
 import {
   COVERAGE_OCCUPANCIES, fetchRooms, sweepOccupancy,
-  type Brand, type RcRoom, type RoomQuery,
+  type RcRoom, type RoomQuery,
 } from './domains/rooms.ts';
+import type { Brand } from './brand.ts';
 import {
   fetchProducts, type ProductQuery, type ProductsResult,
 } from './domains/products.ts';
@@ -40,9 +41,16 @@ export class RcClient {
   /** Concurrent callers share one sign-in rather than racing several. */
   #pending: Promise<RcSession> | null = null;
   readonly #config: RcConfig;
+  /** Which brand's casino host `offers`/`offerDetail` call, and which loyalty programme they resolve. Defaults to `'R'`. */
+  readonly #brand: Brand;
 
-  constructor(init: Credentials | { session: RcSession }, options: Partial<RcConfig> = {}) {
-    this.#config = resolveConfig(options);
+  constructor(
+    init: Credentials | { session: RcSession },
+    options: Partial<RcConfig> & { brand?: Brand } = {},
+  ) {
+    const { brand = 'R', ...config } = options;
+    this.#config = resolveConfig(config);
+    this.#brand = brand;
     if ('session' in init) {
       this.#credentials = null;
       this.#session = init.session;
@@ -92,36 +100,48 @@ export class RcClient {
     return this.#account;
   }
 
-  /** Club Royale loyalty tier and points, or `null` when the account has no casino profile. */
+  /**
+   * Casino loyalty tier and points for this client's brand — Club Royale for
+   * Royal Caribbean, Blue Chip for Celebrity — or `null` when the account has
+   * no casino profile with that brand.
+   */
   async casinoLoyalty(): Promise<CasinoLoyalty | null> {
-    return fetchCasinoLoyalty(await this.session(), this.#config);
+    return fetchCasinoLoyalty(await this.session(), { ...this.#config, brand: this.#brand });
   }
 
   /**
-   * Casino offers. The Crown & Anchor number is resolved from the account
-   * automatically — it is what the offers API keys on, and passing the account
-   * id or casino profile id instead returns nothing.
+   * Casino offers, for this client's brand. The loyalty number — Crown &
+   * Anchor for Royal, Captain's Club for Celebrity — is resolved from the
+   * account automatically via `loyaltyIdFor`; passing the account id or
+   * casino profile id instead returns nothing. When the account has no
+   * number for this brand, returns the empty/`'none'` shape without making a
+   * request — there is nothing a wrong-brand call could return but a
+   * confusing 401.
    *
    * Throws `RcRouteGoneError` if the endpoint has moved again, rather than
    * reporting an empty list. There is no `offerSailings` companion: this API
    * version exposes no route for an offer's eligible sailings.
    */
   async offers(loyaltyId?: string): Promise<OffersResult> {
-    const id = loyaltyId ?? (await this.account()).crownAndAnchorId;
+    const id = loyaltyId ?? loyaltyIdFor(await this.account(), this.#brand);
     const player = { firstName: null, lastName: null, loyaltyId: null };
     if (!id) return { offers: [], outcome: 'none', totalOffers: 0, player };
-    return listOffers(await this.session(), { loyaltyId: id }, this.#config);
+    return listOffers(await this.session(), { loyaltyId: id, brand: this.#brand }, this.#config);
   }
 
   /**
    * One grant with its eligible sailings — ship, departure port, sail date,
    * itinerary, nights, and the room categories the offer covers on it. This is
    * the detail call the hub makes when an offer is opened. Bearer only.
+   * Follows this client's brand the same way `offers` does, and returns
+   * `null` without a request when there is no loyalty number for it.
    */
   async offerDetail(offerCode: string, playerOfferId: string, loyaltyId?: string): Promise<RcOfferDetail | null> {
-    const id = loyaltyId ?? (await this.account()).crownAndAnchorId;
+    const id = loyaltyId ?? loyaltyIdFor(await this.account(), this.#brand);
     if (!id) return null;
-    return fetchOfferDetail(await this.session(), { loyaltyId: id, offerCode, playerOfferId }, this.#config);
+    return fetchOfferDetail(
+      await this.session(), { loyaltyId: id, offerCode, playerOfferId, brand: this.#brand }, this.#config,
+    );
   }
 
   /** Current and past reservations on the account. */

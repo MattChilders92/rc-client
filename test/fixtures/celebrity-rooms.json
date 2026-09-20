@@ -1,0 +1,559 @@
+{
+  "_status": 200,
+  "body": {
+    "sailings": [
+      {
+        "id": "RF4BH328_2026-11-16",
+        "packageCode": "RF4BH328",
+        "startDate": "2026-11-16",
+        "sailDate": "2026-11-16",
+        "endDate": "2026-11-20",
+        "rooms": [
+          {
+            "code": "INTERIOR",
+            "name": "Inside",
+            "description": [
+              "Sleeps 1-4. Studio, 1 bathroom. 103-245* sqft. *Accessible",
+              "Interior stateroom",
+              "Standard Amenities"
+            ],
+            "image": {
+              "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/staterooms/inside-stateroom.jpg",
+              "alt": "Inside"
+            },
+            "subtypes": [
+              {
+                "code": "Z",
+                "name": "We choose your Inside Stateroom",
+                "description": [
+                  "Sleeps 1-4. Studio, 1 bathroom. 183-245* sq. ft. *Accessible",
+                  "We choose your room in this category. It may be located on midship, high-deck areas.",
+                  "Ample living space"
+                ],
+                "image": {
+                  "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/staterooms/inside-stateroom-80-opacity.jpg",
+                  "alt": "Inside Stateroom including a King size bed, cream leather couch, coffee table, television and telephone."
+                },
+                "categoryCode": "Z",
+                "isGuarantee": true,
+                "gallery": [
+                  {
+                    "description": "Virtual tour",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/staterooms/video-360-thumbnail/rf-inside-360tour-thumbnail-2560x1440.jpg",
+                      "alt": ""
+                    },
+                    "virtualTour": {
+                      "path": "https://my.matterport.com/show/?m=v4uL6X9HupB",
+                      "alt": ""
+                    }
+                  },
+                  {
+                    "description": "Inside Stateroom including a King size bed, cream leather couch, coffee table, television and telephone.",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-IS-1.jpg",
+                      "alt": "Inside Stateroom including a King size bed, cream leather couch, coffee table, television and telephone."
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-IS-1.jpg",
+                      "alt": "Inside Stateroom including a King size bed, cream leather couch, coffee table, television and telephone."
+                    }
+                  },
+                  {
+                    "description": "Inside Stateroom including a King size bed, cream leather couch, coffee table, television and telephone.",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-IS-2.jpg",
+                      "alt": "Inside Stateroom including a King size bed, cream leather couch, coffee table, television and telephone."
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-IS-2.jpg",
+                      "alt": "Inside Stateroom including a King size bed, cream leather couch, coffee table, television and telephone."
+                    }
+                  },
+                  {
+                    "description": "Inside Stateroom Schematic",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-Inside-Stateroom-Schematic-3840x2160.jpg",
+                      "alt": "Inside Stateroom Schematic"
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-Inside-Stateroom-Schematic-3840x2160.jpg",
+                      "alt": "Inside Stateroom Schematic"
+                    }
+                  }
+                ],
+                "features": {
+                  "included": [
+                    "Sleeps 1-4. Studio, 1 bathroom. 183-245* sq. ft. *Accessible",
+                    "We choose your room in this category. It may be located on midship, high-deck areas.",
+                    "Ample living space",
+                    "Four pillows in every stateroom",
+                    "Plush 100% cotton bathrobes, slippers and towels",
+                    "Premium Custom blended bathroom products",
+                    "Celebrity Shopping Bag",
+                    "Expansive view of the ocean",
+                    "Queen size bed convertible to two lower beds (except as noted)",
+                    "Some staterooms may have a trundle bed",
+                    "Plentiful storage space in your bathroom and wardrobe",
+                    "Interactive Television system",
+                    "Hair dryer",
+                    "Fresh ice delivered to stateroom upon request"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "4"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "amenities",
+                      "title": "Amenities",
+                      "lines": [
+                        "Sleeps 1-4. Studio, 1 bathroom. 183-245* sq. ft. *Accessible",
+                        "We choose your room in this category. It may be located on midship, high-deck areas.",
+                        "Ample living space",
+                        "Four pillows in every stateroom",
+                        "Plush 100% cotton bathrobes, slippers and towels",
+                        "Premium Custom blended bathroom products",
+                        "Celebrity Shopping Bag",
+                        "Expansive view of the ocean",
+                        "Queen size bed convertible to two lower beds (except as noted)",
+                        "Some staterooms may have a trundle bed",
+                        "Plentiful storage space in your bathroom and wardrobe",
+                        "Interactive Television system",
+                        "Hair dryer",
+                        "Fresh ice delivered to stateroom upon request"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 282.03,
+                  "total": 564.06
+                }
+              },
+              {
+                "code": "IS",
+                "name": "Inside Stateroom",
+                "description": [
+                  "Sleeps 2-4. Studio, 1 bathroom. 183-245* sqft. *Accessible",
+                  "Located on lower decks. Forward, midship, and aft options",
+                  "Ample living space, including a sitting area"
+                ],
+                "image": {
+                  "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/staterooms/inside-stateroom-80-opacity.jpg",
+                  "alt": "Celebrity Cruises Inside Staterooms including a King size bed, cream leather couch, coffee table, television and telephone."
+                },
+                "categoryCode": "I2",
+                "isGuarantee": false,
+                "gallery": [
+                  {
+                    "description": "Virtual tour",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/staterooms/video-360-thumbnail/rf-inside-360tour-thumbnail-2560x1440.jpg",
+                      "alt": ""
+                    },
+                    "virtualTour": {
+                      "path": "https://my.matterport.com/show/?m=v4uL6X9HupB",
+                      "alt": ""
+                    }
+                  },
+                  {
+                    "description": "Video",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/staterooms/video-360-thumbnail/sl-inside-video-thumbnail-2560x1440.jpg",
+                      "alt": ""
+                    },
+                    "video": {
+                      "path": "https://player.vimeo.com/video/000000000?muted=1&playsinline=0&dnt=1",
+                      "alt": ""
+                    }
+                  },
+                  {
+                    "description": "Celebrity Cruises Inside Staterooms including a King size bed, cream leather couch, coffee table, television and telephone.",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-IS-1.jpg",
+                      "alt": "Celebrity Cruises Inside Staterooms including a King size bed, cream leather couch, coffee table, television and telephone."
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-IS-1.jpg",
+                      "alt": "Celebrity Cruises Inside Staterooms including a King size bed, cream leather couch, coffee table, television and telephone."
+                    }
+                  },
+                  {
+                    "description": "",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/new-images/ships/equinox-revolutionized/eq-revolutionized-inside-stateroom-2560x1440.jpg",
+                      "alt": ""
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/new-images/ships/equinox-revolutionized/eq-revolutionized-inside-stateroom-2560x1440.jpg",
+                      "alt": ""
+                    }
+                  },
+                  {
+                    "description": "",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/new-images/ships/equinox-aquaclass-bathroom-revolutionized-2560x1440.jpg",
+                      "alt": ""
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/new-images/ships/equinox-aquaclass-bathroom-revolutionized-2560x1440.jpg",
+                      "alt": ""
+                    }
+                  },
+                  {
+                    "description": "Inside Stateroom Schematic",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-Inside-Stateroom-Schematic-3840x2160.jpg",
+                      "alt": "Inside Stateroom Schematic"
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-Inside-Stateroom-Schematic-3840x2160.jpg",
+                      "alt": "Inside Stateroom Schematic"
+                    }
+                  }
+                ],
+                "features": {
+                  "included": [
+                    "Sleeps 2-4. Studio, 1 bathroom. 183-245* sqft. *Accessible",
+                    "Located on lower decks. Forward, midship, and aft options",
+                    "Ample living space, including a sitting area",
+                    "Limited number are midship on Deck 3",
+                    "King sized* mattress & eXhale® bedding",
+                    "Plentiful storage space in your bathroom and wardrobe",
+                    "Plush 100% cotton bathrobes and towels",
+                    "Four pillows in every stateroom",
+                    "Premium Custom blended bathroom products",
+                    "Fresh ice delivered to stateroom upon request",
+                    "Celebrity Shopping bag",
+                    "Some staterooms may have a trundle bed",
+                    "Interactive television system",
+                    "Hair dryer",
+                    "*Bed as large or larger than average standard international king-size bed"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "4"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "amenities",
+                      "title": "Amenities",
+                      "lines": [
+                        "Sleeps 2-4. Studio, 1 bathroom. 183-245* sqft. *Accessible",
+                        "Located on lower decks. Forward, midship, and aft options",
+                        "Ample living space, including a sitting area",
+                        "Limited number are midship on Deck 3",
+                        "King sized* mattress & eXhale® bedding",
+                        "Plentiful storage space in your bathroom and wardrobe",
+                        "Plush 100% cotton bathrobes and towels",
+                        "Four pillows in every stateroom",
+                        "Premium Custom blended bathroom products",
+                        "Fresh ice delivered to stateroom upon request",
+                        "Celebrity Shopping bag",
+                        "Some staterooms may have a trundle bed",
+                        "Interactive television system",
+                        "Hair dryer",
+                        "*Bed as large or larger than average standard international king-size bed"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 282.53,
+                  "total": 565.06
+                },
+                "roomsLeft": 2
+              },
+              {
+                "code": "IN",
+                "name": "Prime Inside Stateroom",
+                "description": [
+                  "Sleeps 2. Studio, 1 bathroom. 183-245* sqft. *Accessible",
+                  "Located on high deck in central location",
+                  "Ample living space, including a sitting area"
+                ],
+                "image": {
+                  "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/staterooms/inside-stateroom-80-opacity.jpg",
+                  "alt": "Celebrity Cruises Inside Staterooms including a King size bed, cream leather couch, coffee table, television and telephone."
+                },
+                "categoryCode": "I1",
+                "isGuarantee": false,
+                "gallery": [
+                  {
+                    "description": "Virtual tour",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/staterooms/video-360-thumbnail/rf-inside-360tour-thumbnail-2560x1440.jpg",
+                      "alt": ""
+                    },
+                    "virtualTour": {
+                      "path": "https://my.matterport.com/show/?m=v4uL6X9HupB",
+                      "alt": ""
+                    }
+                  },
+                  {
+                    "description": "Video",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/staterooms/video-360-thumbnail/sl-inside-video-thumbnail-2560x1440.jpg",
+                      "alt": ""
+                    },
+                    "video": {
+                      "path": "https://player.vimeo.com/video/000000000?muted=1&playsinline=0&dnt=1",
+                      "alt": ""
+                    }
+                  },
+                  {
+                    "description": "Celebrity Cruises Inside Staterooms including a King size bed, cream leather couch, coffee table, television and telephone.",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-IS-1.jpg",
+                      "alt": "Celebrity Cruises Inside Staterooms including a King size bed, cream leather couch, coffee table, television and telephone."
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-IS-1.jpg",
+                      "alt": "Celebrity Cruises Inside Staterooms including a King size bed, cream leather couch, coffee table, television and telephone."
+                    }
+                  },
+                  {
+                    "description": "Inside Bathroom",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/new-images/ships/equinox-veranda-bathroom-2560x1440.jpg",
+                      "alt": "Inside Bathroom"
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/new-images/ships/equinox-veranda-bathroom-2560x1440.jpg",
+                      "alt": "Inside Bathroom"
+                    }
+                  },
+                  {
+                    "description": "Inside Stateroom Schematic",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-Inside-Stateroom-Schematic-3840x2160.jpg",
+                      "alt": "Inside Stateroom Schematic"
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-Inside-Stateroom-Schematic-3840x2160.jpg",
+                      "alt": "Inside Stateroom Schematic"
+                    }
+                  }
+                ],
+                "features": {
+                  "included": [
+                    "Sleeps 2. Studio, 1 bathroom. 183-245* sqft. *Accessible",
+                    "Located on high deck in central location",
+                    "Ample living space, including a sitting area",
+                    "Higher decks: closer to pool, other outdoor venues. ",
+                    "King sized* mattress & eXhale® bedding",
+                    "Plentiful storage space in your bathroom and wardrobe",
+                    "Plush 100% cotton bathrobes and towels",
+                    "Four pillows in every stateroom",
+                    "Premium Custom blended bathroom products",
+                    "Fresh ice delivered to stateroom upon request",
+                    "Celebrity Shopping bag",
+                    "Some staterooms may have a trundle bed",
+                    "Interactive television system",
+                    "Hair dryer",
+                    "*Bed as large or larger than average standard international king-size bed"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "2"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "amenities",
+                      "title": "Amenities",
+                      "lines": [
+                        "Sleeps 2. Studio, 1 bathroom. 183-245* sqft. *Accessible",
+                        "Located on high deck in central location",
+                        "Ample living space, including a sitting area",
+                        "Higher decks: closer to pool, other outdoor venues. ",
+                        "King sized* mattress & eXhale® bedding",
+                        "Plentiful storage space in your bathroom and wardrobe",
+                        "Plush 100% cotton bathrobes and towels",
+                        "Four pillows in every stateroom",
+                        "Premium Custom blended bathroom products",
+                        "Fresh ice delivered to stateroom upon request",
+                        "Celebrity Shopping bag",
+                        "Some staterooms may have a trundle bed",
+                        "Interactive television system",
+                        "Hair dryer",
+                        "*Bed as large or larger than average standard international king-size bed"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 292.03,
+                  "total": 584.06
+                }
+              }
+            ],
+            "categoryCode": "Z",
+            "pricing": {
+              "amount": 282.03,
+              "total": 564.06
+            }
+          },
+          {
+            "code": "OUTSIDE",
+            "name": "Ocean View",
+            "description": [
+              "Sleeps 1-4. Studio, 1 bathroom. 176-289* sqft. *Accessible",
+              "Ocean view stateroom",
+              "Standard Amenities"
+            ],
+            "image": {
+              "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/staterooms/premium-oceanview.jpg",
+              "alt": "Ocean View"
+            },
+            "subtypes": [
+              {
+                "code": "Y",
+                "name": "We choose your Ocean View Stateroom",
+                "description": [
+                  "Sleeps 2-4. Studio, 1 bathroom. 176-289* sqft. *Accessible",
+                  "We choose your room in this category. Located at forward on higher decks, midship, or lower decks",
+                  "Large window"
+                ],
+                "image": {
+                  "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/rooms-overview/1752-ocean-view-rooms-overview-80-opacity.jpg",
+                  "alt": "Celebrity Cruises Ocean View Stateroom, featuring a cream leather couch, Queen size bed, small coffee table and desk."
+                },
+                "categoryCode": "Y",
+                "isGuarantee": true,
+                "gallery": [
+                  {
+                    "description": "Virtual tour",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/staterooms/video-360-thumbnail/rf-ocean-view-360tour-thumbnail-2560x1440.jpg",
+                      "alt": ""
+                    },
+                    "virtualTour": {
+                      "path": "https://my.matterport.com/show/?m=K5ZjNRLzhgC",
+                      "alt": ""
+                    }
+                  },
+                  {
+                    "description": "Celebrity Cruises Ocean View Stateroom, featuring a cream leather couch, Queen size bed, small coffee table and desk.",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-OS-2.jpg",
+                      "alt": "Celebrity Cruises Ocean View Stateroom, featuring a cream leather couch, Queen size bed, small coffee table and desk."
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-OS-2.jpg",
+                      "alt": "Celebrity Cruises Ocean View Stateroom, featuring a cream leather couch, Queen size bed, small coffee table and desk."
+                    }
+                  },
+                  {
+                    "description": "Ocean View Stateroom Schematic",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-Ocean-View-Stateroom-Schematic-3840x2160.jpg",
+                      "alt": "Ocean View Stateroom Schematic"
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-Ocean-View-Stateroom-Schematic-3840x2160.jpg",
+                      "alt": "Ocean View Stateroom Schematic"
+                    }
+                  },
+                  {
+                    "description": "Celebrity Cruises Ocean View Stateroom, featuring a cream leather couch, Queen size bed, small coffee table and desk.",
+                    "thumbnail": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-OS-1.jpg",
+                      "alt": "Celebrity Cruises Ocean View Stateroom, featuring a cream leather couch, Queen size bed, small coffee table and desk."
+                    },
+                    "image": {
+                      "path": "https://assets.dm.rccl.com/is/image/RoyalCaribbeanCruises/celebrity/images/staterooms-schematics/SL-OS-1.jpg",
+                      "alt": "Celebrity Cruises Ocean View Stateroom, featuring a cream leather couch, Queen size bed, small coffee table and desk."
+                    }
+                  }
+                ],
+                "features": {
+                  "included": [
+                    "Sleeps 2-4. Studio, 1 bathroom. 176-289* sqft. *Accessible",
+                    "We choose your room in this category. Located at forward on higher decks, midship, or lower decks",
+                    "Large window",
+                    "Expansive view of the ocean",
+                    "Celebrity's eXhale™ bedding & Cashmere Mattress*",
+                    "Plush 100% cotton bathrobes, slippers and towels",
+                    "Four pillows in every stateroom",
+                    "Premium Custom blended bathroom products",
+                    "Celebrity Shopping Bag",
+                    "Queen size bed convertible to two lower beds (except as noted)",
+                    "Some staterooms may have a trundle bed",
+                    "Plentiful storage space in your bathroom and wardrobe",
+                    "Interactive Television system",
+                    "Hair dryer",
+                    "Fresh ice delivered to stateroom upon request"
+                  ],
+                  "singleFeatures": [
+                    {
+                      "code": "occupancy",
+                      "title": "Occupancy",
+                      "lines": [
+                        "4"
+                      ]
+                    }
+                  ],
+                  "roomFeatures": [
+                    {
+                      "code": "amenities",
+                      "title": "Amenities",
+                      "lines": [
+                        "Sleeps 2-4. Studio, 1 bathroom. 176-289* sqft. *Accessible",
+                        "We choose your room in this category. Located at forward on higher decks, midship, or lower decks",
+                        "Large window",
+                        "Expansive view of the ocean",
+                        "Celebrity's eXhale™ bedding & Cashmere Mattress*",
+                        "Plush 100% cotton bathrobes, slippers and towels",
+                        "Four pillows in every stateroom",
+                        "Premium Custom blended bathroom products",
+                        "Celebrity Shopping Bag",
+                        "Queen size bed convertible to two lower beds (except as noted)",
+                        "Some staterooms may have a trundle bed",
+                        "Plentiful storage space in your bathroom and wardrobe",
+                        "Interactive Television system",
+                        "Hair dryer",
+                        "Fresh ice delivered to stateroom upon request"
+                      ]
+                    }
+                  ]
+                },
+                "pricing": {
+                  "amount": 401.03,
+                  "total": 802.06
+                }
+              }
+            ],
+            "categoryCode": "Y",
+            "pricing": {
+              "amount": 401.03,
+              "total": 802.06
+            }
+          }
+        ],
+        "includesTaxesAndFees": true,
+        "voyageType": "OCEAN",
+        "taxesAndFees": {
+          "amount": 153.53,
+          "total": 307.06
+        },
+        "status": "OPEN"
+      }
+    ]
+  }
+}

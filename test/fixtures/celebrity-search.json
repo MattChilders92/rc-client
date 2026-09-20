@@ -1,0 +1,644 @@
+{
+  "_status": 200,
+  "body": {
+    "data": {
+      "cruiseSearch": {
+        "results": {
+          "total": 656,
+          "cruises": [
+            {
+              "id": "RF04FLL-000000000",
+              "productViewLink": "itinerary/4-night-key-west-bahamas-cruise-from-fort-lauderdale-on-celebrity-RF4BH328?sailDate=2026-11-16&packageCode=RF4BH328&groupId=RF04FLL-000000000&country=USA",
+              "masterSailing": {
+                "itinerary": {
+                  "name": "Key West & Bahamas",
+                  "code": "RF4BH330",
+                  "totalNights": 4,
+                  "departurePort": {
+                    "code": "FLL",
+                    "name": "Fort Lauderdale",
+                    "countryCode": "USA"
+                  },
+                  "destination": {
+                    "code": "BAHAM",
+                    "name": "Bahamas"
+                  },
+                  "ship": {
+                    "code": "RF",
+                    "name": "Celebrity Reflection"
+                  }
+                }
+              },
+              "sailings": [
+                {
+                  "id": "RF4BH328_2026-11-16",
+                  "sailDate": "2026-11-16",
+                  "startDate": "2026-11-16",
+                  "endDate": "2026-11-20",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH328&sDT=2026-11-16&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH328"
+                  }
+                },
+                {
+                  "id": "RF4BH330_2026-11-23",
+                  "sailDate": "2026-11-23",
+                  "startDate": "2026-11-23",
+                  "endDate": "2026-11-27",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH330&sDT=2026-11-23&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH330"
+                  }
+                },
+                {
+                  "id": "RF4BH328_2026-11-30",
+                  "sailDate": "2026-11-30",
+                  "startDate": "2026-11-30",
+                  "endDate": "2026-12-04",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH328&sDT=2026-11-30&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH328"
+                  }
+                },
+                {
+                  "id": "RF4BH330_2026-12-07",
+                  "sailDate": "2026-12-07",
+                  "startDate": "2026-12-07",
+                  "endDate": "2026-12-11",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH330&sDT=2026-12-07&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH330"
+                  }
+                },
+                {
+                  "id": "RF4BH328_2027-01-11",
+                  "sailDate": "2027-01-11",
+                  "startDate": "2027-01-11",
+                  "endDate": "2027-01-15",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH328&sDT=2027-01-11&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH328"
+                  }
+                },
+                {
+                  "id": "RF4BH560_2027-03-22",
+                  "sailDate": "2027-03-22",
+                  "startDate": "2027-03-22",
+                  "endDate": "2027-03-26",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH560&sDT=2027-03-22&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH560"
+                  }
+                },
+                {
+                  "id": "RF4BH560_2027-03-29",
+                  "sailDate": "2027-03-29",
+                  "startDate": "2027-03-29",
+                  "endDate": "2027-04-02",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH560&sDT=2027-03-29&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH560"
+                  }
+                },
+                {
+                  "id": "RF4BH560_2027-04-05",
+                  "sailDate": "2027-04-05",
+                  "startDate": "2027-04-05",
+                  "endDate": "2027-04-09",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH560&sDT=2027-04-05&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH560"
+                  }
+                },
+                {
+                  "id": "RF4BH560_2027-04-19",
+                  "sailDate": "2027-04-19",
+                  "startDate": "2027-04-19",
+                  "endDate": "2027-04-23",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH560&sDT=2027-04-19&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH560"
+                  }
+                },
+                {
+                  "id": "RF4BH495_2027-05-03",
+                  "sailDate": "2027-05-03",
+                  "startDate": "2027-05-03",
+                  "endDate": "2027-05-07",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH495&sDT=2027-05-03&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH495"
+                  }
+                },
+                {
+                  "id": "RF4BH495_2027-05-10",
+                  "sailDate": "2027-05-10",
+                  "startDate": "2027-05-10",
+                  "endDate": "2027-05-14",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH495&sDT=2027-05-10&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH495"
+                  }
+                },
+                {
+                  "id": "RF4BH495_2027-05-31",
+                  "sailDate": "2027-05-31",
+                  "startDate": "2027-05-31",
+                  "endDate": "2027-06-04",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH495&sDT=2027-05-31&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH495"
+                  }
+                },
+                {
+                  "id": "RF4BH495_2027-06-07",
+                  "sailDate": "2027-06-07",
+                  "startDate": "2027-06-07",
+                  "endDate": "2027-06-11",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH495&sDT=2027-06-07&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH495"
+                  }
+                },
+                {
+                  "id": "RF4BH495_2027-07-05",
+                  "sailDate": "2027-07-05",
+                  "startDate": "2027-07-05",
+                  "endDate": "2027-07-09",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH495&sDT=2027-07-05&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH495"
+                  }
+                },
+                {
+                  "id": "RF4BH495_2027-07-12",
+                  "sailDate": "2027-07-12",
+                  "startDate": "2027-07-12",
+                  "endDate": "2027-07-16",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH495&sDT=2027-07-12&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH495"
+                  }
+                },
+                {
+                  "id": "RF4BH512_2027-07-19",
+                  "sailDate": "2027-07-19",
+                  "startDate": "2027-07-19",
+                  "endDate": "2027-07-23",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH512&sDT=2027-07-19&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH512"
+                  }
+                },
+                {
+                  "id": "RF4BH501_2027-11-29",
+                  "sailDate": "2027-11-29",
+                  "startDate": "2027-11-29",
+                  "endDate": "2027-12-03",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH501&sDT=2027-11-29&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH501"
+                  }
+                },
+                {
+                  "id": "RF4BH501_2027-12-13",
+                  "sailDate": "2027-12-13",
+                  "startDate": "2027-12-13",
+                  "endDate": "2027-12-17",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH501&sDT=2027-12-13&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH501"
+                  }
+                },
+                {
+                  "id": "RF4BH504_2028-01-10",
+                  "sailDate": "2028-01-10",
+                  "startDate": "2028-01-10",
+                  "endDate": "2028-01-14",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH504&sDT=2028-01-10&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH504"
+                  }
+                },
+                {
+                  "id": "RF4BH504_2028-02-21",
+                  "sailDate": "2028-02-21",
+                  "startDate": "2028-02-21",
+                  "endDate": "2028-02-25",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH504&sDT=2028-02-21&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH504"
+                  }
+                },
+                {
+                  "id": "RF4BH504_2028-03-06",
+                  "sailDate": "2028-03-06",
+                  "startDate": "2028-03-06",
+                  "endDate": "2028-03-10",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH504&sDT=2028-03-06&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH504"
+                  }
+                },
+                {
+                  "id": "RF4BH504_2028-03-20",
+                  "sailDate": "2028-03-20",
+                  "startDate": "2028-03-20",
+                  "endDate": "2028-03-24",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH504&sDT=2028-03-20&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH504"
+                  }
+                },
+                {
+                  "id": "RF4BH504_2028-04-03",
+                  "sailDate": "2028-04-03",
+                  "startDate": "2028-04-03",
+                  "endDate": "2028-04-07",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4BH504&sDT=2028-04-03&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4BH504"
+                  }
+                },
+                {
+                  "id": "RF4HB522_2028-04-10",
+                  "sailDate": "2028-04-10",
+                  "startDate": "2028-04-10",
+                  "endDate": "2028-04-14",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=RF04FLL-000000000&pID=RF4HB522&sDT=2028-04-10&sCD=RF&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "RF4HB522"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "XC07MIA-000000000",
+              "productViewLink": "itinerary/7-night-bahamas-mexico-cayman-from-miami-on-celebrity-XC07E474?sailDate=2026-12-13&packageCode=XC07E474&groupId=XC07MIA-000000000&country=USA",
+              "masterSailing": {
+                "itinerary": {
+                  "name": "Bahamas, Mexico & Cayman",
+                  "code": "XC07E474",
+                  "totalNights": 7,
+                  "departurePort": {
+                    "code": "MIA",
+                    "name": "Miami",
+                    "countryCode": "USA"
+                  },
+                  "destination": {
+                    "code": "CARIB",
+                    "name": "Caribbean"
+                  },
+                  "ship": {
+                    "code": "XC",
+                    "name": "Celebrity Xcel"
+                  }
+                }
+              },
+              "sailings": [
+                {
+                  "id": "XC07E474_2026-12-13",
+                  "sailDate": "2026-12-13",
+                  "startDate": "2026-12-13",
+                  "endDate": "2026-12-20",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=XC07MIA-000000000&pID=XC07E474&sDT=2026-12-13&sCD=XC&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "XC07E474"
+                  }
+                },
+                {
+                  "id": "XC07E474_2027-01-03",
+                  "sailDate": "2027-01-03",
+                  "startDate": "2027-01-03",
+                  "endDate": "2027-01-10",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=XC07MIA-000000000&pID=XC07E474&sDT=2027-01-03&sCD=XC&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "XC07E474"
+                  }
+                },
+                {
+                  "id": "XC07E474_2027-02-14",
+                  "sailDate": "2027-02-14",
+                  "startDate": "2027-02-14",
+                  "endDate": "2027-02-21",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=XC07MIA-000000000&pID=XC07E474&sDT=2027-02-14&sCD=XC&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "XC07E474"
+                  }
+                },
+                {
+                  "id": "XC07E474_2027-03-07",
+                  "sailDate": "2027-03-07",
+                  "startDate": "2027-03-07",
+                  "endDate": "2027-03-14",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=XC07MIA-000000000&pID=XC07E474&sDT=2027-03-07&sCD=XC&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "XC07E474"
+                  }
+                },
+                {
+                  "id": "XC07E474_2027-03-28",
+                  "sailDate": "2027-03-28",
+                  "startDate": "2027-03-28",
+                  "endDate": "2027-04-04",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=XC07MIA-000000000&pID=XC07E474&sDT=2027-03-28&sCD=XC&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "XC07E474"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "BY07FLL-000000000",
+              "productViewLink": "itinerary/7-night-grand-cayman-mexico-bahamas-from-fort-lauderdale-on-celebrity-BY07W678?sailDate=2027-04-11&packageCode=BY07W678&groupId=BY07FLL-000000000&country=USA",
+              "masterSailing": {
+                "itinerary": {
+                  "name": "Grand Cayman, Mexico & Bahamas",
+                  "code": "BY07W678",
+                  "totalNights": 7,
+                  "departurePort": {
+                    "code": "FLL",
+                    "name": "Fort Lauderdale",
+                    "countryCode": "USA"
+                  },
+                  "destination": {
+                    "code": "CARIB",
+                    "name": "Caribbean"
+                  },
+                  "ship": {
+                    "code": "BY",
+                    "name": "Celebrity Beyond"
+                  }
+                }
+              },
+              "sailings": [
+                {
+                  "id": "BY07W678_2026-12-06",
+                  "sailDate": "2026-12-06",
+                  "startDate": "2026-12-06",
+                  "endDate": "2026-12-13",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=BY07FLL-000000000&pID=BY07W678&sDT=2026-12-06&sCD=BY&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "BY07W678"
+                  }
+                },
+                {
+                  "id": "BY07W679_2026-12-27",
+                  "sailDate": "2026-12-27",
+                  "startDate": "2026-12-27",
+                  "endDate": "2027-01-03",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=BY07FLL-000000000&pID=BY07W679&sDT=2026-12-27&sCD=BY&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "BY07W679"
+                  }
+                },
+                {
+                  "id": "BY07W678_2027-01-17",
+                  "sailDate": "2027-01-17",
+                  "startDate": "2027-01-17",
+                  "endDate": "2027-01-24",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=BY07FLL-000000000&pID=BY07W678&sDT=2027-01-17&sCD=BY&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "BY07W678"
+                  }
+                },
+                {
+                  "id": "BY07W678_2027-02-28",
+                  "sailDate": "2027-02-28",
+                  "startDate": "2027-02-28",
+                  "endDate": "2027-03-07",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=BY07FLL-000000000&pID=BY07W678&sDT=2027-02-28&sCD=BY&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "BY07W678"
+                  }
+                },
+                {
+                  "id": "BY07W678_2027-04-11",
+                  "sailDate": "2027-04-11",
+                  "startDate": "2027-04-11",
+                  "endDate": "2027-04-18",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=BY07FLL-000000000&pID=BY07W678&sDT=2027-04-11&sCD=BY&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "BY07W678"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "SI06FLL-000000000",
+              "productViewLink": "itinerary/6-night-grand-cayman-mexico-bahamas-from-fort-lauderdale-on-celebrity-SI06W270?sailDate=2026-12-13&packageCode=SI06W270&groupId=SI06FLL-000000000&country=USA",
+              "masterSailing": {
+                "itinerary": {
+                  "name": "Grand Cayman, Mexico & Bahamas ",
+                  "code": "SI06W270",
+                  "totalNights": 6,
+                  "departurePort": {
+                    "code": "FLL",
+                    "name": "Fort Lauderdale",
+                    "countryCode": "USA"
+                  },
+                  "destination": {
+                    "code": "CARIB",
+                    "name": "Caribbean"
+                  },
+                  "ship": {
+                    "code": "SI",
+                    "name": "Celebrity Silhouette"
+                  }
+                }
+              },
+              "sailings": [
+                {
+                  "id": "SI06W270_2026-11-15",
+                  "sailDate": "2026-11-15",
+                  "startDate": "2026-11-15",
+                  "endDate": "2026-11-21",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI06FLL-000000000&pID=SI06W270&sDT=2026-11-15&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI06W270"
+                  }
+                },
+                {
+                  "id": "SI06W270_2026-12-13",
+                  "sailDate": "2026-12-13",
+                  "startDate": "2026-12-13",
+                  "endDate": "2026-12-19",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI06FLL-000000000&pID=SI06W270&sDT=2026-12-13&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI06W270"
+                  }
+                },
+                {
+                  "id": "SI06W272_2026-12-27",
+                  "sailDate": "2026-12-27",
+                  "startDate": "2026-12-27",
+                  "endDate": "2027-01-02",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI06FLL-000000000&pID=SI06W272&sDT=2026-12-27&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI06W272"
+                  }
+                },
+                {
+                  "id": "SI06W293_2027-03-07",
+                  "sailDate": "2027-03-07",
+                  "startDate": "2027-03-07",
+                  "endDate": "2027-03-13",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI06FLL-000000000&pID=SI06W293&sDT=2027-03-07&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI06W293"
+                  }
+                }
+              ]
+            },
+            {
+              "id": "SI08FLL-000000000",
+              "productViewLink": "itinerary/8-night-aruba-curacao-bonaire-cruise-from-fort-lauderdale-on-celebrity-SI08D162?sailDate=2027-10-30&packageCode=SI08D162&groupId=SI08FLL-000000000&country=USA",
+              "masterSailing": {
+                "itinerary": {
+                  "name": "Aruba, Curacao & Bonaire",
+                  "code": "SI08D162",
+                  "totalNights": 8,
+                  "departurePort": {
+                    "code": "FLL",
+                    "name": "Fort Lauderdale",
+                    "countryCode": "USA"
+                  },
+                  "destination": {
+                    "code": "CARIB",
+                    "name": "Caribbean"
+                  },
+                  "ship": {
+                    "code": "SI",
+                    "name": "Celebrity Silhouette"
+                  }
+                }
+              },
+              "sailings": [
+                {
+                  "id": "SI08D128_2026-11-21",
+                  "sailDate": "2026-11-21",
+                  "startDate": "2026-11-21",
+                  "endDate": "2026-11-29",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D128&sDT=2026-11-21&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D128"
+                  }
+                },
+                {
+                  "id": "SI08D128_2026-12-05",
+                  "sailDate": "2026-12-05",
+                  "startDate": "2026-12-05",
+                  "endDate": "2026-12-13",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D128&sDT=2026-12-05&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D128"
+                  }
+                },
+                {
+                  "id": "SI08D129_2026-12-19",
+                  "sailDate": "2026-12-19",
+                  "startDate": "2026-12-19",
+                  "endDate": "2026-12-27",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D129&sDT=2026-12-19&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D129"
+                  }
+                },
+                {
+                  "id": "SI08D128_2027-01-02",
+                  "sailDate": "2027-01-02",
+                  "startDate": "2027-01-02",
+                  "endDate": "2027-01-10",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D128&sDT=2027-01-02&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D128"
+                  }
+                },
+                {
+                  "id": "SI08D128_2027-03-27",
+                  "sailDate": "2027-03-27",
+                  "startDate": "2027-03-27",
+                  "endDate": "2027-04-04",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D128&sDT=2027-03-27&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D128"
+                  }
+                },
+                {
+                  "id": "SI08D128_2027-04-10",
+                  "sailDate": "2027-04-10",
+                  "startDate": "2027-04-10",
+                  "endDate": "2027-04-18",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D128&sDT=2027-04-10&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D128"
+                  }
+                },
+                {
+                  "id": "SI08D162_2027-10-30",
+                  "sailDate": "2027-10-30",
+                  "startDate": "2027-10-30",
+                  "endDate": "2027-11-07",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D162&sDT=2027-10-30&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D162"
+                  }
+                },
+                {
+                  "id": "SI08D162_2027-11-13",
+                  "sailDate": "2027-11-13",
+                  "startDate": "2027-11-13",
+                  "endDate": "2027-11-21",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D162&sDT=2027-11-13&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D162"
+                  }
+                },
+                {
+                  "id": "SI08D162_2027-11-27",
+                  "sailDate": "2027-11-27",
+                  "startDate": "2027-11-27",
+                  "endDate": "2027-12-05",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D162&sDT=2027-11-27&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D162"
+                  }
+                },
+                {
+                  "id": "SI08D162_2027-12-11",
+                  "sailDate": "2027-12-11",
+                  "startDate": "2027-12-11",
+                  "endDate": "2027-12-19",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D162&sDT=2027-12-11&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D162"
+                  }
+                },
+                {
+                  "id": "SI08D164_2028-01-22",
+                  "sailDate": "2028-01-22",
+                  "startDate": "2028-01-22",
+                  "endDate": "2028-01-30",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D164&sDT=2028-01-22&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D164"
+                  }
+                },
+                {
+                  "id": "SI08D168_2028-04-01",
+                  "sailDate": "2028-04-01",
+                  "startDate": "2028-04-01",
+                  "endDate": "2028-04-09",
+                  "bookingLink": "/booking-cruise/selectRoom/stateroomQuantity?groupId=SI08FLL-000000000&pID=SI08D168&sDT=2028-04-01&sCD=SI&sCT=CO&country=USA",
+                  "itinerary": {
+                    "code": "SI08D168"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      }
+    }
+  }
+}

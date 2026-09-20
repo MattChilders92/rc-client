@@ -2,6 +2,7 @@ import { anonymousHeaders } from '../headers.ts';
 import { request } from '../http.ts';
 import { num as coerceNum, str } from '../coerce.ts';
 import { resolveConfig, type RcConfig } from '../config.ts';
+import { brandHost, type Brand } from '../brand.ts';
 
 /**
  * Cabin categories and fares for a sailing.
@@ -15,14 +16,6 @@ import { resolveConfig, type RcConfig } from '../config.ts';
  * cycles guest counts and merges, which is how full coverage is obtained.
  */
 
-const BASE: Record<Brand, string> = {
-  RC: 'https://www.royalcaribbean.com/itinerary/api/v1',
-  CEL: 'https://www.celebritycruises.com/itinerary/api/v1',
-};
-
-/** Which site's inventory to query — Royal Caribbean or Celebrity. Each has its own base URL. */
-export type Brand = 'RC' | 'CEL';
-
 /** What to look up cabins for: sailing, party size, and locale. */
 export interface RoomQuery {
   /** Royal's sailing identifier, as used across the booking APIs. */
@@ -33,7 +26,7 @@ export interface RoomQuery {
   adults?: number;
   /** Defaults to 0. */
   children?: number;
-  /** `RC` or `CEL`. Defaults to `RC`. */
+  /** `R` or `C`. Defaults to `R`. */
   brand?: Brand;
   /** ISO country the guest is booking from. Defaults to `USA`. */
   countryCode?: string;
@@ -91,7 +84,7 @@ export function roomKey(room: Pick<RcRoom, 'categoryCode' | 'subtypeCode' | 'gua
 }
 
 function url(q: RoomQuery): string {
-  const base = BASE[q.brand ?? 'RC'];
+  const base = `https://${brandHost(q.brand ?? 'R')}/itinerary/api/v1`;
   const params = new URLSearchParams({
     packageCode: q.packageCode,
     sailDate: q.sailDate,

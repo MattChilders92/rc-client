@@ -12,7 +12,8 @@ export const REDACT_KEYS: ReadonlySet<string> = new Set([
   'postalcode', 'zipcode', 'birthdate', 'dateofbirth',
   'accountid', 'consumerid', 'vdsid', 'vdsids',
   'crownandanchorid', 'casinoloyaltyid', 'cruiseloyaltyid', 'loyaltyid',
-  'captainsclubid', 'reservationid', 'bookingid', 'passengerid',
+  'captainsclubid', 'venetiansocietyid', 'clubroyaleid',
+  'reservationid', 'bookingid', 'passengerid',
   'access_token', 'id_token', 'accesstoken', 'tokenid', 'playerofferid',
   // `city`/`state` only ever appear in this codebase's fixtures inside a
   // guest's own contact/address object (account.json, casino-loyalty.json).
