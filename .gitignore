@@ -3,3 +3,4 @@ node_modules/
 test/fixtures/*.local.json
 *.tsbuildinfo
 .superpowers/
+dist/
