@@ -32,12 +32,32 @@ const isScrubbed = (v: unknown): boolean =>
   (typeof v === 'string' && SCRUBBED_UUID.test(v)) ||
   (typeof v === 'string' && v.endsWith('@example.com'));
 
-function* walk(node: unknown, trail: string[] = []): Generator<{ key: string; value: unknown; trail: string[] }> {
-  if (Array.isArray(node)) { for (const [i, v] of node.entries()) yield* walk(v, [...trail, String(i)]); return; }
+/**
+ * `parentKey` is the key that owns an array being walked — e.g. `vdsIds` for
+ * `{ vdsIds: [...] }`. A primitive element sitting directly in that array is
+ * exactly as identifying as a bare value under that key, so it is yielded
+ * against `parentKey` too, not silently skipped the way the original walk
+ * (which only ever recursed into arrays, never checked their own elements)
+ * let `vdsIds` through despite `vdsids` being in `REDACT_KEYS` for exactly
+ * this shape.
+ */
+function* walk(
+  node: unknown, trail: string[] = [], parentKey = '',
+): Generator<{ key: string; value: unknown; trail: string[] }> {
+  if (Array.isArray(node)) {
+    for (const [i, v] of node.entries()) {
+      if (v !== null && typeof v === 'object') {
+        yield* walk(v, [...trail, String(i)]);
+      } else {
+        yield { key: parentKey, value: v, trail: [...trail, String(i)] };
+      }
+    }
+    return;
+  }
   if (node && typeof node === 'object') {
     for (const [k, v] of Object.entries(node)) {
       yield { key: k, value: v, trail: [...trail, k] };
-      yield* walk(v, [...trail, k]);
+      yield* walk(v, [...trail, k], k);
     }
   }
 }
