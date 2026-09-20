@@ -23,4 +23,6 @@ export const REDACT_KEYS: ReadonlySet<string> = new Set([
   // to redact unscoped. If a future fixture ever adds a port city/state,
   // re-check this comment before assuming it's personal.
   'city', 'state',
+  // Not identifying alone, but personal, and nothing reads it.
+  'gender',
 ]);

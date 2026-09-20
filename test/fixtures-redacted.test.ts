@@ -46,7 +46,10 @@ function* walk(
 ): Generator<{ key: string; value: unknown; trail: string[] }> {
   if (Array.isArray(node)) {
     for (const [i, v] of node.entries()) {
-      if (v !== null && typeof v === 'object') {
+      if (Array.isArray(v)) {
+        // Still under the same key: `{ vdsIds: [["x"]] }` is as redacted as `{ vdsIds: ["x"] }`.
+        yield* walk(v, [...trail, String(i)], parentKey);
+      } else if (v !== null && typeof v === 'object') {
         yield* walk(v, [...trail, String(i)]);
       } else {
         yield { key: parentKey, value: v, trail: [...trail, String(i)] };
