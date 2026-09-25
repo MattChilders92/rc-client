@@ -38,6 +38,10 @@ export {
 } from './domains/products.ts';
 export { listBookings, type RcBooking, type ListBookingsOptions } from './domains/bookings.ts';
 export {
+  fetchVoyage, parseVoyage, voyageId,
+  type RcVoyage, type RcVoyagePort, type VoyageParts,
+} from './domains/voyage.ts';
+export {
   searchCruises, fetchItineraryPorts, parseItineraryPorts,
   type RcCruise, type RcSailingSummary, type SearchParams, type SearchResult,
   type RcItineraryPorts, type RcItineraryDay,

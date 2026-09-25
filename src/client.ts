@@ -11,6 +11,7 @@ import {
   fetchProducts, type ProductQuery, type ProductsResult,
 } from './domains/products.ts';
 import { listBookings, type ListBookingsOptions, type RcBooking } from './domains/bookings.ts';
+import { fetchVoyage, type RcVoyage, type VoyageParts } from './domains/voyage.ts';
 import {
   fetchItineraryPorts, searchCruises,
   type RcItineraryPorts, type SearchParams, type SearchResult,
@@ -152,6 +153,16 @@ export class RcClient {
   /** Onboard product catalogue and prices for a ship and date window. */
   async products(query: ProductQuery): Promise<ProductsResult> {
     return fetchProducts(await this.session(), query, this.#config);
+  }
+
+  /**
+   * Voyage-scoped sailing detail — nights, itinerary, ports and
+   * `isSailingClosed` for one sailing, independent of whose booking (if any)
+   * is attached to it. Accepts either the voyage id directly or `{ shipCode,
+   * sailDate }`.
+   */
+  async voyage(voyageOrParts: string | VoyageParts): Promise<RcVoyage> {
+    return fetchVoyage(await this.session(), voyageOrParts, this.#config);
   }
 
   /** Cabins at one occupancy. Needs no credentials, but is here for symmetry. */

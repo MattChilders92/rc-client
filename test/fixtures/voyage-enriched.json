@@ -1,0 +1,317 @@
+{
+  "_status": 200,
+  "body": {
+    "status": 200,
+    "errors": [],
+    "payload": {
+      "sailingInfo": [
+        {
+          "shipCode": "LE",
+          "shipName": "LEGEND OF THE SEAS",
+          "duration": 8,
+          "sailDate": "20261114",
+          "sailingEndDate": "20261122",
+          "voyageImage": {
+            "web": [
+              {
+                "title": "FLL-web",
+                "fileReference": "/content/dam/excalibur/digital-web/guest-account/dashboard/FLL-web.jpg",
+                "height": 400,
+                "width": 400
+              }
+            ],
+            "mobile": [
+              {
+                "title": "FLL-mobile",
+                "fileReference": "/content/dam/excalibur/digital-web/guest-account/dashboard/FLL-mobile.jpg",
+                "height": 400,
+                "width": 400
+              }
+            ]
+          },
+          "regionCode": "CARIB",
+          "masterSailDate": {
+            "master1SailDate": "20261114",
+            "master2SailDate": "20261114"
+          },
+          "voyageType": "REGULAR",
+          "voyageId": 53027,
+          "canceled": false,
+          "canceledReason": "",
+          "canceledDate": "",
+          "charter": false,
+          "blacklist": [],
+          "isOlciEnabled": true,
+          "isCheckinAvailable": false,
+          "checkinWindowRemainingTime": "P0Y0M0DT0H0M0S",
+          "checkinStart": "P0Y0M5DT1H31M3S",
+          "checkWindowOpenStartDateTime": "2026-09-30T00:00:00-04:00",
+          "itinerary": {
+            "source": "AEM",
+            "description": "8 Nt Southern Caribbean & Perfect Day",
+            "portInfo": [
+              {
+                "identifier": "day-1-FLL",
+                "title": "Fort Lauderdale, Florida",
+                "description": "",
+                "arrivalDateTime": "20261114T000000",
+                "departureDateTime": "20261114T160000",
+                "pointsOfInterest": [
+                  {
+                    "title": "location 1"
+                  },
+                  {
+                    "title": "location 2"
+                  }
+                ],
+                "portImageURL": "/content/dam/excalibur/digital-destinations/port-destinations/departure-ports/fort-lauderdale-florida-fll/stock-photo-fort-lauderdale-beach-florida-usa-at-dawn-715800955-FLL.jpg",
+                "gangwayUp": "153000",
+                "portCode": "FLL",
+                "portType": "EMBARK",
+                "day": 1,
+                "shortDescription": "Fort Lauderdale, Florida"
+              },
+              {
+                "identifier": "day-2-CRU",
+                "title": "Cruising",
+                "description": "",
+                "arrivalDateTime": "20261115T000000",
+                "departureDateTime": "20261115T235959",
+                "pointsOfInterest": [
+                  {
+                    "title": "location 1",
+                    "latitude": 24.026434,
+                    "longitude": -85.002541
+                  },
+                  {
+                    "title": "location 2"
+                  }
+                ],
+                "portImageURL": "/content/dam/global-fleet/celebrity/dining/solstice-equinox/dining-venues/sunset-bar/EQ-sunset-Bar-back-of-ship-ocean-leisure-view-10-09-17--DSC_0667.jpg",
+                "portCode": "CRU",
+                "portType": "CRUISING",
+                "day": 2,
+                "shortDescription": "shortDescription",
+                "bazaarDayType": "ANCHOR"
+              },
+              {
+                "identifier": "day-3-CRU",
+                "title": "Cruising",
+                "description": "",
+                "arrivalDateTime": "20261116T000000",
+                "departureDateTime": "20261116T235959",
+                "pointsOfInterest": [
+                  {
+                    "title": "location 1",
+                    "latitude": 24.026434,
+                    "longitude": -85.002541
+                  },
+                  {
+                    "title": "location 2"
+                  }
+                ],
+                "portImageURL": "/content/dam/global-fleet/celebrity/dining/solstice-equinox/dining-venues/sunset-bar/EQ-sunset-Bar-back-of-ship-ocean-leisure-view-10-09-17--DSC_0667.jpg",
+                "portCode": "CRU",
+                "portType": "CRUISING",
+                "day": 3,
+                "shortDescription": "shortDescription",
+                "bazaarDayType": "ANCHOR"
+              },
+              {
+                "identifier": "day-4-CUR",
+                "title": "Willemstad, Curacao",
+                "description": "",
+                "arrivalDateTime": "20261117T080000",
+                "departureDateTime": "20261117T180000",
+                "pointsOfInterest": [
+                  {
+                    "title": "location 1"
+                  },
+                  {
+                    "title": "location 2"
+                  }
+                ],
+                "portImageURL": "/content/dam/excalibur/digital-destinations/port-destinations/ports-of-call/curacao-willemstad-cur/stock-photo-curacao-netherlands-antilles-colonial-houses-in-willemstad-510842560-CUR.jpg",
+                "gangwayUp": "173000",
+                "gangwayDown": "083000",
+                "portCode": "CUR",
+                "portType": "DOCKED",
+                "day": 4,
+                "shortDescription": "shortDescription",
+                "bazaarDayType": "DESTINATION"
+              },
+              {
+                "identifier": "day-5-AUA",
+                "title": "Oranjestad, Aruba",
+                "description": "",
+                "arrivalDateTime": "20261118T080000",
+                "departureDateTime": "20261118T230000",
+                "pointsOfInterest": [
+                  {
+                    "title": "location 1"
+                  },
+                  {
+                    "title": "location 2"
+                  }
+                ],
+                "portImageURL": "/content/dam/excalibur/digital-destinations/port-destinations/ports-of-call/aruba-oranjestad-aua/stock-photo-aerial-from-aruba-island-in-the-caribbean-sea-at-sunset-655167355-AUA.jpg",
+                "gangwayUp": "223000",
+                "gangwayDown": "083000",
+                "portCode": "AUA",
+                "portType": "DOCKED",
+                "day": 5,
+                "shortDescription": "shortDescription",
+                "bazaarDayType": "DESTINATION"
+              },
+              {
+                "identifier": "day-6-CRU",
+                "title": "Cruising",
+                "description": "",
+                "arrivalDateTime": "20261119T000000",
+                "departureDateTime": "20261119T235959",
+                "pointsOfInterest": [
+                  {
+                    "title": "location 1",
+                    "latitude": 24.026434,
+                    "longitude": -85.002541
+                  },
+                  {
+                    "title": "location 2"
+                  }
+                ],
+                "portImageURL": "/content/dam/global-fleet/celebrity/dining/solstice-equinox/dining-venues/sunset-bar/EQ-sunset-Bar-back-of-ship-ocean-leisure-view-10-09-17--DSC_0667.jpg",
+                "portCode": "CRU",
+                "portType": "CRUISING",
+                "day": 6,
+                "shortDescription": "shortDescription",
+                "bazaarDayType": "ANCHOR"
+              },
+              {
+                "identifier": "day-7-CRU",
+                "title": "Cruising",
+                "description": "",
+                "arrivalDateTime": "20261120T000000",
+                "departureDateTime": "20261120T235959",
+                "pointsOfInterest": [
+                  {
+                    "title": "location 1",
+                    "latitude": 24.026434,
+                    "longitude": -85.002541
+                  },
+                  {
+                    "title": "location 2"
+                  }
+                ],
+                "portImageURL": "/content/dam/global-fleet/celebrity/dining/solstice-equinox/dining-venues/sunset-bar/EQ-sunset-Bar-back-of-ship-ocean-leisure-view-10-09-17--DSC_0667.jpg",
+                "portCode": "CRU",
+                "portType": "CRUISING",
+                "day": 7,
+                "shortDescription": "shortDescription",
+                "bazaarDayType": "ANCHOR"
+              },
+              {
+                "identifier": "day-8-PCC",
+                "title": "Perfect Day CocoCay",
+                "description": "",
+                "arrivalDateTime": "20261121T070000",
+                "departureDateTime": "20261121T170000",
+                "pointsOfInterest": [
+                  {
+                    "title": "location 1"
+                  },
+                  {
+                    "title": "location 2"
+                  }
+                ],
+                "portImageURL": "/content/dam/excalibur/perfect-day-island/coco-cay/aerials-hero/PDI-entrance-hero-family-coco-cay.jpg",
+                "gangwayUp": "163000",
+                "gangwayDown": "073000",
+                "portCode": "PCC",
+                "portType": "DOCKED",
+                "day": 8,
+                "shortDescription": "There are theme parks, there are islands, and then there’s Perfect Day CocoCay, now featuring our new 18+ Hideaway Beach℠. Find the perfect mix of thrill and chill, from dreamy overwater bungalows to an adrenaline-pumping water park. It’s not just game changing — it’s game over. Because this is the end-all, be-all, island of all.",
+                "bazaarDayType": "DESTINATION"
+              },
+              {
+                "identifier": "day-9-FLL",
+                "title": "Fort Lauderdale, Florida",
+                "description": "",
+                "arrivalDateTime": "20261122T060000",
+                "departureDateTime": "20261122T235959",
+                "pointsOfInterest": [
+                  {
+                    "title": "location 1"
+                  },
+                  {
+                    "title": "location 2"
+                  }
+                ],
+                "portImageURL": "/content/dam/excalibur/digital-destinations/port-destinations/departure-ports/fort-lauderdale-florida-fll/stock-photo-fort-lauderdale-beach-florida-usa-at-dawn-715800955-FLL.jpg",
+                "gangwayDown": "063000",
+                "portCode": "FLL",
+                "portType": "DEBARK",
+                "day": 9,
+                "shortDescription": "Fort Lauderdale, Florida"
+              }
+            ]
+          },
+          "itineraryCode": "08D147",
+          "healthQuestionnaireStartDateTime": "20261113T120000-05:00",
+          "healthQuestionnaireIsOpen": false,
+          "brand": "R",
+          "isSailingClosed": true,
+          "beginOnlineCheckinDays": "5",
+          "transpacificNumberOfDays": 8,
+          "visitsCuba": false,
+          "visitsGalapagos": false,
+          "isCreditCardOnlyEnabled": false,
+          "beginOnlineCheckin": "N",
+          "departurePort": "FLL",
+          "departurePortCountryCode": "USA",
+          "departurePortName": "Fort Lauderdale, Florida",
+          "arrivalPort": "FLL",
+          "arrivalPortCountryCode": "USA",
+          "arrivalPortName": "Fort Lauderdale, Florida",
+          "smartShipCapabilities": {
+            "isFullCreditCardSupported": true,
+            "isArrivalAppointmentTimesCheckinSupported": true,
+            "isSecurityPhotoSupported": true,
+            "isEnhancedBoardingPassSupported": true,
+            "isCharterSailingSupported": false,
+            "isExcaliburWebSupported": true,
+            "isBiometricConsentSupported": true,
+            "isDynamicCurrencyConversionSupported": true
+          },
+          "departurePortInformation": {
+            "found": true,
+            "name": "Port Everglades, Ft. Lauderdale",
+            "code": "FLL",
+            "description": "Port Everglades",
+            "timeZoneName": "America/New_York",
+            "countryCode": "USA",
+            "terminals": [
+              {
+                "name": "Port Everglades Terminal 18",
+                "code": "FLL18",
+                "description": "Terminal 18 Port Everglades",
+                "latitude": "26.08794",
+                "longitude": "-80.120807",
+                "address": "REDACTED",
+                "addressHyperlink": "https://goo.gl/maps/97EWpW6jGrUwLnTq5"
+              },
+              {
+                "name": "Port Everglades Terminal 25",
+                "code": "FLL25",
+                "description": "Terminal 25 Port Everglades",
+                "latitude": "26.0868489",
+                "longitude": "-80.1170429",
+                "address": "REDACTED",
+                "addressHyperlink": "https://goo.gl/maps/97EWpW6jGrUwLnTq5"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
