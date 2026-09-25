@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.5.0 — 2026-09-24
+
+- `fetchVoyage` — voyage-scoped sailing detail, authenticated. Where
+  `listBookings`' enrichment answers only for the signed-in account's own
+  reservations, and can come back empty for an account that demonstrably has
+  them, this answers for a sailing whoever booked it, including sailings absent
+  from the public cruise search.
+
+  It carries the field that makes an uncatalogued sailing usable: the itinerary
+  code (`08D147` for a booking whose package code was `LE08D147`, i.e. ship code
+  plus itinerary code), alongside nights, sail and return dates, the itinerary
+  name, a nine-stop port list with `EMBARK` / `DOCKED` / `CRUISING` / `DEBARK`
+  types, both ports with their names and country codes, and `isSailingClosed` —
+  which tells "Royal is not selling this" apart from "we have not collected it".
+
+  Royal returns compact `YYYYMMDD` dates and `YYYYMMDDTHHMMSS` timestamps here,
+  unlike the ISO dates elsewhere in the API. They are converted once, so callers
+  are not the tenth place to reimplement it.
+
+- `voyageId(shipCode, sailDate)` builds the identifier the endpoint wants, and
+  `RcClient.voyage()` reaches it from the client like its authenticated siblings.
+
 ## 0.4.0 — 2026-09-20
 
 **Behaviour change:** a `429` with no `Retry-After` now waits at least ten

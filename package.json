@@ -1,6 +1,6 @@
 {
   "name": "rc-client",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Client for Royal Caribbean's web APIs: sign-in, account, casino offers and their sailings, room and product pricing, bookings, cruise search and Instant Reward certificates. Zero dependencies, runs anywhere fetch does.",
   "keywords": [
     "royal-caribbean",
